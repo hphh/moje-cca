@@ -1,0 +1,1 @@
+java -jar target\moje-cca.jar -Sprod >moje-cca-start.log

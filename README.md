@@ -1,1 +1,1 @@
-# moje-cca
+Funkce IMIS/ISZA mně na míru 
