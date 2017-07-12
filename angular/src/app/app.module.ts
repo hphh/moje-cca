@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
+import { DatePipe, DecimalPipe } from '@angular/common';
 
 import {
     DataTableModule, 
@@ -11,15 +12,20 @@ import {
     InputTextModule,
     DialogModule,
     ButtonModule,
-    TooltipModule
+    TooltipModule,
+    CalendarModule
     } from 'primeng/primeng';
     
 import { ToasterModule, ToasterService } from 'angular2-toaster';   
 
+import { EmployeeVykazPraceOverviewComponent } from './employee-vykaz-prace-overview/employee-vykaz-prace-overview.component';
+import { MnozstviHodPipe } from './converts/mnozstvi-hod.pipe';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    EmployeeVykazPraceOverviewComponent,
+    MnozstviHodPipe
   ],
   imports: [
     BrowserAnimationsModule,
@@ -33,9 +39,10 @@ import { ToasterModule, ToasterService } from 'angular2-toaster';
     DialogModule,
     ButtonModule,
     ToasterModule,
-    TooltipModule
+    TooltipModule,
+    CalendarModule
   ],
-  providers: [],
+  providers: [DatePipe, DecimalPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

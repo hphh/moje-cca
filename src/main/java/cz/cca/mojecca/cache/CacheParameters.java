@@ -1,4 +1,4 @@
-package cz.cca.webimis.cache;
+package cz.cca.mojecca.cache;
 
 public class CacheParameters {
 	

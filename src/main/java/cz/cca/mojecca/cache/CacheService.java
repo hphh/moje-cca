@@ -1,4 +1,4 @@
-package cz.cca.webimis.cache;
+package cz.cca.mojecca.cache;
 
 import java.util.HashMap;
 import java.util.Map;

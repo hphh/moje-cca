@@ -1,0 +1,24 @@
+<div style="float: left;">
+	Od:
+	<p-calendar [(ngModel)]="fromDate" (onSelect)="readVykazPraces()" dateFormat="dd.mm.yy"></p-calendar>
+</div>
+<div style="float: left;">
+	Do:
+	<p-calendar [(ngModel)]="toDate" (onSelect)="readVykazPraces()" dateFormat="dd.mm.yy"></p-calendar>
+</div>
+<div style="float: left;">
+	<p-dataTable [value]="vykazPraces" rowGroupMode="subheader" groupField="datum" 
+				expandableRowGroups="true" [sortableRowGroup]="false">
+				
+		<ng-template pTemplate="rowgroupheader" let-rowData>{{rowData['datum'] | date: 'dd.MM.yyyy'}} - {{celkemOdvedenePrace(rowData['datum']) | mnozstviHod}}</ng-template>
+		<p-column field="mnozstviOdvedenePrace" header="H">
+			<ng-template let-col let-vykaz="rowData" pTemplate="body">
+            	{{vykaz[col.field] | mnozstviHod}}
+        	</ng-template> 
+        </p-column>
+		<p-column field="popisPrace" header="Popis"></p-column>
+		<p-column field="hlaseni" header="Hlášení"></p-column>
+		<p-column field="krok" header="Krok"></p-column>
+		<p-column field="ukol" header="Úkol"></p-column>
+	</p-dataTable>
+</div>

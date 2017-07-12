@@ -1,1 +1,1 @@
-java -jar target\moje-cca.jar -Sprod >moje-cca-start.log
+java -jar target\moje-cca-swarm.jar -Sprod >moje-cca-start.log

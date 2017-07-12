@@ -1,4 +1,4 @@
-package cz.cca.webimis.cache;
+package cz.cca.mojecca.cache;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
