@@ -1,3 +1,10 @@
+<p-contextMenu #vykazMenu [model]="vykazMenuItems"></p-contextMenu>
+<app-vykaz-prace-mover #vykazPraceMover></app-vykaz-prace-mover>
+
+<div style="float: left;">
+	<button pButton (click)="readVykazPraces()" type="text" icon="fa-refresh {{(readingVykazPraces? 'fa-spin': '')}}" 
+				[disabled]="readingVykazPraces" style="width:40px;"></button>
+</div>
 <div style="float: left;">
 	Od:
 	<p-calendar [(ngModel)]="fromDate" (onSelect)="readVykazPraces()" dateFormat="dd.mm.yy"></p-calendar>
@@ -6,19 +13,28 @@
 	Do:
 	<p-calendar [(ngModel)]="toDate" (onSelect)="readVykazPraces()" dateFormat="dd.mm.yy"></p-calendar>
 </div>
+
 <div style="float: left;">
 	<p-dataTable [value]="vykazPraces" rowGroupMode="subheader" groupField="datum" 
-				expandableRowGroups="true" [sortableRowGroup]="false">
+				expandableRowGroups="true" [sortableRowGroup]="false"
+				[contextMenu]="vykazMenu" 
+				selectionMode="single" [(selection)]="selectedVykazPrace">
 				
 		<ng-template pTemplate="rowgroupheader" let-rowData>{{rowData['datum'] | date: 'dd.MM.yyyy'}} - {{celkemOdvedenePrace(rowData['datum']) | mnozstviHod}}</ng-template>
-		<p-column field="mnozstviOdvedenePrace" header="H">
+		
+		<p-column field="mnozstviOdvedenePrace" header="hod" [style]="{'width':'70px','text-align':'center'}">
 			<ng-template let-col let-vykaz="rowData" pTemplate="body">
             	{{vykaz[col.field] | mnozstviHod}}
         	</ng-template> 
         </p-column>
 		<p-column field="popisPrace" header="Popis"></p-column>
-		<p-column field="hlaseni" header="Hlášení"></p-column>
-		<p-column field="krok" header="Krok"></p-column>
-		<p-column field="ukol" header="Úkol"></p-column>
+		<p-column field="zakazka" header="Zakázka" [style]="{'width':'160px','text-align':'left'}">
+			<ng-template let-col let-vykaz="rowData" pTemplate="body">
+            	{{vykaz | zakazka}}
+        	</ng-template> 
+		</p-column>
+		<p-column field="hlaseni" header="Hlášení" [style]="{'width':'100px','text-align':'center'}"></p-column>
+		<p-column field="krok" header="Krok" [style]="{'width':'100px','text-align':'center'}"></p-column>
+		<p-column field="ukol" header="Úkol" [style]="{'width':'100px','text-align':'center'}"></p-column>
 	</p-dataTable>
 </div>

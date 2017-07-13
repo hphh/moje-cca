@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
 
+import cz.cca.mojecca.db.imis.model.DenVykazEntity;
 import cz.cca.mojecca.db.imis.model.VykazPraceEntity;
 
 @Stateless
@@ -21,7 +22,7 @@ public class VykazPraceDAO {
 			"       t.pozn_hl hlaseni, " + 
 			"       t.pozn_krok krok, " + 
 			"       t.pozn_ukol ukol, " + 
-			"       t.rowid id," + 
+			"       t.id id," + 
 			"       t.zc zakazka," + 
 			"       t.cpolzak polozka," + 
 			"       t.cpozzak pozice," + 
@@ -45,6 +46,21 @@ public class VykazPraceDAO {
 		q.setParameter("toDate", toDate, TemporalType.DATE);
 		
 		return q.getResultList();
+	}
+
+	public void updateDenVykazs(List<DenVykazEntity> denVykazEntities) {
+		if (denVykazEntities == null) {
+			return;
+		}
+		
+		denVykazEntities.stream().forEach(entity -> {
+			entityManager.merge(entity);
+		});
+		
+	}
+
+	public DenVykazEntity getDenVykaz(long id) {
+		return entityManager.find(DenVykazEntity.class, id);
 	}
 
 }

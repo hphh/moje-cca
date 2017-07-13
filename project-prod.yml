@@ -8,6 +8,7 @@ swarm:
         password: hph
         jndi-name: java:/imisDS
         check-valid-connection-sql: select 1 from dual
+        new-connection-sql: set role ccaps_plny_pristup
   http:
     port: 8081 
   logging:

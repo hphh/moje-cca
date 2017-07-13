@@ -1,0 +1,65 @@
+<p-dialog
+    [(visible)]="dialogVisible"
+	header="Přesun výkazu na jiný den"
+	modal="modal" 
+	minWidth="500"
+	width="500"
+	resizable="true">
+	
+	<div class="container-fluid"> 
+		<div class="form-horizontal">
+			<div class="form-group">
+				<label for="noveDatum" class="control-label col-xs-3">Nové datum</label>
+				<div class="col-xs-9">
+					<p-calendar id="noveDatum" [(ngModel)]="newDate" dateFormat="dd.mm.yy"></p-calendar>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="datum" class="control-label col-xs-3">Datum</label>
+				<div class="col-xs-9">
+					<output id="datum">{{vykazPrace.datum | date: 'dd.MM.yy'}}</output>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="mnozstviOdvedenePrace" class="control-label col-xs-3">Hodin</label>
+				<div class="col-xs-9">
+					<output id="mnozstviOdvedenePrace">{{vykazPrace.mnozstviOdvedenePrace | mnozstviHod}}</output>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="popis" class="control-label col-xs-3">Popis</label>
+				<div class="col-xs-9">
+					<output id="popis">{{vykazPrace.popisPrace}}</output>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="zakazka" class="control-label col-xs-3">Zakázka</label>
+				<div class="col-xs-9">
+					<output id="zakazka">{{vykazPrace | zakazka}}</output>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="hlaseni" class="control-label col-xs-3">Hlášení</label>
+				<div class="col-xs-9">
+					<output id="hlaseni">{{vykazPrace.hlaseni}}</output>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="krok" class="control-label col-xs-3">Krok</label>
+				<div class="col-xs-9">
+					<output id="krok">{{vykazPrace.krok}}</output>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="ukol" class="control-label col-xs-3">Úkol</label>
+				<div class="col-xs-9">
+					<output id="ukol">{{vykazPrace.ukol}}</output>
+				</div>
+			</div>
+			<div class="form-group">
+				<button pButton type="button" icon="fa-check" label="OK" (click)="onOk()"></button>
+			</div>
+		</div>
+	</div>
+				
+</p-dialog>	

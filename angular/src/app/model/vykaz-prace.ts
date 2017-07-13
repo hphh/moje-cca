@@ -1,7 +1,7 @@
 export class VykazPrace {
     
-    id: string;
-    datum: Date;
+    id: number;
+    datum: number;
     mnozstviOdvedenePrace: number;
     popisPrace: string;
     hlaseni: string;

@@ -13,19 +13,24 @@ import {
     DialogModule,
     ButtonModule,
     TooltipModule,
-    CalendarModule
+    CalendarModule,
+    ContextMenuModule
     } from 'primeng/primeng';
     
 import { ToasterModule, ToasterService } from 'angular2-toaster';   
 
 import { EmployeeVykazPraceOverviewComponent } from './employee-vykaz-prace-overview/employee-vykaz-prace-overview.component';
+import { VykazPraceMoverComponent } from './vykaz-prace-mover/vykaz-prace-mover.component';
 import { MnozstviHodPipe } from './converts/mnozstvi-hod.pipe';
+import { ZakazkaPipe } from './converts/zakazka.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     EmployeeVykazPraceOverviewComponent,
-    MnozstviHodPipe
+    MnozstviHodPipe,
+    VykazPraceMoverComponent,
+    ZakazkaPipe
   ],
   imports: [
     BrowserAnimationsModule,
@@ -40,7 +45,8 @@ import { MnozstviHodPipe } from './converts/mnozstvi-hod.pipe';
     ButtonModule,
     ToasterModule,
     TooltipModule,
-    CalendarModule
+    CalendarModule,
+    ContextMenuModule
   ],
   providers: [DatePipe, DecimalPipe],
   bootstrap: [AppComponent]

@@ -4,6 +4,8 @@ import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angul
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { ApplicationService } from './application.service';
+import { VykazPrace } from '../model/vykaz-prace';
+
 
 @Injectable()
 export class VykazPraceService {
@@ -25,5 +27,12 @@ export class VykazPraceService {
 
         return this.http.get( this.serviceUrl + "/employeeVykazPraces", { params: params } ).map( res => res.json() );
     }
+    
+    updateVykazPraces(vykazPraces: VykazPrace[]) {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        
+        return this.http.post(this.serviceUrl + "/updateVykazPraces", vykazPraces, options).map(res => res.json() );
+    } 
 
 }

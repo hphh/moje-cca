@@ -1,12 +1,11 @@
 package cz.cca.mojecca.service.imis.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class VykazPrace {
 	
-	private String id;
-	private Date datum;
+	private long id;
+	private long datum;
 	private BigDecimal mnozstviOdvedenePrace;
 	private String popisPrace;
 	private String hlaseni;
@@ -20,16 +19,16 @@ public class VykazPrace {
 	private String kodUzivatele;
 	
 	
-	public String getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
-	public Date getDatum() {
+	public long getDatum() {
 		return datum;
 	}
-	public void setDatum(Date datum) {
+	public void setDatum(long datum) {
 		this.datum = datum;
 	}
 	public BigDecimal getMnozstviOdvedenePrace() {

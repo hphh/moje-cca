@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -34,4 +35,13 @@ public class VykazPraceRestService {
 		
 		return vykazPraceService.getEmployeeVykazPraces(kodUzivatele, fromDate, toDate);
 	}	
+	
+	@POST
+	@Path("/updateVykazPraces")
+	public void updateVykazPraces(List<VykazPrace> vykazPraces) {
+		LOGGER.log(Level.FINE, "Požadavek na změnu výkazů práce {0} ", vykazPraces.size());
+		
+		vykazPraceService.updateVykazPraces(vykazPraces);
+	}
+	
 }
