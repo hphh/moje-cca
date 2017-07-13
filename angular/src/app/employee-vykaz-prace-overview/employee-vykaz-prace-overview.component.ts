@@ -10,7 +10,7 @@ import { MenuItem } from 'primeng/primeng';
     selector: 'app-employee-vykaz-prace-overview',
     templateUrl: './employee-vykaz-prace-overview.component.html',
     styleUrls: ['./employee-vykaz-prace-overview.component.css'],
-    providers: [VykazPraceService, ApplicationService]
+    providers: [VykazPraceService]
 } )
 export class EmployeeVykazPraceOverviewComponent implements OnInit {
 

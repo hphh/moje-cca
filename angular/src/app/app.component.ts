@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef } from '@angular/core';
 import { ApplicationService } from './services/application.service';
 import { ToasterService, ToasterConfig } from 'angular2-toaster';
 
@@ -11,16 +11,14 @@ import { ToasterService, ToasterConfig } from 'angular2-toaster';
 } )
 export class AppComponent {
     
-    @Input()
-    backendServicesUrl: string;
-    
     toasterconfig: ToasterConfig = new ToasterConfig( { animation: 'flyRight' } );
     
 
-    constructor(applicationService: ApplicationService) {
-
-        if ((this.backendServicesUrl != null) && (!this.backendServicesUrl.startsWith('<%'))) {
-            applicationService.backendServicesUrl = this.backendServicesUrl;
+    constructor(elm: ElementRef, applicationService: ApplicationService) {
+        const backendServicesUrl = elm.nativeElement.getAttribute('backendServicesUrl');
+        
+        if ((backendServicesUrl != null) && (!backendServicesUrl.startsWith('<%'))) {
+            applicationService.backendServicesUrl = backendServicesUrl;
         }
 
         console.log('URL backend služeb: ' + applicationService.backendServicesUrl);

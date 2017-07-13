@@ -10,7 +10,7 @@ swarm:
         check-valid-connection-sql: select 1 from dual
         new-connection-sql: set role ccaps_plny_pristup
   http:
-    port: 8081 
+    port: 81 
   logging:
     pattern-formatters:
       MY_PATTERN:
@@ -22,7 +22,7 @@ swarm:
         autoflush: true
         enabled: true
         file:
-          path: ./moje-cca.log
+          path: ./log/moje-cca.log
         suffix: .yyyy-MM-dd     
         rotate-size: 1000k
         max-backup-index: 10
