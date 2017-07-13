@@ -20,7 +20,7 @@
 				[contextMenu]="vykazMenu" 
 				selectionMode="single" [(selection)]="selectedVykazPrace">
 				
-		<ng-template pTemplate="rowgroupheader" let-rowData>{{rowData['datum'] | date: 'dd.MM.yyyy'}} - {{celkemOdvedenePrace(rowData['datum']) | mnozstviHod}}</ng-template>
+		<ng-template pTemplate="rowgroupheader" let-rowData>{{rowData['datum'] | date: 'dd.MM.yyyy'}} - {{celkemOdvedenePrace(rowData['datum']) | mnozstviHod}} / {{rowData['odpracovanaDobaVDen'] | mnozstviHod}}</ng-template>
 		
 		<p-column field="mnozstviOdvedenePrace" header="hod" [style]="{'width':'70px','text-align':'center'}">
 			<ng-template let-col let-vykaz="rowData" pTemplate="body">

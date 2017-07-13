@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 
 import cz.cca.mojecca.db.imis.VykazPraceDAO;
 import cz.cca.mojecca.db.imis.model.DenVykazEntity;
@@ -18,8 +19,12 @@ public class VykazPraceService {
 	@EJB
 	private VykazPraceDAO vykazPraceDAO;
 	
+	@Inject
+	private UzivatelService uzivatelService;
+	
 	public List<VykazPrace> getEmployeeVykazPraces(String kodUzivatele, Date fromDate, Date toDate) {
-		return VykazPraceDataAdapter.toVykazPraceList(vykazPraceDAO.getEmployeeVykazPraces(kodUzivatele, fromDate, toDate));		
+		String icp = uzivatelService.getIcp(kodUzivatele);
+		return VykazPraceDataAdapter.toVykazPraceList(vykazPraceDAO.getEmployeeVykazPraces(kodUzivatele, icp, fromDate, toDate));		
 	}
 
 	public void updateVykazPraces(List<VykazPrace> vykazPraces) {

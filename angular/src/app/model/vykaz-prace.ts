@@ -1,5 +1,5 @@
 export class VykazPrace {
-    
+
     id: number;
     datum: number;
     mnozstviOdvedenePrace: number;
@@ -13,5 +13,6 @@ export class VykazPrace {
     pracovnik: string;
     organizace: string;
     kodUzivatele: string;
-    
+    odpracovanaDobaVDen: number;
+
 }

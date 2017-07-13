@@ -28,6 +28,7 @@ public class VykazPraceEntity {
 	private String pracovnik;
 	private String organizace;
 	private String kodUzivatele;
+	private BigDecimal odpracovanaDobaVDen;
 
 	public long getId() {
 		return id;
@@ -131,6 +132,14 @@ public class VykazPraceEntity {
 
 	public void setKodUzivatele(String kodUzivatele) {
 		this.kodUzivatele = kodUzivatele;
+	}
+
+	public BigDecimal getOdpracovanaDobaVDen() {
+		return odpracovanaDobaVDen;
+	}
+
+	public void setOdpracovanaDobaVDen(BigDecimal odpracovanaDobaVDen) {
+		this.odpracovanaDobaVDen = odpracovanaDobaVDen;
 	}
 
 }
