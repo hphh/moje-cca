@@ -23,7 +23,7 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
 
     private autoRefreshSubscription: Subscription;
 
-    @ViewChild( 'vykazPraceMover' ) vykazPraceMover;
+    @ViewChild( 'vykazPraceEditor' ) vykazPraceEditor;
 
 
 
@@ -41,7 +41,7 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
 
     ngOnInit() {
         this.vykazMenuItems = [
-            { label: 'Přesunout', icon: 'fa-arrows-v', command: ( event ) => this.moveVykazPrace(this.selectedVykazPrace) }
+            { label: 'Upravit', icon: 'fa-pencil-square-o', command: ( event ) => this.editVykazPrace(this.selectedVykazPrace) }
         ];
 
         this.readVykazPraces();
@@ -93,8 +93,8 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
         } );
     }
     
-    private moveVykazPrace(vykaz: VykazPrace) {
-        this.vykazPraceMover.show(vykaz);
+    private editVykazPrace(vykaz: VykazPrace) {
+        this.vykazPraceEditor.show(vykaz);
     }
 
 }

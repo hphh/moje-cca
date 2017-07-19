@@ -1,5 +1,5 @@
 <p-contextMenu #vykazMenu [model]="vykazMenuItems"></p-contextMenu>
-<app-vykaz-prace-mover #vykazPraceMover></app-vykaz-prace-mover>
+<app-vykaz-prace-editor #vykazPraceEditor (onSave)="readVykazPraces()"></app-vykaz-prace-editor>
 
 <div style="float: left;">
 	<button pButton (click)="readVykazPraces()" type="text" icon="fa-refresh {{(readingVykazPraces? 'fa-spin': '')}}" 

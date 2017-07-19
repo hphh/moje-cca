@@ -20,7 +20,7 @@ import {
 import { ToasterModule, ToasterService } from 'angular2-toaster';   
 
 import { EmployeeVykazPraceOverviewComponent } from './employee-vykaz-prace-overview/employee-vykaz-prace-overview.component';
-import { VykazPraceMoverComponent } from './vykaz-prace-mover/vykaz-prace-mover.component';
+import { VykazPraceEditorComponent } from './vykaz-prace-editor/vykaz-prace-editor.component';
 import { MnozstviHodPipe } from './converts/mnozstvi-hod.pipe';
 import { ZakazkaPipe } from './converts/zakazka.pipe';
 
@@ -29,7 +29,7 @@ import { ZakazkaPipe } from './converts/zakazka.pipe';
     AppComponent,
     EmployeeVykazPraceOverviewComponent,
     MnozstviHodPipe,
-    VykazPraceMoverComponent,
+    VykazPraceEditorComponent,
     ZakazkaPipe
   ],
   imports: [

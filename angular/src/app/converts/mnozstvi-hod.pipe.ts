@@ -14,5 +14,5 @@ export class MnozstviHodPipe implements PipeTransform {
         return this.decimalPipe.transform(Math.trunc(value), '2.0-0') + ':' + 
             this.decimalPipe.transform(60 * ( value % 1 ), '2.0-0');
     }
-
+    
 }
