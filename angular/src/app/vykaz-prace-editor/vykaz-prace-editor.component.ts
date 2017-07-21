@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { VykazPrace } from '../model/vykaz-prace';
 import { VykazPraceService } from '../services/vykaz-prace.service';
 import { ToasterService } from 'angular2-toaster';
+import { DataConvertor } from '../converts/data-convertor';
+
 
 @Component( {
     selector: 'app-vykaz-prace-editor',
@@ -40,8 +42,7 @@ export class VykazPraceEditorComponent implements OnInit {
         this.vykazPrace = Object.assign( {}, vykazPrace );
         this.vykazPraceDatum = new Date(this.vykazPrace.datum);
         
-        this.vykazPraceMnozstviOdvedenePrace = new Date();
-        this.vykazPraceMnozstviOdvedenePrace.setHours(this.vykazPrace.mnozstviOdvedenePrace, (this.vykazPrace.mnozstviOdvedenePrace % 1) * 60, 0, 0);
+        this.vykazPraceMnozstviOdvedenePrace = DataConvertor.mnozstviHodToDate(this.vykazPrace.mnozstviOdvedenePrace);
                 
         this.vykazPraceOriginal = vykazPrace;
 
@@ -49,13 +50,8 @@ export class VykazPraceEditorComponent implements OnInit {
 
     onOk() {
         this.vykazPrace.datum = this.vykazPraceDatum.getTime();
-        this.vykazPrace.mnozstviOdvedenePrace = this.vykazPraceMnozstviOdvedenePrace.getHours() + 
-            (this.vykazPraceMnozstviOdvedenePrace.getMinutes() / 60);
+        this.vykazPrace.mnozstviOdvedenePrace = DataConvertor.dateToMnozstviHodToDate(this.vykazPraceMnozstviOdvedenePrace);
         
-        if ( this.vykazPraceOriginal === this.vykazPrace ) {
-            return;
-        }
-
         let vykazPraces = [this.vykazPrace];
 
         this.vykazPraceService.updateVykazPraces( vykazPraces ).subscribe(

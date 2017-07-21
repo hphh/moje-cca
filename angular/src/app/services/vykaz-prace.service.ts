@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { ApplicationService } from './application.service';
 import { VykazPrace } from '../model/vykaz-prace';
+import { SplittingVykazPrace } from '../model/splitting-vykaz-prace';
 
 
 @Injectable()
@@ -34,6 +35,17 @@ export class VykazPraceService {
         let options = new RequestOptions( { headers: headers } );
 
         return this.http.post( this.getServiceUrl() + "/updateVykazPraces", vykazPraces, options ).map( res => res.json() );
+    }
+    
+    splitVykazPrace( oldVykazPrace: VykazPrace, newVykazPrace: VykazPrace ) {
+        let headers = new Headers( { 'Content-Type': 'application/json' } );
+        let options = new RequestOptions( { headers: headers } );
+        
+        let splittingVykazPrace = new SplittingVykazPrace();
+        splittingVykazPrace.oldVykazPrace = oldVykazPrace;
+        splittingVykazPrace.newVykazPrace = newVykazPrace;
+
+        return this.http.post( this.getServiceUrl() + "/splitVykazPrace", splittingVykazPrace, options ).map( res => res.json() );
     }
 
 }

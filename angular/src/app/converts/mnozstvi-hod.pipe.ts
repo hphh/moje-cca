@@ -6,13 +6,13 @@ import { DecimalPipe } from '@angular/common';
 } )
 export class MnozstviHodPipe implements PipeTransform {
 
-    constructor(private decimalPipe: DecimalPipe) {
-        
+    constructor( private decimalPipe: DecimalPipe ) {
+
     }
 
     transform( value: number, args?: any ): string {
-        return this.decimalPipe.transform(Math.trunc(value), '2.0-0') + ':' + 
-            this.decimalPipe.transform(60 * ( value % 1 ), '2.0-0');
+        return this.decimalPipe.transform( Math.trunc( value ), '2.0-0' ) + ':' +
+            this.decimalPipe.transform( 60 * ( Math.abs( value ) % 1 ), '2.0-0' );
     }
-    
+
 }

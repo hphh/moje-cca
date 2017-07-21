@@ -24,6 +24,7 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
     private autoRefreshSubscription: Subscription;
 
     @ViewChild( 'vykazPraceEditor' ) vykazPraceEditor;
+    @ViewChild( 'vykazPraceSplitter' ) vykazPraceSplitter;
 
 
 
@@ -41,7 +42,8 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
 
     ngOnInit() {
         this.vykazMenuItems = [
-            { label: 'Upravit', icon: 'fa-pencil-square-o', command: ( event ) => this.editVykazPrace(this.selectedVykazPrace) }
+            { label: 'Upravit', icon: 'fa-pencil-square-o', command: ( event ) => this.editVykazPrace( this.selectedVykazPrace ) },
+            { label: 'Rozdělit', icon: 'fa-scissors', command: ( event ) => this.splitVykazPrace( this.selectedVykazPrace ) }
         ];
 
         this.readVykazPraces();
@@ -92,9 +94,13 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
             this.readVykazPraces();
         } );
     }
-    
-    private editVykazPrace(vykaz: VykazPrace) {
-        this.vykazPraceEditor.show(vykaz);
+
+    private editVykazPrace( vykaz: VykazPrace ) {
+        this.vykazPraceEditor.show( vykaz );
+    }
+
+    private splitVykazPrace( vykaz: VykazPrace ) {
+        this.vykazPraceSplitter.show( vykaz );
     }
 
 }

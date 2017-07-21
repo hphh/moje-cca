@@ -89,19 +89,27 @@ public class VykazPraceDAO {
 		return result;
 	}
 
+	public void updateDenVykaz(DenVykazEntity denVykazEntity) {
+		entityManager.merge(denVykazEntity);
+	}
+
 	public void updateDenVykazs(List<DenVykazEntity> denVykazEntities) {
 		if (denVykazEntities == null) {
 			return;
 		}
 
 		denVykazEntities.stream().forEach(entity -> {
-			entityManager.merge(entity);
+			updateDenVykaz(entity);
 		});
 
 	}
 
 	public DenVykazEntity getDenVykaz(long id) {
 		return entityManager.find(DenVykazEntity.class, id);
+	}
+	
+	public void insertDenVykaz(DenVykazEntity denVykazEntity) {
+		entityManager.persist(denVykazEntity);
 	}
 
 }

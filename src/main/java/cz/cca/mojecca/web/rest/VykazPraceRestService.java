@@ -15,6 +15,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import cz.cca.mojecca.service.imis.VykazPraceService;
+import cz.cca.mojecca.service.imis.model.SplittingVykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPrace;
 
 @Path("/services/imis/vykazPrace")
@@ -42,6 +43,15 @@ public class VykazPraceRestService {
 		LOGGER.log(Level.FINE, "Požadavek na změnu výkazů práce {0} ", vykazPraces.size());
 		
 		vykazPraceService.updateVykazPraces(vykazPraces);
+	}
+	
+	@POST
+	@Path("/splitVykazPrace")
+	public void splitVykazPrace(SplittingVykazPrace splittingVykazPrace) {
+		LOGGER.log(Level.FINE, "Požadavek na rozdělení výkazu práce {0} ", splittingVykazPrace.getOldVykazPrace().getId());
+		
+		vykazPraceService.splitVykazPrace(splittingVykazPrace);
+		
 	}
 	
 }

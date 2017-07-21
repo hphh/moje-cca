@@ -1,0 +1,118 @@
+<p-dialog
+    [(visible)]="dialogVisible"
+	header="Rozdělení výkazu práce"
+	modal="modal" 
+	minWidth="500"
+	width="500"
+	resizable="true">
+	
+	<div class="container-fluid"> 
+		<div class="form-horizontal">
+			<div class="form-group">
+				<h4>Původní výkaz</h4>
+			</div>
+			<div class="form-group">
+				<label for="datum" class="control-label col-xs-3">Datum</label>
+				<div class="col-xs-9">
+					<p-calendar id="datum" [(ngModel)]="oldVykazPraceDatum" dateFormat="dd.mm.yy"></p-calendar>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="mnozstviOdvedenePrace" class="control-label col-xs-3">Hodin</label>
+				<div class="col-xs-9">
+					<p-calendar id="mnozstviOdvedenePrace" [(ngModel)]="oldVykazPraceMnozstviOdvedenePrace"
+						[timeOnly]="true"></p-calendar>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="popis" class="control-label col-xs-3">Popis</label>
+				<div class="col-xs-9">
+					<input pInputText id="popis" type="text" size="45" [(ngModel)]="oldVykazPrace.popisPrace">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="zakazka" class="control-label col-xs-3">Zakázka</label>
+				<div class="col-xs-9">
+					<input pInputText id="zakazka" type="text" size="12" [(ngModel)]="oldVykazPrace.zakazka">
+					<input pInputText id="zakpol" type="text" size="3" [(ngModel)]="oldVykazPrace.polozka">
+					<input pInputText id="zakpoz" type="text" size="3" [(ngModel)]="oldVykazPrace.pozice">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="hlaseni" class="control-label col-xs-3">Hlášení</label>
+				<div class="col-xs-9">
+					<input pInputText id="hlaseni" type="text" size="20" [(ngModel)]="oldVykazPrace.hlaseni">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="krok" class="control-label col-xs-3">Krok</label>
+				<div class="col-xs-9">
+					<input pInputText id="krok" type="text" size="20" [(ngModel)]="oldVykazPrace.krok">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="ukol" class="control-label col-xs-3">Úkol</label>
+				<div class="col-xs-9">
+					<input pInputText id="ukol" type="text" size="20" [(ngModel)]="oldVykazPrace.ukol">
+				</div>
+			</div>
+			
+			<hr>
+
+			<div class="form-group">
+				<h4>Nový výkaz</h4>
+			</div>
+			<div class="form-group">
+				<label for="datum" class="control-label col-xs-3">Datum</label>
+				<div class="col-xs-9">
+					<p-calendar id="datum" [(ngModel)]="newVykazPraceDatum" dateFormat="dd.mm.yy"></p-calendar>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="mnozstviOdvedenePrace" class="control-label col-xs-3">Hodin</label>
+				<div class="col-xs-9">
+					<p-calendar id="mnozstviOdvedenePrace" [(ngModel)]="newVykazPraceMnozstviOdvedenePrace"
+						[timeOnly]="true"></p-calendar>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="popis" class="control-label col-xs-3">Popis</label>
+				<div class="col-xs-9">
+					<input pInputText id="popis" type="text" size="45" [(ngModel)]="newVykazPrace.popisPrace">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="zakazka" class="control-label col-xs-3">Zakázka</label>
+				<div class="col-xs-9">
+					<input pInputText id="zakazka" type="text" size="12" [(ngModel)]="newVykazPrace.zakazka">
+					<input pInputText id="zakpol" type="text" size="3" [(ngModel)]="newVykazPrace.polozka">
+					<input pInputText id="zakpoz" type="text" size="3" [(ngModel)]="newVykazPrace.pozice">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="hlaseni" class="control-label col-xs-3">Hlášení</label>
+				<div class="col-xs-9">
+					<input pInputText id="hlaseni" type="text" size="20" [(ngModel)]="newVykazPrace.hlaseni">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="krok" class="control-label col-xs-3">Krok</label>
+				<div class="col-xs-9">
+					<input pInputText id="krok" type="text" size="20" [(ngModel)]="newVykazPrace.krok">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="ukol" class="control-label col-xs-3">Úkol</label>
+				<div class="col-xs-9">
+					<input pInputText id="ukol" type="text" size="20" [(ngModel)]="newVykazPrace.ukol">
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<button pButton type="button" icon="fa-check" label="OK" (click)="onOk()"></button>
+			</div>
+		</div>
+	</div>
+				
+</p-dialog>	
