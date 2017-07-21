@@ -12,68 +12,60 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TemporalType;
 import javax.sql.DataSource;
 
 import org.hibernate.Session;
 
+import com.mysema.query.jpa.JPQLQuery;
+import com.mysema.query.jpa.impl.JPAQuery;
+
 import cz.cca.mojecca.db.imis.model.DenVykazEntity;
-import cz.cca.mojecca.db.imis.model.VykazPraceEntity;
+import cz.cca.mojecca.db.imis.model.DenVykazFilterParameters;
+import cz.cca.mojecca.db.imis.model.QDenVykazEntity;
 
 @Stateless
 public class VykazPraceDAO {
 
-	private final String EMPLOYEE_VYKAZ_PRACES_QUERY = 
-			"select t.datum datum, "
-			+ "       t.mnozstvi_odved mnozstviOdvedenePrace, "
-			+ "       t.poznamka popisPrace, "
-			+ "       t.pozn_hl hlaseni, "
-			+ "       t.pozn_krok krok, "
-			+ "       t.pozn_ukol ukol, "
-			+ "       t.id id,"
-			+ "       t.zc zakazka," + "       t.cpolzak polozka,"
-			+ "       t.cpozzak pozice,"
-			+ "       t.prac pracovnik,"
-			+ "       t.id_firmy_zak organizace,"
-			+ "       t.kodpra kodUzivatele,"
-			+ "       0 odpracovanaDobaVDen"
-			+ "  from den_vykaz t"
-			+ " where datum between :fromDate and :toDate"
-			+ "   and kodpra = :kodpra"
-			+ "   and jednotka = 'H'"
-			+ " order by datum, mnozstvi_odved desc";
-
 	@PersistenceContext(unitName = "imis")
 	private EntityManager entityManager;
-	
-	@Resource(mappedName="java:/imisDS") 
+
+	@Resource(mappedName = "java:/imisDS")
 	private DataSource datasource;
 
-	@SuppressWarnings("unchecked")
-	@TransactionAttribute(TransactionAttributeType.NEVER)
-	public List<VykazPraceEntity> getEmployeeVykazPraces(String kodUzivatele, String icp, Date fromDate, Date toDate) {
-		Query q = entityManager.createNativeQuery(EMPLOYEE_VYKAZ_PRACES_QUERY, VykazPraceEntity.class);
-		q.setParameter("kodpra", kodUzivatele);
-		q.setParameter("fromDate", fromDate, TemporalType.DATE);
-		q.setParameter("toDate", toDate, TemporalType.DATE);
-
-		List<VykazPraceEntity> result = q.getResultList();
-
-		Date lastDate = new Date(0);
-		BigDecimal odpracovanaDobaVDen = null;
-		for (VykazPraceEntity e : result) {
-			if (!e.getDatum().equals(lastDate)) {
-				odpracovanaDobaVDen = getOdpracovanaDobaVDen(icp, e.getDatum());
-			}
-			e.setOdpracovanaDobaVDen(odpracovanaDobaVDen);
-			lastDate = e.getDatum();
+	public List<DenVykazEntity> getVykazPraces(DenVykazFilterParameters params) {
+		
+		QDenVykazEntity denVykaz = new QDenVykazEntity("denVykaz");
+		JPQLQuery query = new JPAQuery(entityManager);
+		
+		query.from(denVykaz);
+		
+		query.where(denVykaz.jednotka.eq("H"));
+		if (params.getKodUzivatele() != null) {
+			query.where(denVykaz.kodpra.eq(params.getKodUzivatele()));
 		}
-
-		return result;
+		if (params.getFromDate() != null) {
+			query.where(denVykaz.datum.goe(params.getFromDate()));
+		}
+		if (params.getToDate() != null) {
+			query.where(denVykaz.datum.loe(params.getToDate()));
+		}
+		if (params.getHlaseni() != null) {
+			query.where(denVykaz.poznHl.eq(params.getHlaseni()));
+		}
+		if (params.getUkol() != null) {
+			query.where(denVykaz.poznUkol.eq(params.getUkol()));
+		}
+		if (params.getKrok() != null) {
+			query.where(denVykaz.poznKrok.eq(params.getKrok()));
+		}
+		
+		query.orderBy(denVykaz.datum.asc(), denVykaz.mnozstviOdved.desc());
+		
+		return query.list(denVykaz);
 	}
 
-	private BigDecimal getOdpracovanaDobaVDen(String icp, Date datum) {
+	@TransactionAttribute(TransactionAttributeType.NEVER)
+	public BigDecimal getOdpracovanoHodVDen(String icp, Date datum) {
 		Session session = entityManager.unwrap(Session.class);
 		BigDecimal result = (BigDecimal) session.doReturningWork(connection -> {
 			try (CallableStatement function = connection.prepareCall("{ ? = call ccap_odpich_doba_den(?, ?, ?) }")) {
@@ -85,7 +77,7 @@ public class VykazPraceDAO {
 				return function.getBigDecimal(1);
 			}
 		});
-		
+
 		return result;
 	}
 
@@ -107,7 +99,7 @@ public class VykazPraceDAO {
 	public DenVykazEntity getDenVykaz(long id) {
 		return entityManager.find(DenVykazEntity.class, id);
 	}
-	
+
 	public void insertDenVykaz(DenVykazEntity denVykazEntity) {
 		entityManager.persist(denVykazEntity);
 	}

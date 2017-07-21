@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 import { ApplicationService } from './application.service';
 import { VykazPrace } from '../model/vykaz-prace';
 import { SplittingVykazPrace } from '../model/splitting-vykaz-prace';
+import { VykazPraceFilterParameters } from '../model/vykaz-prace-filter-parameters';
 
 
 @Injectable()
@@ -21,13 +22,11 @@ export class VykazPraceService {
         return this.applicationService.backendServicesUrl + '/imis/vykazPrace';
     }
 
-    getEmployeeVykazPracesOverview( fromDate: Date, toDate: Date ) {
-        let params: URLSearchParams = new URLSearchParams();
-        params.set( 'kodUzivatele', this.applicationService.kodUzivatele );
-        params.set( 'fromDate', this.datePipe.transform( fromDate, 'MM/dd/yyyy' ) );
-        params.set( 'toDate', this.datePipe.transform( toDate, 'MM/dd/yyyy' ) );
+    getVykazPraces( params: VykazPraceFilterParameters ) {
+        let headers = new Headers( { 'Content-Type': 'application/json' } );
+        let options = new RequestOptions( { headers: headers } );
 
-        return this.http.get( this.getServiceUrl() + "/employeeVykazPraces", { params: params } ).map( res => res.json() );
+        return this.http.post( this.getServiceUrl() + "/vykazPraces", params, options ).map( res => res.json() );
     }
 
     updateVykazPraces( vykazPraces: VykazPrace[] ) {

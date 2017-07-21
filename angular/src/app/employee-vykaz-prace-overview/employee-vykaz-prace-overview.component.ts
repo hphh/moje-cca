@@ -1,35 +1,37 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { VykazPraceService } from '../services/vykaz-prace.service';
+import { ImisKalendarService } from '../services/imis-kalendar.service';
 import { ApplicationService } from '../services/application.service';
 import { ToasterService } from 'angular2-toaster';
 import { VykazPrace } from '../model/vykaz-prace';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
+import { VykazPraceFilterParameters } from '../model/vykaz-prace-filter-parameters';
+import { ImisDay } from '../model/imis-day';
+import { ImisDaysFilterParameters } from '../model/imis-days-filter-parameters';
+
+
 
 @Component( {
     selector: 'app-employee-vykaz-prace-overview',
     templateUrl: './employee-vykaz-prace-overview.component.html',
     styleUrls: ['./employee-vykaz-prace-overview.component.css'],
-    providers: [VykazPraceService]
+    providers: [VykazPraceService, ImisKalendarService]
 } )
 export class EmployeeVykazPraceOverviewComponent implements OnInit {
 
     fromDate: Date = new Date();
     toDate: Date = new Date();
     vykazPraces: VykazPrace[] = [];
-    readingVykazPraces: boolean = false;
-    vykazMenuItems: MenuItem[];
-    selectedVykazPrace: VykazPrace;
+    readingData: boolean = false;
+    imisDays: ImisDay[] = [];
+    selectedDay: ImisDay;
 
     private autoRefreshSubscription: Subscription;
 
-    @ViewChild( 'vykazPraceEditor' ) vykazPraceEditor;
-    @ViewChild( 'vykazPraceSplitter' ) vykazPraceSplitter;
-
-
-
     constructor(
         private vykazPraceService: VykazPraceService,
+        private imisKalendarService: ImisKalendarService,
         private toasterService: ToasterService,
         private applicationService: ApplicationService ) {
 
@@ -37,32 +39,62 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
         this.fromDate.setDate( this.fromDate.getDate() - 2 );
 
         this.toDate = new Date();
-        this.toDate.setDate( this.toDate.getDate() + 365 );
+        this.fromDate.setDate( this.fromDate.getDate() + 10 );
     }
 
     ngOnInit() {
-        this.vykazMenuItems = [
-            { label: 'Upravit', icon: 'fa-pencil-square-o', command: ( event ) => this.editVykazPrace( this.selectedVykazPrace ) },
-            { label: 'Rozdělit', icon: 'fa-scissors', command: ( event ) => this.splitVykazPrace( this.selectedVykazPrace ) }
-        ];
-
-        this.readVykazPraces();
+        this.readImisDays();
         this.refreshAutoRefreshSubscription();
 
 
     }
 
-    readVykazPraces() {
-        this.readingVykazPraces = true;
+    readImisDays() {
+        this.readingData = true;
         this.unsubscribeAutoRefreshSubscription();
-        this.vykazPraceService.getEmployeeVykazPracesOverview( this.fromDate, this.toDate ).subscribe(
+
+        let params = new ImisDaysFilterParameters();
+        params.kodUzivatele = this.applicationService.kodUzivatele;
+        params.fromDate = this.fromDate;
+        params.toDate = this.toDate;
+
+        this.imisKalendarService.getImisDays( params ).subscribe(
             data => {
-                this.readingVykazPraces = false;
+                this.readingData = false;
+                this.refreshAutoRefreshSubscription();
+                this.imisDays = data;
+            },
+            err => {
+                this.readingData = false;
+                this.refreshAutoRefreshSubscription();
+                console.log( 'chyba při čtení imis kalendáře' );
+                console.log( err );
+                this.toasterService.pop( 'error', 'Nedaří se načíst data', null );
+            }
+        );
+    }
+
+    readVykazPraces() {
+        this.readingData = true;
+        this.unsubscribeAutoRefreshSubscription();
+
+        let params = new VykazPraceFilterParameters();
+        params.kodUzivatele = this.applicationService.kodUzivatele;
+        if ( this.fromDate != null ) {
+            params.fromDate = this.fromDate.getTime();
+        }
+        if ( this.toDate != null ) {
+            params.toDate = this.toDate.getTime();
+        }
+
+        this.vykazPraceService.getVykazPraces( params ).subscribe(
+            data => {
+                this.readingData = false;
                 this.vykazPraces = data;
                 this.refreshAutoRefreshSubscription();
             },
             err => {
-                this.readingVykazPraces = false;
+                this.readingData = false;
                 this.refreshAutoRefreshSubscription();
                 console.log( 'chyba při čtení výkazu práce' );
                 console.log( err );
@@ -91,16 +123,8 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
     private refreshAutoRefreshSubscription() {
         this.unsubscribeAutoRefreshSubscription();
         this.autoRefreshSubscription = Observable.interval( 60000 ).subscribe(() => {
-            this.readVykazPraces();
+            this.readImisDays()
         } );
-    }
-
-    private editVykazPrace( vykaz: VykazPrace ) {
-        this.vykazPraceEditor.show( vykaz );
-    }
-
-    private splitVykazPrace( vykaz: VykazPrace ) {
-        this.vykazPraceSplitter.show( vykaz );
     }
 
 }

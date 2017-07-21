@@ -1,9 +1,5 @@
-<p-contextMenu #vykazMenu [model]="vykazMenuItems"></p-contextMenu>
-<app-vykaz-prace-editor #vykazPraceEditor (onSave)="readVykazPraces()"></app-vykaz-prace-editor>
-<app-vykaz-prace-splitter #vykazPraceSplitter (onSave)="readVykazPraces()"></app-vykaz-prace-splitter>
-
 <div style="float: left;">
-	<button pButton (click)="readVykazPraces()" type="text" icon="fa-refresh {{(readingVykazPraces? 'fa-spin': '')}}" 
+	<button pButton (click)="readVykazPraces()" type="text" icon="fa-refresh {{(readingData? 'fa-spin': '')}}" 
 				[disabled]="readingVykazPraces" style="width:40px;"></button>
 </div>
 <div style="float: left;">
@@ -16,6 +12,25 @@
 </div>
 
 <div style="float: left;">
+	<p-dataTable [value]="imisDays"  
+				selectionMode="single" [(selection)]="selectedDay">
+				
+		<p-column field="datum" header="Datum" [style]="{'width':'70px','text-align':'center'}">
+			<ng-template let-col let-vykaz="rowData" pTemplate="body">
+	           	{{vykaz[col.field] | date: 'dd.MM.yyyy'}}
+	       	</ng-template> 
+        </p-column>
+	</p-dataTable>
+</div>
+
+
+
+<div style="float: left;">
+	<app-vykaz-prace-table [vykazPraces]="vykazPraces" ></app-vykaz-prace-table>
+</div>
+
+
+<!-- div style="float: left;">
 	<p-dataTable [value]="vykazPraces" rowGroupMode="subheader" groupField="datum" 
 				expandableRowGroups="true" [sortableRowGroup]="false"
 				[contextMenu]="vykazMenu" 
@@ -44,4 +59,4 @@
 		<p-column field="krok" header="Krok" [style]="{'width':'100px','text-align':'center'}"></p-column>
 		<p-column field="ukol" header="Úkol" [style]="{'width':'100px','text-align':'center'}"></p-column>
 	</p-dataTable>
-</div>
+</div-->

@@ -24,6 +24,7 @@ import { VykazPraceEditorComponent } from './vykaz-prace-editor/vykaz-prace-edit
 import { MnozstviHodPipe } from './converts/mnozstvi-hod.pipe';
 import { ZakazkaPipe } from './converts/zakazka.pipe';
 import { VykazPraceSplitterComponent } from './vykaz-prace-splitter/vykaz-prace-splitter.component';
+import { VykazPraceTableComponent } from './vykaz-prace-table/vykaz-prace-table.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { VykazPraceSplitterComponent } from './vykaz-prace-splitter/vykaz-prace-
     MnozstviHodPipe,
     VykazPraceEditorComponent,
     ZakazkaPipe,
-    VykazPraceSplitterComponent
+    VykazPraceSplitterComponent,
+    VykazPraceTableComponent
   ],
   imports: [
     BrowserAnimationsModule,

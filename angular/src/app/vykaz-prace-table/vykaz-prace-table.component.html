@@ -1,0 +1,28 @@
+<p-contextMenu #vykazMenu [model]="vykazMenuItems"></p-contextMenu>
+<app-vykaz-prace-editor #vykazPraceEditor (onSave)="readVykazPraces()"></app-vykaz-prace-editor>
+<app-vykaz-prace-splitter #vykazPraceSplitter (onSave)="readVykazPraces()"></app-vykaz-prace-splitter>
+
+<p-dataTable [value]="vykazPraces" [contextMenu]="vykazMenu" 
+			selectionMode="single" [(selection)]="selectedVykazPrace"
+			rowGroupMode="subheader" groupField="datum"
+			[sortableRowGroup]="false">
+			
+	<ng-template pTemplate="rowgroupheader" let-rowData>
+		{{rowData['datum'] | date: 'dd.MM.yyyy'}}
+	</ng-template>
+	
+	<p-column field="mnozstviOdvedenePrace" header="hod" [style]="{'width':'70px','text-align':'center'}">
+		<ng-template let-col let-vykaz="rowData" pTemplate="body">
+           	{{vykaz[col.field] | mnozstviHod}}
+       	</ng-template> 
+       </p-column>
+	<p-column field="popisPrace" header="Popis"></p-column>
+	<p-column field="zakazka" header="Zakázka" [style]="{'width':'160px','text-align':'left'}">
+		<ng-template let-col let-vykaz="rowData" pTemplate="body">
+           	{{vykaz | zakazka}}
+       	</ng-template> 
+	</p-column>
+	<p-column field="hlaseni" header="Hlášení" [style]="{'width':'100px','text-align':'center'}"></p-column>
+	<p-column field="krok" header="Krok" [style]="{'width':'100px','text-align':'center'}"></p-column>
+	<p-column field="ukol" header="Úkol" [style]="{'width':'100px','text-align':'center'}"></p-column>
+</p-dataTable>

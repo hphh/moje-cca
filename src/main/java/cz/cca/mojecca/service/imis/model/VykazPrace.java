@@ -17,7 +17,7 @@ public class VykazPrace {
 	private String pracovnik;
 	private String organizace;
 	private String kodUzivatele;
-	private BigDecimal odpracovanaDobaVDen;
+	private String stav;
 	
 	public long getId() {
 		return id;
@@ -97,11 +97,12 @@ public class VykazPrace {
 	public void setKodUzivatele(String kodUzivatele) {
 		this.kodUzivatele = kodUzivatele;
 	}
-	public BigDecimal getOdpracovanaDobaVDen() {
-		return odpracovanaDobaVDen;
+	public String getStav() {
+		return stav;
 	}
-	public void setOdpracovanaDobaVDen(BigDecimal odpracovanaDobaVDen) {
-		this.odpracovanaDobaVDen = odpracovanaDobaVDen;
+	public void setStav(String stav) {
+		this.stav = stav;
 	}
 
+	
 }
