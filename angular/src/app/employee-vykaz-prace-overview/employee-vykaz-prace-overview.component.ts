@@ -26,6 +26,10 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
     readingData: boolean = false;
     imisDays: ImisDay[] = [];
     selectedDay: ImisDay;
+    unsolvedDaysOnly: boolean = true;
+
+    kalendarMenuItems: MenuItem[];
+
 
     private autoRefreshSubscription: Subscription;
 
@@ -36,17 +40,19 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
         private applicationService: ApplicationService ) {
 
         this.fromDate = new Date();
-        this.fromDate.setDate( this.fromDate.getDate() - 2 );
+        this.fromDate.setDate( this.fromDate.getDate() - 30 );
 
         this.toDate = new Date();
-        this.fromDate.setDate( this.fromDate.getDate() + 10 );
+        this.toDate.setDate( this.toDate.getDate() + 30 );
     }
 
     ngOnInit() {
+        this.kalendarMenuItems = [
+            { label: 'Potvrdit výkazy', icon: 'fa-check', command: ( event ) => this.confirmVykazPraces( this.selectedDay ) }
+        ];
+
         this.readImisDays();
         this.refreshAutoRefreshSubscription();
-
-
     }
 
     readImisDays() {
@@ -57,12 +63,14 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
         params.kodUzivatele = this.applicationService.kodUzivatele;
         params.fromDate = this.fromDate;
         params.toDate = this.toDate;
+        params.unsolvedDaysOnly = this.unsolvedDaysOnly;
 
         this.imisKalendarService.getImisDays( params ).subscribe(
             data => {
                 this.readingData = false;
                 this.refreshAutoRefreshSubscription();
                 this.imisDays = data;
+                this.readVykazPraces();
             },
             err => {
                 this.readingData = false;
@@ -75,17 +83,18 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
     }
 
     readVykazPraces() {
+        if ( this.selectedDay == null ) {
+            this.vykazPraces = [];
+            return;
+        }
+
         this.readingData = true;
         this.unsubscribeAutoRefreshSubscription();
 
         let params = new VykazPraceFilterParameters();
         params.kodUzivatele = this.applicationService.kodUzivatele;
-        if ( this.fromDate != null ) {
-            params.fromDate = this.fromDate.getTime();
-        }
-        if ( this.toDate != null ) {
-            params.toDate = this.toDate.getTime();
-        }
+        params.fromDate = this.selectedDay.datum;
+        params.toDate = this.selectedDay.datum;
 
         this.vykazPraceService.getVykazPraces( params ).subscribe(
             data => {
@@ -125,6 +134,28 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
         this.autoRefreshSubscription = Observable.interval( 60000 ).subscribe(() => {
             this.readImisDays()
         } );
+    }
+
+    isToday( date: number ): boolean {
+        let today = new Date();
+        today.setHours( 0, 0, 0, 0 );
+        return date === today.getTime();
+    }
+
+    onDateSelect( imisDay: ImisDay ) {
+        this.readVykazPraces();
+    }
+
+    private confirmVykazPraces( imisDay: ImisDay ) {
+        this.vykazPraceService.confirmVykazPraces( imisDay.datum, imisDay.datum ).subscribe(
+            data => {
+                this.readImisDays();
+            },
+            err => {
+                console.log( 'chyba při potvrzování výkazu práce' );
+                console.log( err );
+                this.toasterService.pop( 'error', 'Nedaří se potvrdit výkazy práce', null );
+            } )
     }
 
 }

@@ -1,6 +1,7 @@
 package cz.cca.mojecca.service.imis.data;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,14 @@ public class KalendarDataAdapter {
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
+		
+		if (result.getVykazanoHod() == null) {
+			result.setVykazanoHod(new BigDecimal(0));
+		}
+		if (result.getOdpracovanoHod() == null) {
+			result.setOdpracovanoHod(new BigDecimal(0));
+		}
+		
 		return result;
 	}
 

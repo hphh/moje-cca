@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import cz.cca.mojecca.service.imis.VykazPraceService;
+import cz.cca.mojecca.service.imis.model.ConfirmVykazPracesParameters;
 import cz.cca.mojecca.service.imis.model.SplittingVykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPracesFilterParameters;
@@ -50,7 +51,14 @@ public class VykazPraceRestService {
 		LOGGER.log(Level.FINE, "Požadavek na rozdělení výkazu práce {0} ", splittingVykazPrace.getOldVykazPrace().getId());
 		
 		vykazPraceService.splitVykazPrace(splittingVykazPrace);
+	}
+	
+	@POST
+	@Path("confirmVykazPraces")
+	public void confirmVykazPraces(ConfirmVykazPracesParameters params) {
+		LOGGER.log(Level.FINE, "Požadavek na potvrzení výkazů práce");
 		
+		vykazPraceService.confirmVykazPraces(params);
 	}
 	
 }

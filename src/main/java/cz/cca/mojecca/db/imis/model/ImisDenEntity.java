@@ -17,6 +17,7 @@ public class ImisDenEntity {
 	private String vykazano;
 	private String pritomen;
 	private BigDecimal vykazanoHod;
+	private String potvrzeno;
 	
 	
 	public Date getDatum() {
@@ -61,8 +62,12 @@ public class ImisDenEntity {
 	public void setVykazanoHod(BigDecimal vykazanoHod) {
 		this.vykazanoHod = vykazanoHod;
 	}
-	
-	
+	public String getPotvrzeno() {
+		return potvrzeno;
+	}
+	public void setPotvrzeno(String potvrzeno) {
+		this.potvrzeno = potvrzeno;
+	}
 	
 
 }

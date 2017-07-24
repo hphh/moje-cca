@@ -30,14 +30,20 @@ public class KalendarDAO {
 			"                and icp = :icp" + 
 			"                and typ not in ('S', 'F')" + 
 			"                and rownum = 1), 'N')) pritomen, " +
+			"       (nvl((select 'N'" + 
+			"               from den_vykaz v" + 
+			"              where v.datum = k.datum" + 
+			"                and v.kodpra = :kodUzivatele" + 
+			"                and v.stav_v = 'V'" + 
+			"                and rownum = 1), 'A')) potvrzeno," + 
 			"       (select sum(v.mnozstvi_odved)" + 
 			"          from den_vykaz v" + 
 			"         where v.datum = k.datum" + 
 			"           and v.kodpra = :kodUzivatele" + 
 			"           and v.jednotka = 'H') vykazanoHod" +
 			"  from ccas_kalendar k" + 
-			" where datum >= :datumOd " +
-			"   and datum <= :datumDo " +
+			" where datum >= trunc(:datumOd) " +
+			"   and datum <= trunc(:datumDo) " +
 			" order by datum";
 	
 	@PersistenceContext(unitName = "imis")
@@ -51,7 +57,8 @@ public class KalendarDAO {
 		q.setParameter("kodUzivatele", kodUzivatele);
 		q.setParameter("icp", icp);
 		
-		return q.getResultList();
+		List<ImisDenEntity> result = q.getResultList();
+		return result;
 
 	}
 

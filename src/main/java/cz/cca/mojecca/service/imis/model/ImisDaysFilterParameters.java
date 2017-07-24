@@ -7,6 +7,7 @@ public class ImisDaysFilterParameters {
 	private String kodUzivatele;
 	private Date fromDate;
 	private Date toDate;
+	private boolean unsolvedDaysOnly;
 	
 	
 	public String getKodUzivatele() {
@@ -26,6 +27,12 @@ public class ImisDaysFilterParameters {
 	}
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
+	}
+	public boolean isUnsolvedDaysOnly() {
+		return unsolvedDaysOnly;
+	}
+	public void setUnsolvedDaysOnly(boolean unsolvedDaysOnly) {
+		this.unsolvedDaysOnly = unsolvedDaysOnly;
 	}
 	
 	

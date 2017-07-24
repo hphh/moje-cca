@@ -16,7 +16,7 @@ public class DenVykazEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "DenVykazEntityIdGenerator", sequenceName = "den_vykaz#id_seq")
+	@SequenceGenerator(name = "DenVykazEntityIdGenerator", sequenceName = "den_vykaz#id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DenVykazEntityIdGenerator")
 	private Long id;
 

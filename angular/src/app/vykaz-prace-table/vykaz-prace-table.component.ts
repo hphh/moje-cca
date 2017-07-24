@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { VykazPrace } from '../model/vykaz-prace';
 import { MenuItem } from 'primeng/primeng';
 
@@ -17,6 +17,9 @@ export class VykazPraceTableComponent implements OnInit {
 
     @Input()
     vykazPraces: VykazPrace[] = [];
+    
+    @Output() onSave: EventEmitter<any> = new EventEmitter();
+  
 
     constructor() { }
 
@@ -34,6 +37,10 @@ export class VykazPraceTableComponent implements OnInit {
 
     private splitVykazPrace( vykaz: VykazPrace ) {
         this.vykazPraceSplitter.show( vykaz );
+    }
+    
+    refreshData() {
+        this.onSave.emit();
     }
 
 }

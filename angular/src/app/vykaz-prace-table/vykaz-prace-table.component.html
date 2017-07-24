@@ -1,6 +1,6 @@
 <p-contextMenu #vykazMenu [model]="vykazMenuItems"></p-contextMenu>
-<app-vykaz-prace-editor #vykazPraceEditor (onSave)="readVykazPraces()"></app-vykaz-prace-editor>
-<app-vykaz-prace-splitter #vykazPraceSplitter (onSave)="readVykazPraces()"></app-vykaz-prace-splitter>
+<app-vykaz-prace-editor #vykazPraceEditor (onSave)="refreshData()"></app-vykaz-prace-editor>
+<app-vykaz-prace-splitter #vykazPraceSplitter (onSave)="refreshData()"></app-vykaz-prace-splitter>
 
 <p-dataTable [value]="vykazPraces" [contextMenu]="vykazMenu" 
 			selectionMode="single" [(selection)]="selectedVykazPrace"

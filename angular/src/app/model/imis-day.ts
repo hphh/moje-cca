@@ -1,6 +1,6 @@
 export class ImisDay {
     
-    datum: Date;
+    datum: number;
     druhDne: string;
     svatek: string;
     vyrobniDen: string;
@@ -8,5 +8,6 @@ export class ImisDay {
     pritomen: string;
     odpracovanoHod: number;
     vykazanoHod: number;
+    potvrzeno: string;
     
 }

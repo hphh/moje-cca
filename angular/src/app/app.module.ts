@@ -14,7 +14,8 @@ import {
     ButtonModule,
     TooltipModule,
     CalendarModule,
-    ContextMenuModule
+    ContextMenuModule,
+    CheckboxModule
     } from 'primeng/primeng';
     
 import { ToasterModule, ToasterService } from 'angular2-toaster';   
@@ -25,6 +26,7 @@ import { MnozstviHodPipe } from './converts/mnozstvi-hod.pipe';
 import { ZakazkaPipe } from './converts/zakazka.pipe';
 import { VykazPraceSplitterComponent } from './vykaz-prace-splitter/vykaz-prace-splitter.component';
 import { VykazPraceTableComponent } from './vykaz-prace-table/vykaz-prace-table.component';
+import { VykazyNaUkolComponent } from './vykazy-na-ukol/vykazy-na-ukol.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import { VykazPraceTableComponent } from './vykaz-prace-table/vykaz-prace-table.
     VykazPraceEditorComponent,
     ZakazkaPipe,
     VykazPraceSplitterComponent,
-    VykazPraceTableComponent
+    VykazPraceTableComponent,
+    VykazyNaUkolComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -50,7 +53,8 @@ import { VykazPraceTableComponent } from './vykaz-prace-table/vykaz-prace-table.
     ToasterModule,
     TooltipModule,
     CalendarModule,
-    ContextMenuModule
+    ContextMenuModule,
+    CheckboxModule
   ],
   providers: [DatePipe, DecimalPipe],
   bootstrap: [AppComponent]

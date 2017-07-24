@@ -7,6 +7,7 @@ import { ApplicationService } from './application.service';
 import { VykazPrace } from '../model/vykaz-prace';
 import { SplittingVykazPrace } from '../model/splitting-vykaz-prace';
 import { VykazPraceFilterParameters } from '../model/vykaz-prace-filter-parameters';
+import { ConfirmVykazPracesParameters } from '../model/confirm-vykaz-praces-parameters';
 
 
 @Injectable()
@@ -46,5 +47,17 @@ export class VykazPraceService {
 
         return this.http.post( this.getServiceUrl() + "/splitVykazPrace", splittingVykazPrace, options ).map( res => res.json() );
     }
+    
+    confirmVykazPraces( fromDate: number, toDate: number ) {
+        let headers = new Headers( { 'Content-Type': 'application/json' } );
+        let options = new RequestOptions( { headers: headers } );
+        
+        let params = new ConfirmVykazPracesParameters();
+        params.fromDate = fromDate;
+        params.toDate = toDate;
+        params.kodUzivatele = this.applicationService.kodUzivatele;
+
+        return this.http.post( this.getServiceUrl() + "/confirmVykazPraces", params, options ).map( res => res.json() );
+    }    
 
 }

@@ -13,6 +13,7 @@ public class ImisDay {
 	private String pritomen;
 	private BigDecimal odpracovanoHod;
 	private BigDecimal vykazanoHod;
+	private String potvrzeno;
 	
 	
 	public Date getDatum() {
@@ -62,6 +63,12 @@ public class ImisDay {
 	}
 	public void setVykazanoHod(BigDecimal vykazanoHod) {
 		this.vykazanoHod = vykazanoHod;
+	}
+	public String getPotvrzeno() {
+		return potvrzeno;
+	}
+	public void setPotvrzeno(String potvrzeno) {
+		this.potvrzeno = potvrzeno;
 	}	
 	
 	

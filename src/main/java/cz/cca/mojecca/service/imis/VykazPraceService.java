@@ -1,6 +1,7 @@
 package cz.cca.mojecca.service.imis;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,7 +13,9 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import cz.cca.mojecca.db.imis.VykazPraceDAO;
 import cz.cca.mojecca.db.imis.model.DenVykazEntity;
+import cz.cca.mojecca.db.imis.model.DenVykazFilterParameters;
 import cz.cca.mojecca.service.imis.data.VykazPraceDataAdapter;
+import cz.cca.mojecca.service.imis.model.ConfirmVykazPracesParameters;
 import cz.cca.mojecca.service.imis.model.SplittingVykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPracesFilterParameters;
@@ -66,5 +69,28 @@ public class VykazPraceService {
 		vykazPraceDAO.updateDenVykaz(oldDenVykazEntity);
 		vykazPraceDAO.insertDenVykaz(newDenVykazEntity);
 	}
+	
+	public void confirmVykazPraces(ConfirmVykazPracesParameters params) {
+		DenVykazFilterParameters pars = new DenVykazFilterParameters();
+		pars.setFromDate(new Date(params.getFromDate()));
+		pars.setToDate(new Date(params.getToDate()));
+		pars.setKodUzivatele(params.getKodUzivatele());
+		
+		List<DenVykazEntity> denVykazEntities = vykazPraceDAO.getVykazPraces(pars);
+		
+		if (denVykazEntities == null) {
+			return;
+		}
+		
+		denVykazEntities.forEach(entity -> {
+			if (!"V".equals(entity.getStavV())) {
+				return;
+			}
+			entity.setStavV("P");
+		});
+		
+		vykazPraceDAO.updateDenVykazs(denVykazEntities);			
+	}
+	
 
 }
