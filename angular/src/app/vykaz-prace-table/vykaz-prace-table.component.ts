@@ -14,12 +14,31 @@ export class VykazPraceTableComponent implements OnInit {
 
     @ViewChild( 'vykazPraceEditor' ) vykazPraceEditor;
     @ViewChild( 'vykazPraceSplitter' ) vykazPraceSplitter;
+    @ViewChild( 'vykazyNaUkol' ) vykazyNaUkol;
 
     @Input()
     vykazPraces: VykazPrace[] = [];
+
+    @Input()
+    disableVykazyNaUkol: boolean = false;
+    
+    @Input()
+    showKodUzivatele: boolean = false;
+    
+    @Input()
+    datumMode: string = 'group'; //group/show/hide
+    
+    @Input()
+    hideUkol: boolean = false;
+
+    @Input()
+    hideKrok: boolean = false;
+
+    @Input()
+    hideHlaseni: boolean = false;
     
     @Output() onSave: EventEmitter<any> = new EventEmitter();
-  
+
 
     constructor() { }
 
@@ -28,6 +47,12 @@ export class VykazPraceTableComponent implements OnInit {
             { label: 'Upravit', icon: 'fa-pencil-square-o', command: ( event ) => this.editVykazPrace( this.selectedVykazPrace ) },
             { label: 'Rozdělit', icon: 'fa-scissors', command: ( event ) => this.splitVykazPrace( this.selectedVykazPrace ) }
         ];
+
+        if ( !this.disableVykazyNaUkol ) {
+            this.vykazMenuItems.push(
+                { label: 'Výkazy na úkol', icon: 'fa-list', command: ( event ) => this.showVykazyNaUkol( this.selectedVykazPrace ) }
+            );
+        }
 
     }
 
@@ -38,9 +63,17 @@ export class VykazPraceTableComponent implements OnInit {
     private splitVykazPrace( vykaz: VykazPrace ) {
         this.vykazPraceSplitter.show( vykaz );
     }
-    
+
     refreshData() {
         this.onSave.emit();
+    }
+
+    private showVykazyNaUkol( vykaz: VykazPrace ) {
+        if ( vykaz.ukol == null ) {
+            return;
+        }
+
+        this.vykazyNaUkol.show( vykaz.ukol );
     }
 
 }

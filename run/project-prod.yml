@@ -9,6 +9,14 @@ swarm:
         jndi-name: java:/imisDS
         check-valid-connection-sql: select 1 from dual
         new-connection-sql: set role ccaps_plny_pristup
+      iszaDS:
+        driver-name: oracle
+        connection-url: jdbc:oracle:thin:@dbs031:1521:oracase
+        user-name: her
+        password: hph
+        jndi-name: java:/iszaDS
+        check-valid-connection-sql: select 1 from dual
+        new-connection-sql: set role ccasp_hap001f
   http:
     port: 81 
   logging:

@@ -3,5 +3,9 @@
 	<persistence-unit name="imis">
 		<jta-data-source>imisDS</jta-data-source>
 		<class>cz.cca.mojecca.db.imis.model.DenVykazEntity</class>
+		<class>cz.cca.mojecca.db.isza.model.CcagUkol</class>
+	</persistence-unit>
+	<persistence-unit name="isza">
+		<jta-data-source>iszaDS</jta-data-source>
 	</persistence-unit>
 </persistence>

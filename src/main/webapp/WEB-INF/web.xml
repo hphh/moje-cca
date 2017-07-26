@@ -5,6 +5,10 @@
 	version="3.1">
 
 	<display-name>Restuju-web</display-name>
+	
+	<listener>
+		<listener-class>cz.cca.mojecca.init.ApplicationInit</listener-class>
+	</listener>
 
 	<servlet>
 		<servlet-name>javax.ws.rs.core.Application</servlet-name>

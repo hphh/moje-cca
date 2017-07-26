@@ -1,4 +1,4 @@
-package cz.cca.mojecca.web.rest;
+package cz.cca.mojecca.web.rest.imis;
 
 import java.util.List;
 import java.util.logging.Level;
