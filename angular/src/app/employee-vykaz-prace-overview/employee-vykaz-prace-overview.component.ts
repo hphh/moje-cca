@@ -68,8 +68,23 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
         this.imisKalendarService.getImisDays( params ).subscribe(
             data => {
                 this.readingData = false;
-                this.refreshAutoRefreshSubscription();
+
                 this.imisDays = data;
+
+                var selectedDate: number;
+                if (this.selectedDay) {
+                    selectedDate = this.selectedDay.datum;
+                }
+                if ( this.imisDays.length > 0 ) {
+                    this.selectedDay = this.imisDays[0];
+                    this.imisDays.forEach( value => {
+                        if ( (selectedDate && selectedDate === value.datum) || 
+                                (!selectedDate && this.isToday( value.datum )) ) {
+                            this.selectedDay = value;
+                        }
+                    });
+                }
+                
                 this.readVykazPraces();
             },
             err => {

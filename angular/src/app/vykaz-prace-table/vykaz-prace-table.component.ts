@@ -21,13 +21,13 @@ export class VykazPraceTableComponent implements OnInit {
 
     @Input()
     disableVykazyNaUkol: boolean = false;
-    
+
     @Input()
     showKodUzivatele: boolean = false;
-    
+
     @Input()
     datumMode: string = 'group'; //group/show/hide
-    
+
     @Input()
     hideUkol: boolean = false;
 
@@ -36,24 +36,30 @@ export class VykazPraceTableComponent implements OnInit {
 
     @Input()
     hideHlaseni: boolean = false;
-    
+
+    @Input()
+    disableEdit: boolean = false;
+
     @Output() onSave: EventEmitter<any> = new EventEmitter();
 
 
     constructor() { }
 
     ngOnInit() {
-        this.vykazMenuItems = [
-            { label: 'Upravit', icon: 'fa-pencil-square-o', command: ( event ) => this.editVykazPrace( this.selectedVykazPrace ) },
-            { label: 'Rozdělit', icon: 'fa-scissors', command: ( event ) => this.splitVykazPrace( this.selectedVykazPrace ) }
-        ];
+        this.vykazMenuItems = [];
+        if ( !this.disableEdit ) {
+            this.vykazMenuItems.push(
+                { label: 'Upravit', icon: 'fa-pencil-square-o', command: ( event ) => this.editVykazPrace( this.selectedVykazPrace ) },
+                { label: 'Rozdělit', icon: 'fa-scissors', command: ( event ) => this.splitVykazPrace( this.selectedVykazPrace ) }
+            );
+        }
 
         if ( !this.disableVykazyNaUkol ) {
             this.vykazMenuItems.push(
                 { label: 'Výkazy na úkol', icon: 'fa-list', command: ( event ) => this.showVykazyNaUkol( this.selectedVykazPrace ) }
             );
         }
-
+        
     }
 
     private editVykazPrace( vykaz: VykazPrace ) {
