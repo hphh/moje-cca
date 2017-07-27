@@ -1,26 +1,28 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';
 import { ApplicationService } from './application.service';
-import { DatePipe } from '@angular/common';
 import { ImisDaysFilterParameters } from '../model/imis-days-filter-parameters';
+import { CallBackendService } from './call-backend.service';
+import { ImisDay } from '../model/imis-day';
+
 
 @Injectable()
 export class ImisKalendarService {
 
-    constructor(
-        private http: Http,
-        private applicationService: ApplicationService,
-        private datePipe: DatePipe ) {
+    private readonly ROOT_PATH = '/imis/kalendar';
+
+
+    constructor( private callBackendService: CallBackendService ) {
     }
 
-    private getServiceUrl() {
-        return this.applicationService.backendServicesUrl + '/imis/kalendar';
-    }
+    getImisDays(
+        params: ImisDaysFilterParameters,
+        successCallback?: ( data: ImisDay[] ) => void,
+        finishCallback?: ( success: boolean ) => void ): void {
 
-    getImisDays( params: ImisDaysFilterParameters ) {
-        let headers = new Headers( { 'Content-Type': 'application/json' } );
-        let options = new RequestOptions( { headers: headers } );
-
-        return this.http.post( this.getServiceUrl() + "/imisDays", params, options ).map( res => res.json() );
+        this.callBackendService.post(
+            this.ROOT_PATH + '/imisDays',
+            params,
+            successCallback,
+            finishCallback );
     }
 }

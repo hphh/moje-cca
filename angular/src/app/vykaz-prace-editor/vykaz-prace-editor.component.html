@@ -19,6 +19,7 @@
 				<div class="col-xs-9">
 					<p-calendar id="mnozstviOdvedenePrace" [(ngModel)]="vykazPraceMnozstviOdvedenePrace"
 						[timeOnly]="true"></p-calendar>
+					<button pButton type="button" label="Vyplň den" icon="fa-hourglass" (click)="mnozstviOdvedenePraceFillDay()"></button>	
 				</div>
 			</div>
 			<div class="form-group">

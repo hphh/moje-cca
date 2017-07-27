@@ -27,6 +27,7 @@ import { ZakazkaPipe } from './converts/zakazka.pipe';
 import { VykazPraceSplitterComponent } from './vykaz-prace-splitter/vykaz-prace-splitter.component';
 import { VykazPraceTableComponent } from './vykaz-prace-table/vykaz-prace-table.component';
 import { VykazyNaUkolComponent } from './vykazy-na-ukol/vykazy-na-ukol.component';
+import { VykazPraceEditFormComponent } from './vykaz-prace-edit-form/vykaz-prace-edit-form.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { VykazyNaUkolComponent } from './vykazy-na-ukol/vykazy-na-ukol.component
     ZakazkaPipe,
     VykazPraceSplitterComponent,
     VykazPraceTableComponent,
-    VykazyNaUkolComponent
+    VykazyNaUkolComponent,
+    VykazPraceEditFormComponent
   ],
   imports: [
     BrowserAnimationsModule,

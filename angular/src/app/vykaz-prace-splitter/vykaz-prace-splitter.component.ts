@@ -51,20 +51,18 @@ export class VykazPraceSplitterComponent implements OnInit {
 
     onOk() {
         this.oldVykazPrace.datum = this.oldVykazPraceDatum.getTime();
-        this.oldVykazPrace.mnozstviOdvedenePrace = DataConvertor.dateToMnozstviHodToDate( this.oldVykazPraceMnozstviOdvedenePrace );
+        this.oldVykazPrace.mnozstviOdvedenePrace = DataConvertor.toMnozstviHod( this.oldVykazPraceMnozstviOdvedenePrace );
 
         this.newVykazPrace.datum = this.newVykazPraceDatum.getTime();
-        this.newVykazPrace.mnozstviOdvedenePrace = DataConvertor.dateToMnozstviHodToDate( this.newVykazPraceMnozstviOdvedenePrace );
+        this.newVykazPrace.mnozstviOdvedenePrace = DataConvertor.toMnozstviHod( this.newVykazPraceMnozstviOdvedenePrace );
 
-        this.vykazPraceService.splitVykazPrace( this.oldVykazPrace, this.newVykazPrace ).subscribe(
-            data => {
-                this.dialogVisible = false;
-                this.onSave.emit();
-            },
-            err => {
-                console.log( 'chyba při rozdělování výkazu' );
-                console.log( err );
-                this.toasterService.pop( 'error', 'Nedaří se zpracovat požadavek', null );
+        this.vykazPraceService.splitVykazPrace( this.oldVykazPrace, this.newVykazPrace,
+            () => { },
+            success => {
+                if ( success ) {
+                    this.dialogVisible = false;
+                    this.onSave.emit();
+                }
             }
         );
     }

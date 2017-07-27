@@ -65,34 +65,31 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
         params.toDate = this.toDate;
         params.unsolvedDaysOnly = this.unsolvedDaysOnly;
 
-        this.imisKalendarService.getImisDays( params ).subscribe(
+        this.imisKalendarService.getImisDays( params,
             data => {
                 this.readingData = false;
 
                 this.imisDays = data;
 
                 var selectedDate: number;
-                if (this.selectedDay) {
+                if ( this.selectedDay ) {
                     selectedDate = this.selectedDay.datum;
                 }
                 if ( this.imisDays.length > 0 ) {
                     this.selectedDay = this.imisDays[0];
                     this.imisDays.forEach( value => {
-                        if ( (selectedDate && selectedDate === value.datum) || 
-                                (!selectedDate && this.isToday( value.datum )) ) {
+                        if ( ( selectedDate && selectedDate === value.datum ) ||
+                            ( !selectedDate && this.isToday( value.datum ) ) ) {
                             this.selectedDay = value;
                         }
-                    });
+                    } );
                 }
-                
+
                 this.readVykazPraces();
             },
-            err => {
+            success => {
                 this.readingData = false;
                 this.refreshAutoRefreshSubscription();
-                console.log( 'chyba při čtení imis kalendáře' );
-                console.log( err );
-                this.toasterService.pop( 'error', 'Nedaří se načíst data', null );
             }
         );
     }
@@ -111,18 +108,15 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
         params.fromDate = this.selectedDay.datum;
         params.toDate = this.selectedDay.datum;
 
-        this.vykazPraceService.getVykazPraces( params ).subscribe(
+        this.vykazPraceService.getVykazPraces( params,
             data => {
                 this.readingData = false;
                 this.vykazPraces = data;
                 this.refreshAutoRefreshSubscription();
             },
-            err => {
+            success => {
                 this.readingData = false;
                 this.refreshAutoRefreshSubscription();
-                console.log( 'chyba při čtení výkazu práce' );
-                console.log( err );
-                this.toasterService.pop( 'error', 'Nedaří se načíst data', null );
             } )
     }
 
@@ -162,14 +156,9 @@ export class EmployeeVykazPraceOverviewComponent implements OnInit {
     }
 
     private confirmVykazPraces( imisDay: ImisDay ) {
-        this.vykazPraceService.confirmVykazPraces( imisDay.datum, imisDay.datum ).subscribe(
-            data => {
+        this.vykazPraceService.confirmVykazPraces( imisDay.datum, imisDay.datum,
+            () => {
                 this.readImisDays();
-            },
-            err => {
-                console.log( 'chyba při potvrzování výkazu práce' );
-                console.log( err );
-                this.toasterService.pop( 'error', 'Nedaří se potvrdit výkazy práce', null );
             } )
     }
 

@@ -22,10 +22,10 @@ export class VykazyNaUkolComponent implements OnInit {
     sumVykazano: number = 0;
     pracnostUkolu: number = 0;
 
-    constructor( 
-            private vykazPraceService: VykazPraceService, 
-            private ukolService: UkolService,
-            private toasterService: ToasterService ) { }
+    constructor(
+        private vykazPraceService: VykazPraceService,
+        private ukolService: UkolService,
+        private toasterService: ToasterService ) { }
 
     ngOnInit() {
     }
@@ -33,59 +33,49 @@ export class VykazyNaUkolComponent implements OnInit {
     private readVykazPraces() {
         let params = new VykazPraceFilterParameters();
         params.ukol = this.ukol;
-        
-        this.vykazPraceService.getVykazPraces( params ).subscribe(
+
+        this.vykazPraceService.getVykazPraces( params,
             data => {
                 this.vykazPraces = data;
                 this.sumVykazano = 0;
-                this.vykazPraces.forEach(value => {
-                   this.sumVykazano += value.mnozstviOdvedenePrace; 
-                });
-            },
-            err => {
-                console.log( 'chyba při čtení dat' );
-                console.log( err );
-                this.toasterService.pop( 'error', 'Nedaří se načíst data', null );
+                this.vykazPraces.forEach( value => {
+                    this.sumVykazano += value.mnozstviOdvedenePrace;
+                } );
             }
         );
-        
+
         this.readPracnostUkolu();
     }
-    
+
     private readPracnostUkolu() {
         this.pracnostUkolu = 0;
-        
-        if (this.ukol == null) {
+
+        if ( this.ukol == null ) {
             return;
         }
-        
+
         let params = new UkolFilterParameters();
-        let cisloRok = DataConvertor.toCisloRok(this.ukol);
-        
-        if (cisloRok == null) {
+        let cisloRok = DataConvertor.toCisloRok( this.ukol );
+
+        if ( cisloRok == null ) {
             return;
         }
-        
+
         params.cisloUkolu = cisloRok.cislo;
         params.rokUkolu = cisloRok.rok;
-        
-        this.ukolService.getUkols( params ).subscribe(
-                data => {
-                    let ukols: Ukol[] = data;
-                    if ((ukols == null) || (ukols.length == 0)) {
-                        this.pracnostUkolu = 0;
-                        console.log( 'nenalezen úkol ' + this.ukol );
-                        this.toasterService.pop( 'error', 'Nenalezen úkol ' + this.ukol, null );
-                        return;
-                    } 
-                    this.pracnostUkolu = ukols[0].pracnostPlan;
-                },
-                err => {
-                    console.log( 'chyba při čtení úkolu' );
-                    console.log( err );
-                    this.toasterService.pop( 'error', 'Nedaří se načíst úkol', null );
+
+        this.ukolService.getUkols( params,
+            data => {
+                let ukols: Ukol[] = data;
+                if ( ( ukols == null ) || ( ukols.length == 0 ) ) {
+                    this.pracnostUkolu = 0;
+                    console.log( 'nenalezen úkol ' + this.ukol );
+                    this.toasterService.pop( 'error', 'Nenalezen úkol ' + this.ukol, null );
+                    return;
                 }
-            );        
+                this.pracnostUkolu = ukols[0].pracnostPlan;
+            }
+        );
     }
 
     @Input()

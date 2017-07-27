@@ -1,63 +1,79 @@
 import { Injectable } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { ApplicationService } from './application.service';
 import { VykazPrace } from '../model/vykaz-prace';
 import { SplittingVykazPrace } from '../model/splitting-vykaz-prace';
 import { VykazPraceFilterParameters } from '../model/vykaz-prace-filter-parameters';
 import { ConfirmVykazPracesParameters } from '../model/confirm-vykaz-praces-parameters';
+import { CallBackendService } from './call-backend.service';
 
 
 @Injectable()
 export class VykazPraceService {
 
+    private readonly ROOT_PATH = '/imis/vykazPrace';
+
     constructor(
-        private http: Http,
-        private applicationService: ApplicationService,
-        private datePipe: DatePipe ) {
+        private callBackendService: CallBackendService,
+        private applicationService: ApplicationService ) {
     }
 
-    private getServiceUrl() {
-        return this.applicationService.backendServicesUrl + '/imis/vykazPrace';
+    getVykazPraces(
+        params: VykazPraceFilterParameters,
+        successCallback?: ( data: VykazPrace[] ) => void,
+        finishCallback?: ( success: boolean ) => void ): void {
+
+        this.callBackendService.post(
+            this.ROOT_PATH + '/vykazPraces',
+            params,
+            successCallback,
+            finishCallback );
     }
 
-    getVykazPraces( params: VykazPraceFilterParameters ) {
-        let headers = new Headers( { 'Content-Type': 'application/json' } );
-        let options = new RequestOptions( { headers: headers } );
+    updateVykazPraces( vykazPraces: VykazPrace[],
+        successCallback?: () => void,
+        finishCallback?: ( success: boolean ) => void ): void {
 
-        return this.http.post( this.getServiceUrl() + "/vykazPraces", params, options ).map( res => res.json() );
+        this.callBackendService.post(
+            this.ROOT_PATH + '/updateVykazPraces',
+            vykazPraces,
+            successCallback,
+            finishCallback );
+
     }
 
-    updateVykazPraces( vykazPraces: VykazPrace[] ) {
-        let headers = new Headers( { 'Content-Type': 'application/json' } );
-        let options = new RequestOptions( { headers: headers } );
+    splitVykazPrace(
+        oldVykazPrace: VykazPrace, newVykazPrace: VykazPrace,
+        successCallback?: () => void,
+        finishCallback?: ( success: boolean ) => void ): void {
 
-        return this.http.post( this.getServiceUrl() + "/updateVykazPraces", vykazPraces, options ).map( res => res.json() );
-    }
-    
-    splitVykazPrace( oldVykazPrace: VykazPrace, newVykazPrace: VykazPrace ) {
-        let headers = new Headers( { 'Content-Type': 'application/json' } );
-        let options = new RequestOptions( { headers: headers } );
-        
         let splittingVykazPrace = new SplittingVykazPrace();
         splittingVykazPrace.oldVykazPrace = oldVykazPrace;
         splittingVykazPrace.newVykazPrace = newVykazPrace;
 
-        return this.http.post( this.getServiceUrl() + "/splitVykazPrace", splittingVykazPrace, options ).map( res => res.json() );
+        this.callBackendService.post(
+            this.ROOT_PATH + '/splitVykazPrace',
+            splittingVykazPrace,
+            successCallback,
+            finishCallback );
+
     }
-    
-    confirmVykazPraces( fromDate: number, toDate: number ) {
-        let headers = new Headers( { 'Content-Type': 'application/json' } );
-        let options = new RequestOptions( { headers: headers } );
-        
+
+    confirmVykazPraces( 
+            fromDate: number, toDate: number,
+            successCallback?: () => void,
+            finishCallback?: ( success: boolean ) => void): void {
+
         let params = new ConfirmVykazPracesParameters();
         params.fromDate = fromDate;
         params.toDate = toDate;
         params.kodUzivatele = this.applicationService.kodUzivatele;
-
-        return this.http.post( this.getServiceUrl() + "/confirmVykazPraces", params, options ).map( res => res.json() );
-    }    
+        
+        this.callBackendService.post(
+                this.ROOT_PATH + '/confirmVykazPraces',
+                params,
+                successCallback,
+                finishCallback );
+    }
 
 }

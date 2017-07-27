@@ -13,7 +13,6 @@ export class VykazPrace {
     pracovnik: string;
     organizace: string;
     kodUzivatele: string;
-    odpracovanaDobaVDen: number;
     stav: string;
 
 }

@@ -8,7 +8,7 @@ export class DataConvertor {
         return result;
     }
     
-    static dateToMnozstviHodToDate(date: Date): number {
+    static toMnozstviHod(date: Date): number {
         return date.getHours() + (date.getMinutes() / 60);
     }
     

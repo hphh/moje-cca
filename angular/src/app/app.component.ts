@@ -1,13 +1,14 @@
 import { Component, ElementRef } from '@angular/core';
 import { ApplicationService } from './services/application.service';
 import { ToasterService, ToasterConfig } from 'angular2-toaster';
+import { CallBackendService } from './services/call-backend.service';
 
 
 @Component( {
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    providers: [ApplicationService]
+    providers: [ApplicationService, CallBackendService]
 } )
 export class AppComponent {
     

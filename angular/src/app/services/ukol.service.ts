@@ -1,22 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';
 import { UkolFilterParameters } from '../model/ukol-filter-parameters';
-import { ApplicationService } from './application.service';
+import { CallBackendService } from './call-backend.service';
+import { Ukol } from '../model/ukol';
 
 @Injectable()
 export class UkolService {
 
-    constructor(
-        private http: Http,
-        private applicationService: ApplicationService ) { }
+    private readonly ROOT_PATH = '/isza/ukol';
 
-    private getServiceUrl() {
-        return this.applicationService.backendServicesUrl + '/isza/ukol';
-    }
+    constructor( private callBackendService: CallBackendService ) { }
 
-    getUkols( params: UkolFilterParameters ) {
-        let headers = new Headers( { 'Content-Type': 'application/json' } );
-        let options = new RequestOptions( { headers: headers } );
-        return this.http.post( this.getServiceUrl() + "/ukols", params, options ).map( res => res.json() );
+    getUkols( params: UkolFilterParameters,
+        successCallback?: ( data: Ukol[] ) => void,
+        finishCallback?: ( success: boolean ) => void ): void {
+
+        this.callBackendService.post(
+            this.ROOT_PATH + '/ukols',
+            params,
+            successCallback,
+            finishCallback );
+
     }
 }
