@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { VykazPrace } from '../model/vykaz-prace';
 import { VykazPraceService } from '../services/vykaz-prace.service';
 import { ToasterService } from 'angular2-toaster';
 import { DataConvertor } from '../converts/data-convertor';
+import { VykazPraceEditFormComponent } from '../vykaz-prace-edit-form/vykaz-prace-edit-form.component';
 
 
 @Component( {
@@ -14,14 +15,8 @@ export class VykazPraceSplitterComponent implements OnInit {
 
     dialogVisible: boolean = false;
 
-    oldVykazPrace: VykazPrace = new VykazPrace();
-    oldVykazPraceDatum: Date;
-    oldVykazPraceMnozstviOdvedenePrace: Date;
-
-    newVykazPrace: VykazPrace = new VykazPrace();
-    newVykazPraceDatum: Date;
-    newVykazPraceMnozstviOdvedenePrace: Date;
-
+    @ViewChild( 'oldEditForm' ) oldEditForm: VykazPraceEditFormComponent;
+    @ViewChild( 'newEditForm' ) newEditForm: VykazPraceEditFormComponent;
 
     @Output() onSave: EventEmitter<any> = new EventEmitter();
 
@@ -38,25 +33,21 @@ export class VykazPraceSplitterComponent implements OnInit {
             return;
         }
 
+        this.oldEditForm.show( vykazPrace );
+
+        let newVykazPrace = Object.assign( {}, vykazPrace );
+        newVykazPrace.mnozstviOdvedenePrace = 0;
+        this.newEditForm.show( newVykazPrace );
+
         this.dialogVisible = true;
-
-        this.oldVykazPrace = Object.assign( {}, vykazPrace );
-        this.oldVykazPraceMnozstviOdvedenePrace = DataConvertor.mnozstviHodToDate( this.oldVykazPrace.mnozstviOdvedenePrace );
-        this.oldVykazPraceDatum = new Date( this.oldVykazPrace.datum );
-
-        this.newVykazPrace = Object.assign( {}, vykazPrace );
-        this.newVykazPraceMnozstviOdvedenePrace = DataConvertor.mnozstviHodToDate( 0 );
-        this.newVykazPraceDatum = new Date( this.newVykazPrace.datum );
     }
 
     onOk() {
-        this.oldVykazPrace.datum = this.oldVykazPraceDatum.getTime();
-        this.oldVykazPrace.mnozstviOdvedenePrace = DataConvertor.toMnozstviHod( this.oldVykazPraceMnozstviOdvedenePrace );
+        let oldVykazPrace = this.oldEditForm.getVykazPrace();
+        let newVykazPrace = this.newEditForm.getVykazPrace();
 
-        this.newVykazPrace.datum = this.newVykazPraceDatum.getTime();
-        this.newVykazPrace.mnozstviOdvedenePrace = DataConvertor.toMnozstviHod( this.newVykazPraceMnozstviOdvedenePrace );
-
-        this.vykazPraceService.splitVykazPrace( this.oldVykazPrace, this.newVykazPrace,
+        this.vykazPraceService.splitVykazPrace(
+            oldVykazPrace, newVykazPrace,
             () => { },
             success => {
                 if ( success ) {

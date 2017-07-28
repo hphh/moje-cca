@@ -19,7 +19,6 @@ export class VykazPraceEditFormComponent implements OnInit {
     vykazPrace: VykazPrace = new VykazPrace();
     vykazPraceDatum: Date;
     vykazPraceMnozstviOdvedenePrace: Date;
-    vykazPraceOriginal: VykazPrace;
 
 
     constructor(
@@ -40,8 +39,53 @@ export class VykazPraceEditFormComponent implements OnInit {
         this.vykazPrace = Object.assign( {}, vykazPrace );
         this.vykazPraceDatum = new Date( this.vykazPrace.datum );
         this.vykazPraceMnozstviOdvedenePrace = DataConvertor.mnozstviHodToDate( this.vykazPrace.mnozstviOdvedenePrace );
-        this.vykazPraceOriginal = vykazPrace;
-
     }
+    
+    mnozstviOdvedenePraceFillDay() {
+        let params = new VykazPraceFilterParameters();
+        params.fromDate = this.vykazPrace.datum;
+        params.toDate = this.vykazPrace.datum;
+        params.kodUzivatele = this.applicationService.kodUzivatele;
+
+        this.vykazPraceService.getVykazPraces( params,
+            data => {
+                let vyks: VykazPrace[] = data;
+                let sumVyks = vyks.filter( value => value.id !== this.vykazPrace.id ).map( value => value.mnozstviOdvedenePrace ).reduce(( previousValue, currentValue ) => {
+                    return previousValue + currentValue;
+                } );
+
+                let params = new ImisDaysFilterParameters();
+                params.fromDate = new Date( this.vykazPrace.datum );
+                params.toDate = new Date( this.vykazPrace.datum );
+                params.kodUzivatele = this.applicationService.kodUzivatele;
+                params.unsolvedDaysOnly = false;
+
+                this.imisKalendarService.getImisDays( params, 
+                    data => {
+                        let days: ImisDay[] = data;
+
+                        var odprac = 0;
+                        if ( days && ( days.length > 0 ) ) {
+                            odprac = days[0].odpracovanoHod;
+                        }
+
+                        if ( odprac - sumVyks < 0 ) {
+                            return;
+                        }
+
+                        this.vykazPraceMnozstviOdvedenePrace = DataConvertor.mnozstviHodToDate( odprac - sumVyks );
+                    }
+                );
+
+            }
+        );
+    }
+    
+    public getVykazPrace(): VykazPrace {
+        this.vykazPrace.datum = this.vykazPraceDatum.getTime();
+        this.vykazPrace.mnozstviOdvedenePrace = DataConvertor.toMnozstviHod( this.vykazPraceMnozstviOdvedenePrace );
+        return this.vykazPrace;
+    }
+    
 
 }

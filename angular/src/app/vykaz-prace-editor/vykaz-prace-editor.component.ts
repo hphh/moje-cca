@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { VykazPrace } from '../model/vykaz-prace';
 import { VykazPraceService } from '../services/vykaz-prace.service';
 import { ToasterService } from 'angular2-toaster';
@@ -8,6 +8,7 @@ import { ApplicationService } from '../services/application.service';
 import { ImisKalendarService } from '../services/imis-kalendar.service';
 import { ImisDaysFilterParameters } from '../model/imis-days-filter-parameters';
 import { ImisDay } from '../model/imis-day';
+import { VykazPraceEditFormComponent } from '../vykaz-prace-edit-form/vykaz-prace-edit-form.component';
 
 
 @Component( {
@@ -20,14 +21,10 @@ export class VykazPraceEditorComponent implements OnInit {
 
     dialogVisible: boolean = false;
 
-    vykazPrace: VykazPrace = new VykazPrace();
-    vykazPraceDatum: Date;
-    vykazPraceMnozstviOdvedenePrace: Date;
-
-    vykazPraceOriginal: VykazPrace;
+    @ViewChild( 'editForm' ) editForm: VykazPraceEditFormComponent;
 
     @Output() onSave: EventEmitter<any> = new EventEmitter();
-
+    
     constructor(
         private vykazPraceService: VykazPraceService,
         private toasterService: ToasterService,
@@ -37,31 +34,21 @@ export class VykazPraceEditorComponent implements OnInit {
     ngOnInit() {
     }
 
-
-
     @Input()
     show( vykazPrace: VykazPrace ) {
         if ( vykazPrace == null ) {
             return;
         }
-
+        
+        this.editForm.show(vykazPrace);
         this.dialogVisible = true;
-        this.vykazPrace = Object.assign( {}, vykazPrace );
-        this.vykazPraceDatum = new Date( this.vykazPrace.datum );
-
-        this.vykazPraceMnozstviOdvedenePrace = DataConvertor.mnozstviHodToDate( this.vykazPrace.mnozstviOdvedenePrace );
-
-        this.vykazPraceOriginal = vykazPrace;
 
     }
 
     onOk() {
-        this.vykazPrace.datum = this.vykazPraceDatum.getTime();
-        this.vykazPrace.mnozstviOdvedenePrace = DataConvertor.toMnozstviHod( this.vykazPraceMnozstviOdvedenePrace );
+        let vykazPrace = this.editForm.getVykazPrace();
 
-        let vykazPraces = [this.vykazPrace];
-
-        this.vykazPraceService.updateVykazPraces( vykazPraces,
+        this.vykazPraceService.updateVykazPraces( [vykazPrace],
             () => { },
             success => {
                 if ( success ) {
@@ -71,46 +58,6 @@ export class VykazPraceEditorComponent implements OnInit {
             }
         );
 
-    }
-
-    mnozstviOdvedenePraceFillDay() {
-        let params = new VykazPraceFilterParameters();
-        params.fromDate = this.vykazPrace.datum;
-        params.toDate = this.vykazPrace.datum;
-        params.kodUzivatele = this.applicationService.kodUzivatele;
-
-        this.vykazPraceService.getVykazPraces( params,
-            data => {
-                let vyks: VykazPrace[] = data;
-                let sumVyks = vyks.filter( value => value.id !== this.vykazPrace.id ).map( value => value.mnozstviOdvedenePrace ).reduce(( previousValue, currentValue ) => {
-                    return previousValue + currentValue;
-                } );
-
-                let params = new ImisDaysFilterParameters();
-                params.fromDate = new Date( this.vykazPrace.datum );
-                params.toDate = new Date( this.vykazPrace.datum );
-                params.kodUzivatele = this.applicationService.kodUzivatele;
-                params.unsolvedDaysOnly = false;
-
-                this.imisKalendarService.getImisDays( params, 
-                    data => {
-                        let days: ImisDay[] = data;
-
-                        var odprac = 0;
-                        if ( days && ( days.length > 0 ) ) {
-                            odprac = days[0].odpracovanoHod;
-                        }
-
-                        if ( odprac - sumVyks < 0 ) {
-                            return;
-                        }
-
-                        this.vykazPraceMnozstviOdvedenePrace = DataConvertor.mnozstviHodToDate( odprac - sumVyks );
-                    }
-                );
-
-            }
-        );
     }
 
 }

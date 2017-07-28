@@ -1,3 +1,50 @@
-<p>
-  vykaz-prace-edit-form works!
-</p>
+<div class="container-fluid"> 
+	<div class="form-horizontal">
+		<div class="form-group">
+			<label for="datum" class="control-label col-xs-3">Datum</label>
+			<div class="col-xs-9">
+				<p-calendar id="datum" [(ngModel)]="vykazPraceDatum" dateFormat="dd.mm.yy"></p-calendar>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="mnozstviOdvedenePrace" class="control-label col-xs-3">Hodin</label>
+			<div class="col-xs-9">
+				<p-calendar id="mnozstviOdvedenePrace" [(ngModel)]="vykazPraceMnozstviOdvedenePrace"
+					[timeOnly]="true"></p-calendar>
+				<button pButton type="button" label="Vyplň den" icon="fa-hourglass" (click)="mnozstviOdvedenePraceFillDay()"></button>	
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="popis" class="control-label col-xs-3">Popis</label>
+			<div class="col-xs-9">
+				<input pInputText id="popis" type="text" size="45" [(ngModel)]="vykazPrace.popisPrace">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="zakazka" class="control-label col-xs-3">Zakázka</label>
+			<div class="col-xs-9">
+				<input pInputText id="zakazka" type="text" size="12" [(ngModel)]="vykazPrace.zakazka">
+				<input pInputText id="zakpol" type="text" size="3" [(ngModel)]="vykazPrace.polozka">
+				<input pInputText id="zakpoz" type="text" size="3" [(ngModel)]="vykazPrace.pozice">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="hlaseni" class="control-label col-xs-3">Hlášení</label>
+			<div class="col-xs-9">
+				<input pInputText id="hlaseni" type="text" size="20" [(ngModel)]="vykazPrace.hlaseni">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="krok" class="control-label col-xs-3">Krok</label>
+			<div class="col-xs-9">
+				<input pInputText id="krok" type="text" size="20" [(ngModel)]="vykazPrace.krok">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="ukol" class="control-label col-xs-3">Úkol</label>
+			<div class="col-xs-9">
+				<input pInputText id="ukol" type="text" size="20" [(ngModel)]="vykazPrace.ukol">
+			</div>
+		</div>
+	</div>
+</div>
