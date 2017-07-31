@@ -116,7 +116,7 @@ public class KalendarService {
 				inTime = newTime;
 			}
 		} else if ((inTime > 6) && (outTime < 0.5d)) {
-			double newTime = inTime - (1d - outTime);
+			double newTime = inTime - (0.5d - outTime);
 			if (newTime < 6) {
 				inTime = 6;
 			} else {
