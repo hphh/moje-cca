@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  backendServicesUrl: "CHYBA-Tohle se nemá použít"
 };
