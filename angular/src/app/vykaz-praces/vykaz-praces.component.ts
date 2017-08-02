@@ -13,12 +13,12 @@ import { ImisDaysFilterParameters } from '../model/imis-days-filter-parameters';
 
 
 @Component( {
-    selector: 'app-employee-vykaz-prace-overview',
-    templateUrl: './employee-vykaz-prace-overview.component.html',
-    styleUrls: ['./employee-vykaz-prace-overview.component.css'],
+    selector: 'app-vykaz-praces',
+    templateUrl: './vykaz-praces.component.html',
+    styleUrls: ['./vykaz-praces.component.css'],
     providers: [VykazPraceService, ImisKalendarService]
 } )
-export class EmployeeVykazPraceOverviewComponent implements OnInit {
+export class VykazPracesComponent implements OnInit {
 
     fromDate: Date = new Date();
     toDate: Date = new Date();

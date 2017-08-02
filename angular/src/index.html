@@ -15,7 +15,9 @@
 	</head>
 	
 	<body>
-		<app-root backendServicesUrl="<%=request.getContextPath() %>/services">
+		<app-root 
+			backendServicesUrl="<%=request.getContextPath() %>/services"
+			kodUzivatele="<%=System.getProperty("cz.cca.mojecca.kodUzivatele") %>">
 			<div style="top: 50%; left: 50%; width: 10em; height: 2em; margin-top: -1em; margin-left: -5em; position:fixed;" >
 				<i class="fa fa-refresh fa-spin fa-lg"></i>
 				nahrávám aplikaci

@@ -9,14 +9,15 @@ import { Ukol } from '../model/ukol';
 import { DataConvertor } from '../converts/data-convertor';
 
 @Component( {
-    selector: 'app-vykazy-na-ukol',
-    templateUrl: './vykazy-na-ukol.component.html',
-    styleUrls: ['./vykazy-na-ukol.component.css'],
+    selector: 'app-vykaz-praces-overview',
+    templateUrl: './vykaz-praces-overview.component.html',
+    styleUrls: ['./vykaz-praces-overview.component.css'],
     providers: [UkolService]
 } )
-export class VykazyNaUkolComponent implements OnInit {
+export class VykazPracesOverviewComponent implements OnInit {
 
-    ukol: string;
+    params: VykazPraceFilterParameters;
+
     dialogVisible: boolean = false;
     vykazPraces: VykazPrace[] = [];
     sumVykazano: number = 0;
@@ -31,10 +32,11 @@ export class VykazyNaUkolComponent implements OnInit {
     }
 
     private readVykazPraces() {
-        let params = new VykazPraceFilterParameters();
-        params.ukol = this.ukol;
-
-        this.vykazPraceService.getVykazPraces( params,
+        if (!this.params) {
+            return;
+        }
+        
+        this.vykazPraceService.getVykazPraces( this.params,
             data => {
                 this.vykazPraces = data;
                 this.sumVykazano = 0;
@@ -50,12 +52,12 @@ export class VykazyNaUkolComponent implements OnInit {
     private readPracnostUkolu() {
         this.pracnostUkolu = 0;
 
-        if ( this.ukol == null ) {
+        if ( this.params.ukol == null ) {
             return;
         }
 
         let params = new UkolFilterParameters();
-        let cisloRok = DataConvertor.toCisloRok( this.ukol );
+        let cisloRok = DataConvertor.toCisloRok( this.params.ukol );
 
         if ( cisloRok == null ) {
             return;
@@ -69,8 +71,8 @@ export class VykazyNaUkolComponent implements OnInit {
                 let ukols: Ukol[] = data;
                 if ( ( ukols == null ) || ( ukols.length == 0 ) ) {
                     this.pracnostUkolu = 0;
-                    console.log( 'nenalezen úkol ' + this.ukol );
-                    this.toasterService.pop( 'error', 'Nenalezen úkol ' + this.ukol, null );
+                    console.log( 'nenalezen úkol ' + this.params.ukol );
+                    this.toasterService.pop( 'error', 'Nenalezen úkol ' + this.params.ukol, null );
                     return;
                 }
                 this.pracnostUkolu = ukols[0].pracnostPlan;
@@ -79,10 +81,31 @@ export class VykazyNaUkolComponent implements OnInit {
     }
 
     @Input()
-    show( ukol: string ) {
-        this.ukol = ukol;
+    show( params: VykazPraceFilterParameters ) {
+        this.params = params;
         this.dialogVisible = true;
         this.readVykazPraces();
+    }
+    
+    paramsDecription() {
+        if (!this.params) {
+            return '';
+        }
+        
+        var result = '';
+        if (this.params.ukol) {
+            result += 'úkol ' + this.params.ukol;
+        }
+        if (this.params.krok) {
+            result += 'krok ' + this.params.krok;
+        }
+        if (this.params.hlaseni) {
+            result += 'hlášení ' + this.params.hlaseni;
+        }
+        if (result.length == 0) {
+            result += 'něco jiného';
+        }
+        return 'na ' + result;        
     }
 
 }

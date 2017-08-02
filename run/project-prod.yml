@@ -42,3 +42,7 @@ swarm:
     loggers:
       cz.cca:
         level: INFO
+cz:
+  cca:
+    mojecca:
+      kodUzivatele: HER        

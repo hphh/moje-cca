@@ -1,0 +1,26 @@
+<p-dialog
+    [(visible)]="dialogVisible"
+	header="Výkazy práce {{paramsDecription()}}"
+	modal="modal" 
+	minWidth="1000"
+	width="1000"
+	height="600"
+	resizable="true">
+	<div style="height: 100%;">
+		<div style="height: 50px;">
+			Celkem vykázáno: {{sumVykazano | mnozstviHod}} z {{pracnostUkolu | mnozstviHod}}
+		</div>
+		<div style="height: 100%; max-height: 100%; overflow: hidden;">
+			<div style="overflow-y: auto; height: 450px; max-height: 450px;">
+				<app-vykaz-prace-table [vykazPraces]="vykazPraces" 
+					disableVykazyNaUkol="true"
+					showKodUzivatele="true"
+					datumMode="show"
+					[hideUkol]="params?.ukol"
+					[hideKrok]="params?.krok"
+					[hideHlaseni]="params?.hlaseni"
+					disableEdit="true"></app-vykaz-prace-table>
+			</div>
+		</div>
+	</div>
+</p-dialog>

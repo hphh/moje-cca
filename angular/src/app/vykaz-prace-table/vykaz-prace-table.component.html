@@ -1,12 +1,13 @@
 <p-contextMenu #vykazMenu [model]="vykazMenuItems"></p-contextMenu>
 <app-vykaz-prace-editor #vykazPraceEditor (onSave)="refreshData()"></app-vykaz-prace-editor>
 <app-vykaz-prace-splitter #vykazPraceSplitter (onSave)="refreshData()"></app-vykaz-prace-splitter>
-<app-vykazy-na-ukol *ngIf="!disableVykazyNaUkol" #vykazyNaUkol></app-vykazy-na-ukol>
+<app-vykaz-praces-overview *ngIf="!disableVykazyNaUkol" #vykazPracesOverview></app-vykaz-praces-overview>
 
 <p-dataTable [value]="vykazPraces" [contextMenu]="vykazMenu" 
 			selectionMode="single" [(selection)]="selectedVykazPrace"
 			rowGroupMode="{{datumMode === 'group'? 'subheader': ''}}" groupField="datum"
-			[sortableRowGroup]="false">
+			[sortableRowGroup]="false"
+			(onContextMenuSelect)="onContextMenuSelect($event)">
 			
 	<ng-template pTemplate="rowgroupheader" let-rowData>
 		{{rowData['datum'] | date: 'dd.MM.yyyy'}}

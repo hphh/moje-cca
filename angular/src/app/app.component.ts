@@ -15,15 +15,24 @@ export class AppComponent {
     toasterconfig: ToasterConfig = new ToasterConfig( { animation: 'flyRight' } );
     
 
-    constructor(elm: ElementRef, applicationService: ApplicationService) {
-        const backendServicesUrl = elm.nativeElement.getAttribute('backendServicesUrl');
+    constructor(
+            private elm: ElementRef, 
+            private applicationService: ApplicationService) {
         
-        if ((backendServicesUrl != null) && (!backendServicesUrl.startsWith('<%'))) {
-            applicationService.backendServicesUrl = backendServicesUrl;
-        }
+        this.getParam('backendServicesUrl', value => applicationService.backendServicesUrl = value);
+        this.getParam('kodUzivatele', value => applicationService.kodUzivatele = value);
+        
 
+        console.log('uživatel: ' + applicationService.kodUzivatele);
         console.log('URL backend služeb: ' + applicationService.backendServicesUrl);
         
+    }
+    
+    private getParam(name: string, manageFnc: (value: string) => void) {
+        let value = this.elm.nativeElement.getAttribute(name);
+        if ((value != null) && (!value.startsWith('<%'))) {
+            manageFnc(value);
+        }
     }
 
 

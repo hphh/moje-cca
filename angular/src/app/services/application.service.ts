@@ -6,7 +6,7 @@ export class ApplicationService {
     
   backendServicesUrl: string = environment.backendServicesUrl;  
 
-  kodUzivatele: string = 'HER';
+  kodUzivatele: string = environment.kodUzivatele;
 
   constructor() { }
 

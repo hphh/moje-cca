@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { VykazPrace } from '../model/vykaz-prace';
 import { MenuItem } from 'primeng/primeng';
+import { VykazPracesOverviewComponent } from '../vykaz-praces-overview/vykaz-praces-overview.component';
+import { VykazPraceFilterParameters } from '../model/vykaz-prace-filter-parameters';
 
 @Component( {
     selector: 'app-vykaz-prace-table',
@@ -14,7 +16,7 @@ export class VykazPraceTableComponent implements OnInit {
 
     @ViewChild( 'vykazPraceEditor' ) vykazPraceEditor;
     @ViewChild( 'vykazPraceSplitter' ) vykazPraceSplitter;
-    @ViewChild( 'vykazyNaUkol' ) vykazyNaUkol;
+    @ViewChild( 'vykazPracesOverview' ) vykazPracesOverview: VykazPracesOverviewComponent;
 
     @Input()
     vykazPraces: VykazPrace[] = [];
@@ -46,6 +48,9 @@ export class VykazPraceTableComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {
+    }
+
+    private refreshMenuItems( vykaz: VykazPrace ) {
         this.vykazMenuItems = [];
         if ( !this.disableEdit ) {
             this.vykazMenuItems.push(
@@ -55,11 +60,22 @@ export class VykazPraceTableComponent implements OnInit {
         }
 
         if ( !this.disableVykazyNaUkol ) {
-            this.vykazMenuItems.push(
-                { label: 'Výkazy na úkol', icon: 'fa-list', command: ( event ) => this.showVykazyNaUkol( this.selectedVykazPrace ) }
-            );
+            if ( vykaz.ukol ) {
+                this.vykazMenuItems.push(
+                    { label: 'Výkazy na úkol', icon: 'fa-list', command: ( event ) => this.showVykazPracesOverview( this.selectedVykazPrace, VykazPracesOverviewType.ukol ) }
+                );
+            }
+            if ( vykaz.krok ) {
+                this.vykazMenuItems.push(
+                    { label: 'Výkazy na krok', icon: 'fa-list', command: ( event ) => this.showVykazPracesOverview( this.selectedVykazPrace, VykazPracesOverviewType.krok ) }
+                );
+            }
+            if ( vykaz.hlaseni ) {
+                this.vykazMenuItems.push(
+                    { label: 'Výkazy na hlášení', icon: 'fa-list', command: ( event ) => this.showVykazPracesOverview( this.selectedVykazPrace, VykazPracesOverviewType.hlaseni ) }
+                );
+            }
         }
-        
     }
 
     private editVykazPrace( vykaz: VykazPrace ) {
@@ -74,12 +90,35 @@ export class VykazPraceTableComponent implements OnInit {
         this.onSave.emit();
     }
 
-    private showVykazyNaUkol( vykaz: VykazPrace ) {
-        if ( vykaz.ukol == null ) {
+    private showVykazPracesOverview( vykaz: VykazPrace, type: VykazPracesOverviewType ) {
+        if ( !vykaz.ukol ) {
             return;
         }
 
-        this.vykazyNaUkol.show( vykaz.ukol );
+        let params = new VykazPraceFilterParameters();
+
+        switch ( type ) {
+            case VykazPracesOverviewType.ukol:
+                params.ukol = vykaz.ukol;
+                break;
+            case VykazPracesOverviewType.krok:
+                params.krok = vykaz.krok;
+                break;
+            case VykazPracesOverviewType.hlaseni:
+                params.hlaseni = vykaz.hlaseni;
+                break;
+        }
+        this.vykazPracesOverview.show( params );
     }
 
+    onContextMenuSelect( event ) {
+        this.refreshMenuItems( event.data );
+    }
+
+}
+
+enum VykazPracesOverviewType {
+    ukol,
+    krok,
+    hlaseni
 }

@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
-  backendServicesUrl: "http://localhost:8085/services"
+  backendServicesUrl: 'http://localhost:8085/services',
+  kodUzivatele: 'HER'
 };
