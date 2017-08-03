@@ -1,14 +1,14 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID  } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { DatePipe, DecimalPipe } from '@angular/common';
 
 import {
-    DataTableModule, 
-    SharedModule, 
+    DataTableModule,
+    SharedModule,
     InputTextModule,
     DialogModule,
     ButtonModule,
@@ -16,9 +16,9 @@ import {
     CalendarModule,
     ContextMenuModule,
     CheckboxModule
-    } from 'primeng/primeng';
-    
-import { ToasterModule, ToasterService } from 'angular2-toaster';   
+} from 'primeng/primeng';
+
+import { ToasterModule, ToasterService } from 'angular2-toaster';
 
 import { VykazPracesComponent } from './vykaz-praces/vykaz-praces.component';
 import { VykazPraceEditorComponent } from './vykaz-prace-editor/vykaz-prace-editor.component';
@@ -29,36 +29,40 @@ import { VykazPraceTableComponent } from './vykaz-prace-table/vykaz-prace-table.
 import { VykazPracesOverviewComponent } from './vykaz-praces-overview/vykaz-praces-overview.component';
 import { VykazPraceEditFormComponent } from './vykaz-prace-edit-form/vykaz-prace-edit-form.component';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    VykazPracesComponent,
-    MnozstviHodPipe,
-    VykazPraceEditorComponent,
-    ZakazkaPipe,
-    VykazPraceSplitterComponent,
-    VykazPraceTableComponent,
-    VykazPracesOverviewComponent,
-    VykazPraceEditFormComponent
-  ],
-  imports: [
-    BrowserAnimationsModule,
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-    DataTableModule,
-    SharedModule,
-    InputTextModule,
-    ReactiveFormsModule,
-    DialogModule,
-    ButtonModule,
-    ToasterModule,
-    TooltipModule,
-    CalendarModule,
-    ContextMenuModule,
-    CheckboxModule
-  ],
-  providers: [DatePipe, DecimalPipe],
-  bootstrap: [AppComponent]
-})
+@NgModule( {
+    declarations: [
+        AppComponent,
+        VykazPracesComponent,
+        MnozstviHodPipe,
+        VykazPraceEditorComponent,
+        ZakazkaPipe,
+        VykazPraceSplitterComponent,
+        VykazPraceTableComponent,
+        VykazPracesOverviewComponent,
+        VykazPraceEditFormComponent
+    ],
+    imports: [
+        BrowserAnimationsModule,
+        BrowserModule,
+        FormsModule,
+        HttpModule,
+        DataTableModule,
+        SharedModule,
+        InputTextModule,
+        ReactiveFormsModule,
+        DialogModule,
+        ButtonModule,
+        ToasterModule,
+        TooltipModule,
+        CalendarModule,
+        ContextMenuModule,
+        CheckboxModule
+    ],
+    providers: [
+        DatePipe,
+        DecimalPipe,
+        { provide: LOCALE_ID, useValue: "cz-CS" }
+    ],
+    bootstrap: [AppComponent]
+} )
 export class AppModule { }

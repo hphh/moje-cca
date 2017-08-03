@@ -10,12 +10,12 @@
 			(onContextMenuSelect)="onContextMenuSelect($event)">
 			
 	<ng-template pTemplate="rowgroupheader" let-rowData>
-		{{rowData['datum'] | date: 'dd.MM.yyyy'}}
+		{{rowData['datum'] | date: 'ddMM.yyyy'}}
 	</ng-template>
 	
 	<p-column field="datum" *ngIf="datumMode === 'show'" header="Datum" [style]="{'width':'120px','text-align':'center'}">
 		<ng-template let-col let-vykaz="rowData" pTemplate="body">
-           	{{vykaz[col.field] | date: 'dd.MM.yyyy'}}
+           	{{vykaz[col.field] | date: 'ddMM.yyyy'}}
        	</ng-template> 
        </p-column>
 	<p-column *ngIf="showKodUzivatele" field="kodUzivatele" header="Prac." [style]="{'width':'100px','text-align':'center'}"></p-column>
