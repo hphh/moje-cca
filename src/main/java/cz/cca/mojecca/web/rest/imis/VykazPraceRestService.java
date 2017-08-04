@@ -16,6 +16,8 @@ import cz.cca.mojecca.service.imis.model.ConfirmVykazPracesParameters;
 import cz.cca.mojecca.service.imis.model.SplittingVykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPracesFilterParameters;
+import cz.cca.mojecca.service.imis.model.Zakazka;
+import cz.cca.mojecca.service.imis.model.ZakazkaFilterParameters;
 
 @Path("/services/imis/vykazPrace")
 @Produces(MediaType.APPLICATION_JSON)
@@ -38,11 +40,11 @@ public class VykazPraceRestService {
 	}	
 	
 	@POST
-	@Path("/updateVykazPraces")
-	public void updateVykazPraces(List<VykazPrace> vykazPraces) {
-		LOGGER.log(Level.FINE, "Požadavek na změnu výkazů práce {0} ", vykazPraces.size());
+	@Path("/saveOrUpdateVykazPraces")
+	public void saveOrUpdateVykazPraces(List<VykazPrace> vykazPraces) {
+		LOGGER.log(Level.FINE, "Požadavek na založení/změnu výkazů práce {0} ", vykazPraces.size());
 		
-		vykazPraceService.updateVykazPraces(vykazPraces);
+		vykazPraceService.saveOrUpdateVykazPraces(vykazPraces);
 	}
 	
 	@POST
@@ -59,6 +61,14 @@ public class VykazPraceRestService {
 		LOGGER.log(Level.FINE, "Požadavek na potvrzení výkazů práce");
 		
 		vykazPraceService.confirmVykazPraces(params);
+	}
+
+	@POST
+	@Path("zakazkas")
+	public List<Zakazka> getZakazkas(ZakazkaFilterParameters params) {
+		LOGGER.log(Level.FINE, "Požadavek na zakázky");
+		
+		return vykazPraceService.getZakazkas(params);
 	}
 	
 }

@@ -9,8 +9,12 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import cz.cca.mojecca.db.imis.model.DenVykazEntity;
 import cz.cca.mojecca.db.imis.model.DenVykazFilterParameters;
+import cz.cca.mojecca.db.imis.model.ZakEntity;
+import cz.cca.mojecca.db.imis.model.ZakEntityFilterParameters;
 import cz.cca.mojecca.service.imis.model.VykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPracesFilterParameters;
+import cz.cca.mojecca.service.imis.model.Zakazka;
+import cz.cca.mojecca.service.imis.model.ZakazkaFilterParameters;
 
 public class VykazPraceDataAdapter {
 
@@ -42,22 +46,7 @@ public class VykazPraceDataAdapter {
 
 	}
 
-	public static void mergeDenVykazAndVykazPrace(DenVykazEntity denVykazEntity, VykazPrace entity) {
-		denVykazEntity.setDatum(new Date(entity.getDatum()));
-		denVykazEntity.setPoznHl(entity.getHlaseni());
-		denVykazEntity.setKodpra(entity.getKodUzivatele());
-		denVykazEntity.setPoznKrok(entity.getKrok());
-		denVykazEntity.setMnozstviOdved(entity.getMnozstviOdvedenePrace());
-		denVykazEntity.setIdFirmyZak(entity.getOrganizace());
-		denVykazEntity.setCpolzak(entity.getPolozka());
-		denVykazEntity.setPoznamka(entity.getPopisPrace());
-		denVykazEntity.setCpozzak(entity.getPozice());
-		denVykazEntity.setPrac(entity.getPracovnik());
-		denVykazEntity.setPoznUkol(entity.getUkol());
-		denVykazEntity.setZc(entity.getZakazka());	
-		denVykazEntity.setStavV(entity.getStav());
-	}
-	
+
 	public static DenVykazFilterParameters toDenVykazFilterParameters(VykazPracesFilterParameters params) {
 		DenVykazFilterParameters result = new DenVykazFilterParameters();
 		
@@ -74,6 +63,41 @@ public class VykazPraceDataAdapter {
 			result.setToDate(new Date(params.getToDate()));
 		}
 				
+		return result;
+	}
+
+
+	public static ZakEntityFilterParameters toZakEntityFilterParameters(ZakazkaFilterParameters params) {
+		if (params == null) {
+			return null;
+		}
+		
+		ZakEntityFilterParameters result = new ZakEntityFilterParameters();
+		
+		result.setZcPattern(params.getZakazkaPattern());
+		
+		return result;
+	}
+
+
+	public static List<Zakazka> toZakazkaList(List<ZakEntity> zaks) {
+		if (zaks == null) {
+			return null;
+		}
+		
+		List<Zakazka> result = zaks.stream().map(entity -> toZakazka(entity)).collect(Collectors.toList());
+		
+		return result;
+	}
+
+
+	private static Zakazka toZakazka(ZakEntity entity) {
+		Zakazka result = new Zakazka();
+		
+		result.setGarant(entity.getGarant());
+		result.setZakazka(entity.getZc());
+		result.setPopis(entity.getNazzak());
+		
 		return result;
 	}
 

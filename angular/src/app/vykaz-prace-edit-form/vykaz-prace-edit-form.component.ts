@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { VykazPrace } from '../model/vykaz-prace';
 import { VykazPraceService } from '../services/vykaz-prace.service';
 import { ToasterService } from 'angular2-toaster';
@@ -8,6 +8,8 @@ import { ApplicationService } from '../services/application.service';
 import { ImisKalendarService } from '../services/imis-kalendar.service';
 import { ImisDaysFilterParameters } from '../model/imis-days-filter-parameters';
 import { ImisDay } from '../model/imis-day';
+import { ZakazkaFilterParameters } from '../model/zakazka-filter-parameters';
+import { Zakazka } from '../model/zakazka';
 
 @Component( {
     selector: 'app-vykaz-prace-edit-form',
@@ -19,6 +21,8 @@ export class VykazPraceEditFormComponent implements OnInit {
     vykazPrace: VykazPrace = new VykazPrace();
     vykazPraceDatum: Date;
     vykazPraceMnozstviOdvedenePrace: Date;
+
+    zakazkaSuggestions: string[];
 
 
     constructor(
@@ -40,7 +44,7 @@ export class VykazPraceEditFormComponent implements OnInit {
         this.vykazPraceDatum = new Date( this.vykazPrace.datum );
         this.vykazPraceMnozstviOdvedenePrace = DataConvertor.mnozstviHodToDate( this.vykazPrace.mnozstviOdvedenePrace );
     }
-    
+
     mnozstviOdvedenePraceFillDay() {
         let params = new VykazPraceFilterParameters();
         params.fromDate = this.vykazPrace.datum;
@@ -60,7 +64,7 @@ export class VykazPraceEditFormComponent implements OnInit {
                 params.kodUzivatele = this.applicationService.kodUzivatele;
                 params.unsolvedDaysOnly = false;
 
-                this.imisKalendarService.getImisDays( params, 
+                this.imisKalendarService.getImisDays( params,
                     data => {
                         let days: ImisDay[] = data;
 
@@ -80,12 +84,33 @@ export class VykazPraceEditFormComponent implements OnInit {
             }
         );
     }
-    
+
     public getVykazPrace(): VykazPrace {
         this.vykazPrace.datum = this.vykazPraceDatum.getTime();
         this.vykazPrace.mnozstviOdvedenePrace = DataConvertor.toMnozstviHod( this.vykazPraceMnozstviOdvedenePrace );
+        if ( this.vykazPrace.zakazka ) {
+            this.vykazPrace.zakazka = this.vykazPrace.zakazka.toUpperCase();
+        }
         return this.vykazPrace;
     }
-    
+
+    findZakazkaSuggestions( event ) {
+        let query: string = event.query;
+        if (!query) {
+            this.zakazkaSuggestions = [];
+            return;
+        }
+        
+        let params = new ZakazkaFilterParameters();
+        params.zakazkaPattern = query.toUpperCase() + '%';
+        
+        this.vykazPraceService.getZakazkas( params,
+            data => {
+                this.zakazkaSuggestions = data.map(value => value.zakazka);
+            }
+        );
+
+    }
+
 
 }

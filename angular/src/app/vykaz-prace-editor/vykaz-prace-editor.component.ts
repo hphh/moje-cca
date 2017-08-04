@@ -42,13 +42,12 @@ export class VykazPraceEditorComponent implements OnInit {
         
         this.editForm.show(vykazPrace);
         this.dialogVisible = true;
-
     }
 
     onOk() {
         let vykazPrace = this.editForm.getVykazPrace();
 
-        this.vykazPraceService.updateVykazPraces( [vykazPrace],
+        this.vykazPraceService.saveOrUpdateVykazPraces( [vykazPrace],
             () => { },
             success => {
                 if ( success ) {

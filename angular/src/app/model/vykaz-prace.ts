@@ -2,7 +2,7 @@ export class VykazPrace {
 
     id: number;
     datum: number;
-    mnozstviOdvedenePrace: number;
+    mnozstviOdvedenePrace: number = 0;
     popisPrace: string;
     hlaseni: string;
     krok: string;

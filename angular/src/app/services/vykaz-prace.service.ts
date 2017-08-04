@@ -6,7 +6,8 @@ import { SplittingVykazPrace } from '../model/splitting-vykaz-prace';
 import { VykazPraceFilterParameters } from '../model/vykaz-prace-filter-parameters';
 import { ConfirmVykazPracesParameters } from '../model/confirm-vykaz-praces-parameters';
 import { CallBackendService } from './call-backend.service';
-
+import { ZakazkaFilterParameters } from '../model/zakazka-filter-parameters';
+import { Zakazka } from '../model/zakazka';
 
 @Injectable()
 export class VykazPraceService {
@@ -30,12 +31,12 @@ export class VykazPraceService {
             finishCallback );
     }
 
-    updateVykazPraces( vykazPraces: VykazPrace[],
+    saveOrUpdateVykazPraces( vykazPraces: VykazPrace[],
         successCallback?: () => void,
         finishCallback?: ( success: boolean ) => void ): void {
 
         this.callBackendService.post(
-            this.ROOT_PATH + '/updateVykazPraces',
+            this.ROOT_PATH + '/saveOrUpdateVykazPraces',
             vykazPraces,
             successCallback,
             finishCallback );
@@ -59,21 +60,33 @@ export class VykazPraceService {
 
     }
 
-    confirmVykazPraces( 
-            fromDate: number, toDate: number,
-            successCallback?: () => void,
-            finishCallback?: ( success: boolean ) => void): void {
+    confirmVykazPraces(
+        fromDate: number, toDate: number,
+        successCallback?: () => void,
+        finishCallback?: ( success: boolean ) => void ): void {
 
         let params = new ConfirmVykazPracesParameters();
         params.fromDate = fromDate;
         params.toDate = toDate;
         params.kodUzivatele = this.applicationService.kodUzivatele;
-        
+
         this.callBackendService.post(
-                this.ROOT_PATH + '/confirmVykazPraces',
-                params,
-                successCallback,
-                finishCallback );
+            this.ROOT_PATH + '/confirmVykazPraces',
+            params,
+            successCallback,
+            finishCallback );
+    }
+
+    getZakazkas(
+        params: ZakazkaFilterParameters,
+        successCallback?: ( data: VykazPrace[] ) => void,
+        finishCallback?: ( success: boolean ) => void ) {
+
+        this.callBackendService.post(
+            this.ROOT_PATH + '/zakazkas',
+            params,
+            successCallback,
+            finishCallback );
     }
 
 }

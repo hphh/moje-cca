@@ -1,7 +1,7 @@
 <div class="container-fluid"> 
 	<div class="form-horizontal">
 		<div class="form-group">
-			<label for="datum" class="control-label col-xs-3">Datum</label>
+			<label for="datum" class="control-label col-xs-3" >Datum</label>
 			<div class="col-xs-9">
 				<p-calendar id="datum" [(ngModel)]="vykazPraceDatum" dateFormat="dd.mm.yy"></p-calendar>
 			</div>
@@ -23,7 +23,7 @@
 		<div class="form-group">
 			<label for="zakazka" class="control-label col-xs-3">Zakázka</label>
 			<div class="col-xs-9">
-				<input pInputText id="zakazka" type="text" size="12" [(ngModel)]="vykazPrace.zakazka">
+				<p-autoComplete id="zakazka" size="12" [(ngModel)]="vykazPrace.zakazka" [suggestions]="zakazkaSuggestions" (completeMethod)="findZakazkaSuggestions($event)"></p-autoComplete>
 				<input pInputText id="zakpol" type="text" size="3" [(ngModel)]="vykazPrace.polozka">
 				<input pInputText id="zakpoz" type="text" size="3" [(ngModel)]="vykazPrace.pozice">
 			</div>

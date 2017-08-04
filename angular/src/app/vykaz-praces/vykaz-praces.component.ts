@@ -9,7 +9,7 @@ import { MenuItem } from 'primeng/primeng';
 import { VykazPraceFilterParameters } from '../model/vykaz-prace-filter-parameters';
 import { ImisDay } from '../model/imis-day';
 import { ImisDaysFilterParameters } from '../model/imis-days-filter-parameters';
-
+import { VykazPraceEditorComponent } from '../vykaz-prace-editor/vykaz-prace-editor.component';
 
 
 @Component( {
@@ -30,6 +30,9 @@ export class VykazPracesComponent implements OnInit {
 
     kalendarMenuItems: MenuItem[];
 
+    @ViewChild( 'vykazPraceEditor' ) vykazPraceEditor: VykazPraceEditorComponent;
+
+
 
     private autoRefreshSubscription: Subscription;
 
@@ -48,11 +51,11 @@ export class VykazPracesComponent implements OnInit {
 
     ngOnInit() {
         this.kalendarMenuItems = [
-            { label: 'Potvrdit výkazy', icon: 'fa-check', command: ( event ) => this.confirmVykazPraces( this.selectedDay ) }
+            { label: 'Potvrdit výkazy', icon: 'fa-check', command: ( event ) => this.confirmVykazPraces( this.selectedDay ) },
+            { label: 'Nový výkaz', icon: 'fa-asterisk', command: ( event ) => this.newVykazPrace( this.selectedDay ) }
         ];
 
         this.readImisDays();
-        this.refreshAutoRefreshSubscription();
     }
 
     readImisDays() {
@@ -160,6 +163,13 @@ export class VykazPracesComponent implements OnInit {
             () => {
                 this.readImisDays();
             } )
+    }
+
+    newVykazPrace( imisDay: ImisDay ) {
+        let vykazPrace = new VykazPrace();
+        vykazPrace.datum = imisDay.datum;
+        vykazPrace.kodUzivatele = this.applicationService.kodUzivatele;
+        this.vykazPraceEditor.show(vykazPrace);
     }
 
 }
