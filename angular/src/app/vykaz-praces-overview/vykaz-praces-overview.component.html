@@ -8,7 +8,7 @@
 	resizable="true">
 	<div style="height: 100%;">
 		<div style="height: 50px;">
-			Celkem vykázáno: {{sumVykazano | mnozstviHod}} z {{pracnostUkolu | mnozstviHod}}
+			Celkem vykázáno: {{sumVykazano | mnozstviHod}}<span *ngIf="pracnostOdhad"> z {{pracnostOdhad | mnozstviHod}}</span>
 		</div>
 		<div style="height: 100%; max-height: 100%; overflow: hidden;">
 			<div style="overflow-y: auto; height: 450px; max-height: 450px;">

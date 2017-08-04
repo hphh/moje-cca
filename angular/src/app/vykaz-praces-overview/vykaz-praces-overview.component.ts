@@ -4,15 +4,18 @@ import { VykazPraceService } from '../services/vykaz-prace.service';
 import { ToasterService } from 'angular2-toaster';
 import { VykazPraceFilterParameters } from '../model/vykaz-prace-filter-parameters';
 import { UkolService } from '../services/ukol.service';
+import { KrokService } from '../services/krok.service';
 import { UkolFilterParameters } from '../model/ukol-filter-parameters';
+import { KrokFilterParameters } from '../model/krok-filter-parameters';
 import { Ukol } from '../model/ukol';
+import { Krok } from '../model/krok';
 import { DataConvertor } from '../converts/data-convertor';
 
 @Component( {
     selector: 'app-vykaz-praces-overview',
     templateUrl: './vykaz-praces-overview.component.html',
     styleUrls: ['./vykaz-praces-overview.component.css'],
-    providers: [UkolService]
+    providers: [UkolService, KrokService]
 } )
 export class VykazPracesOverviewComponent implements OnInit {
 
@@ -21,11 +24,12 @@ export class VykazPracesOverviewComponent implements OnInit {
     dialogVisible: boolean = false;
     vykazPraces: VykazPrace[] = [];
     sumVykazano: number = 0;
-    pracnostUkolu: number = 0;
+    pracnostOdhad: number;
 
     constructor(
         private vykazPraceService: VykazPraceService,
         private ukolService: UkolService,
+        private krokService: KrokService,
         private toasterService: ToasterService ) { }
 
     ngOnInit() {
@@ -46,12 +50,21 @@ export class VykazPracesOverviewComponent implements OnInit {
             }
         );
 
-        this.readPracnostUkolu();
+        this.readPracnostOdhad();
+    }
+    
+    private readPracnostOdhad() {
+        this.pracnostOdhad = null;
+        
+        if (this.params.ukol) {
+            this.readPracnostUkolu();
+        }
+        if (this.params.krok) {
+            this.readPracnostKroku();
+        }
     }
 
     private readPracnostUkolu() {
-        this.pracnostUkolu = 0;
-
         if ( this.params.ukol == null ) {
             return;
         }
@@ -70,16 +83,45 @@ export class VykazPracesOverviewComponent implements OnInit {
             data => {
                 let ukols: Ukol[] = data;
                 if ( ( ukols == null ) || ( ukols.length == 0 ) ) {
-                    this.pracnostUkolu = 0;
+                    this.pracnostOdhad = 0;
                     console.log( 'nenalezen úkol ' + this.params.ukol );
                     this.toasterService.pop( 'error', 'Nenalezen úkol ' + this.params.ukol, null );
                     return;
                 }
-                this.pracnostUkolu = ukols[0].pracnostPlan;
+                this.pracnostOdhad = ukols[0].pracnostPlan;
             }
         );
     }
 
+    private readPracnostKroku() {
+        if ( this.params.krok == null ) {
+            return;
+        }
+
+        let params = new KrokFilterParameters();
+        let cisloRok = DataConvertor.toCisloRok( this.params.krok );
+
+        if ( cisloRok == null ) {
+            return;
+        }
+
+        params.cisloKroku = cisloRok.cislo;
+        params.rokKroku = cisloRok.rok;
+
+        this.krokService.getKroks( params,
+            data => {
+                let kroks: Krok[] = data;
+                if ( ( kroks == null ) || ( kroks.length == 0 ) ) {
+                    this.pracnostOdhad = 0;
+                    console.log( 'nenalezen krok ' + this.params.krok );
+                    this.toasterService.pop( 'error', 'Nenalezen krok ' + this.params.krok, null );
+                    return;
+                }
+                this.pracnostOdhad = kroks[0].pracnostPlan;
+            }
+        );
+    }
+    
     @Input()
     show( params: VykazPraceFilterParameters ) {
         this.params = params;
