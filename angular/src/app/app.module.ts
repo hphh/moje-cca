@@ -16,7 +16,8 @@ import {
     CalendarModule,
     ContextMenuModule,
     CheckboxModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    DropdownModule
 } from 'primeng/primeng';
 
 import { ToasterModule, ToasterService } from 'angular2-toaster';
@@ -58,7 +59,8 @@ import { VykazPraceEditFormComponent } from './vykaz-prace-edit-form/vykaz-prace
         CalendarModule,
         ContextMenuModule,
         CheckboxModule,
-        AutoCompleteModule
+        AutoCompleteModule,
+        DropdownModule
     ],
     providers: [
         DatePipe,

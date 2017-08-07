@@ -13,6 +13,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import cz.cca.mojecca.db.imis.PlzDAO;
+import cz.cca.mojecca.db.imis.PpzDAO;
 import cz.cca.mojecca.db.imis.VykazPraceDAO;
 import cz.cca.mojecca.db.imis.ZakDAO;
 import cz.cca.mojecca.db.imis.model.DenVykazEntity;
@@ -24,6 +26,10 @@ import cz.cca.mojecca.service.imis.model.VykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPracesFilterParameters;
 import cz.cca.mojecca.service.imis.model.Zakazka;
 import cz.cca.mojecca.service.imis.model.ZakazkaFilterParameters;
+import cz.cca.mojecca.service.imis.model.ZakazkaPolozka;
+import cz.cca.mojecca.service.imis.model.ZakazkaPolozkasFilterParameters;
+import cz.cca.mojecca.service.imis.model.ZakazkaPozice;
+import cz.cca.mojecca.service.imis.model.ZakazkaPozicesFilterParameters;
 
 @RequestScoped
 public class VykazPraceService {
@@ -36,6 +42,12 @@ public class VykazPraceService {
 	
 	@EJB
 	private ZakDAO zakDAO;
+	
+	@EJB
+	private PlzDAO plzDAO;
+	
+	@EJB
+	private PpzDAO ppzDAO;
 	
 	public List<VykazPrace> getEmployeeVykazPraces(VykazPracesFilterParameters vykazPracesFilterParameters) {
 		List<DenVykazEntity> denVykazs = vykazPraceDAO.getVykazPraces(
@@ -164,6 +176,14 @@ public class VykazPraceService {
 	
 	public List<Zakazka> getZakazkas(ZakazkaFilterParameters params) {
 		return VykazPraceDataAdapter.toZakazkaList(zakDAO.getZaks(VykazPraceDataAdapter.toZakEntityFilterParameters(params)));
+	}
+	
+	public List<ZakazkaPolozka> getZakazkaPolozkas(ZakazkaPolozkasFilterParameters params) {
+		return VykazPraceDataAdapter.toZakazkaPolozkaList(plzDAO.getPlzs(VykazPraceDataAdapter.toPlzFilterParameters(params)));
+	}
+	
+	public List<ZakazkaPozice> getZakazkaPozices(ZakazkaPozicesFilterParameters params) {
+		return VykazPraceDataAdapter.toZakazkaPoziceList(ppzDAO.getPpzs(VykazPraceDataAdapter.toPpzFilterParameters(params)));
 	}
 	
 

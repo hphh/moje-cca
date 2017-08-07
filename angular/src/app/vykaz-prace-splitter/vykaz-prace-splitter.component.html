@@ -2,26 +2,22 @@
     [(visible)]="dialogVisible"
 	header="Rozdělení výkazu práce"
 	modal="modal" 
-	minWidth="500"
-	width="500"
-	resizable="true">
+	[resizable]="false">
 	
 	<div class="container-fluid"> 
-		<div class="form-horizontal">
-			<div class="form-group">
-				<h4>Původní výkaz</h4>
-			</div>
+		<div style="float: left; width: 400px;">
+			<h4>Původní výkaz</h4>
 			<app-vykaz-prace-edit-form #oldEditForm></app-vykaz-prace-edit-form>
-			<div class="form-group">
-				<h4>Nový výkaz</h4>
-			</div>
-			<app-vykaz-prace-edit-form #newEditForm></app-vykaz-prace-edit-form>
-			
-			<div class="form-group">
-				<button pButton type="button" icon="fa-check" label="OK" (click)="onOk()"></button>
-			</div>
-			
 		</div>
+		<div style="float: left; width: 400px;">
+			<h4>Nový výkaz</h4>
+			<app-vykaz-prace-edit-form #newEditForm></app-vykaz-prace-edit-form>
+		</div>
+		
+		<div style="float: left; clear: left;">
+			<button pButton type="button" icon="fa-check" label="OK" (click)="onOk()"></button>
+		</div>
+			
 	</div>	
 	
 </p-dialog>	

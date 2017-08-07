@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { VykazPrace } from '../model/vykaz-prace';
 import { VykazPraceService } from '../services/vykaz-prace.service';
 import { ToasterService } from 'angular2-toaster';
@@ -10,11 +11,16 @@ import { ImisDaysFilterParameters } from '../model/imis-days-filter-parameters';
 import { ImisDay } from '../model/imis-day';
 import { ZakazkaFilterParameters } from '../model/zakazka-filter-parameters';
 import { Zakazka } from '../model/zakazka';
+import { ZakazkaPolozka } from '../model/zakazka-polozka';
+import { ZakazkaPozice } from '../model/zakazka-pozice';
+import { ZakazkaPozicesFilterParameters } from '../model/zakazka-pozices-filter-parameters';
+import { ZakazkaPolozkasFilterParameters } from '../model/zakazka-polozkas-filter-parameters';
 
 @Component( {
     selector: 'app-vykaz-prace-edit-form',
     templateUrl: './vykaz-prace-edit-form.component.html',
-    styleUrls: ['./vykaz-prace-edit-form.component.css']
+    styleUrls: ['./vykaz-prace-edit-form.component.css'],
+    providers: [DatePipe]
 } )
 export class VykazPraceEditFormComponent implements OnInit {
 
@@ -23,13 +29,22 @@ export class VykazPraceEditFormComponent implements OnInit {
     vykazPraceMnozstviOdvedenePrace: Date;
 
     zakazkaSuggestions: string[];
+    zakazkaSuggestionDatas: Zakazka[];
 
+    zakazkaPolozkaSuggestions: number[];
+    zakazkaPolozkaSuggestionDatas: ZakazkaPolozka[];
+
+    zakazkaPoziceSuggestions: number[];
+    zakazkaPoziceSuggestionDatas: ZakazkaPozice[];
+
+    fillDayButtonLabel: string = 'Vyplň den';
 
     constructor(
         private vykazPraceService: VykazPraceService,
         private toasterService: ToasterService,
         private applicationService: ApplicationService,
-        private imisKalendarService: ImisKalendarService ) { }
+        private imisKalendarService: ImisKalendarService,
+        private datePipe: DatePipe ) { }
 
     ngOnInit() {
     }
@@ -43,12 +58,13 @@ export class VykazPraceEditFormComponent implements OnInit {
         this.vykazPrace = Object.assign( {}, vykazPrace );
         this.vykazPraceDatum = new Date( this.vykazPrace.datum );
         this.vykazPraceMnozstviOdvedenePrace = DataConvertor.mnozstviHodToDate( this.vykazPrace.mnozstviOdvedenePrace );
+        this.refreshFillDayButtonLabel();
     }
 
-    mnozstviOdvedenePraceFillDay() {
+    private calculateFillDay( fnc: ( Date ) => void ) {
         let params = new VykazPraceFilterParameters();
-        params.fromDate = this.vykazPrace.datum;
-        params.toDate = this.vykazPrace.datum;
+        params.fromDate = this.vykazPraceDatum.getTime();
+        params.toDate = params.fromDate;
         params.kodUzivatele = this.applicationService.kodUzivatele;
 
         this.vykazPraceService.getVykazPraces( params,
@@ -73,16 +89,25 @@ export class VykazPraceEditFormComponent implements OnInit {
                             odprac = days[0].odpracovanoHod;
                         }
 
-                        if ( odprac - sumVyks < 0 ) {
-                            return;
+                        var result = odprac - sumVyks; 
+                        if ( result < 0 ) {
+                            result = DataConvertor.toMnozstviHod(this.vykazPraceMnozstviOdvedenePrace);
                         }
 
-                        this.vykazPraceMnozstviOdvedenePrace = DataConvertor.mnozstviHodToDate( odprac - sumVyks );
+                        fnc( DataConvertor.mnozstviHodToDate( result ) );
                     }
                 );
 
             }
         );
+    }
+
+    mnozstviOdvedenePraceFillDay() {
+        this.calculateFillDay( date => this.vykazPraceMnozstviOdvedenePrace = date );
+    }
+
+    refreshFillDayButtonLabel() {
+        this.calculateFillDay( date => this.fillDayButtonLabel = this.datePipe.transform( date, 'HH:mm' ) );
     }
 
     public getVykazPrace(): VykazPrace {
@@ -96,21 +121,97 @@ export class VykazPraceEditFormComponent implements OnInit {
 
     findZakazkaSuggestions( event ) {
         let query: string = event.query;
-        if (!query) {
-            this.zakazkaSuggestions = [];
-            return;
-        }
-        
+
         let params = new ZakazkaFilterParameters();
-        params.zakazkaPattern = query.toUpperCase() + '%';
-        
+        if ( query ) {
+            params.zakazkaPattern = query.toUpperCase() + '%';
+        } else {
+            params.zakazkaPattern = '%';
+        }
+
         this.vykazPraceService.getZakazkas( params,
             data => {
-                this.zakazkaSuggestions = data.map(value => value.zakazka);
+                this.zakazkaSuggestions = data.map( value => value.zakazka );
+                this.zakazkaSuggestionDatas = [];
+                data.forEach( value => this.zakazkaSuggestionDatas[value.zakazka] = value );
             }
         );
 
     }
 
+    onZakazkaDropdownClick() {
+        this.findZakazkaSuggestions( { query: this.vykazPrace.zakazka } );
+    }
+
+
+    findZakazkaPolozkaSuggestions( event ) {
+        let query: string = event.query;
+
+        let zakazka = this.getVykazPrace().zakazka;
+        if ( !zakazka ) {
+            this.zakazkaPolozkaSuggestions = [];
+            return;
+        }
+
+        let params = new ZakazkaPolozkasFilterParameters();
+        params.zakazka = zakazka;
+        if ( query ) {
+            params.polozkaPattern = query + '%';
+        }
+
+        this.vykazPraceService.getZakazkaPolozkas( params,
+            data => {
+                this.zakazkaPolozkaSuggestions = data.map( value => value.polozka );
+                this.zakazkaPolozkaSuggestionDatas = [];
+                data.forEach( value => this.zakazkaPolozkaSuggestionDatas[value.polozka] = value );
+            }
+        );
+
+    }
+
+    onZakazkaPolozkaDropdownClick() {
+        this.findZakazkaPolozkaSuggestions( { query: this.vykazPrace.polozka } );
+    }
+
+    findZakazkaPoziceSuggestions( event ) {
+        let query: string = event.query;
+
+        var zakazka = this.vykazPrace.zakazka;
+        if ( !zakazka ) {
+            this.zakazkaPoziceSuggestions = [];
+            return;
+        }
+        zakazka = zakazka.toUpperCase();
+
+        let polozka = this.vykazPrace.polozka;
+        if ( !polozka ) {
+            this.zakazkaPoziceSuggestions = []
+            return;
+        }
+
+        let params = new ZakazkaPozicesFilterParameters();
+        params.polozka = polozka;
+        params.zakazka = zakazka;
+        if ( query ) {
+            params.pozicePattern = query + '%';
+        }
+
+        this.vykazPraceService.getZakazkaPozices( params,
+            data => {
+                this.zakazkaPoziceSuggestions = data.map( value => value.pozice );
+                this.zakazkaPoziceSuggestionDatas = [];
+                data.forEach( value => this.zakazkaPoziceSuggestionDatas[value.pozice] = value );
+            }
+        );
+
+    }
+
+    onZakazkaPoziceDropdownClick() {
+        this.findZakazkaPoziceSuggestions( { query: this.vykazPrace.pozice } );
+    }
+    
+    onDatumSelect() {
+        this.refreshFillDayButtonLabel();
+    }
 
 }

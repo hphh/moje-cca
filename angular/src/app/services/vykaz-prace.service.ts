@@ -8,6 +8,11 @@ import { ConfirmVykazPracesParameters } from '../model/confirm-vykaz-praces-para
 import { CallBackendService } from './call-backend.service';
 import { ZakazkaFilterParameters } from '../model/zakazka-filter-parameters';
 import { Zakazka } from '../model/zakazka';
+import { ZakazkaPolozka } from '../model/zakazka-polozka';
+import { ZakazkaPozice } from '../model/zakazka-pozice';
+import { ZakazkaPozicesFilterParameters } from '../model/zakazka-pozices-filter-parameters';
+import { ZakazkaPolozkasFilterParameters } from '../model/zakazka-polozkas-filter-parameters';
+
 
 @Injectable()
 export class VykazPraceService {
@@ -79,11 +84,33 @@ export class VykazPraceService {
 
     getZakazkas(
         params: ZakazkaFilterParameters,
-        successCallback?: ( data: VykazPrace[] ) => void,
+        successCallback?: ( data: Zakazka[] ) => void,
         finishCallback?: ( success: boolean ) => void ) {
 
         this.callBackendService.post(
             this.ROOT_PATH + '/zakazkas',
+            params,
+            successCallback,
+            finishCallback );
+    }
+
+    getZakazkaPolozkas( params: ZakazkaPolozkasFilterParameters,
+        successCallback?: ( data: ZakazkaPolozka[] ) => void,
+        finishCallback?: ( success: boolean ) => void ) {
+
+        this.callBackendService.post(
+            this.ROOT_PATH + '/zakazkaPolozkas',
+            params,
+            successCallback,
+            finishCallback );
+    }
+
+    getZakazkaPozices( params: ZakazkaPozicesFilterParameters,
+        successCallback?: ( data: ZakazkaPozice[] ) => void,
+        finishCallback?: ( success: boolean ) => void ) {
+
+        this.callBackendService.post(
+            this.ROOT_PATH + '/zakazkaPozices',
             params,
             successCallback,
             finishCallback );

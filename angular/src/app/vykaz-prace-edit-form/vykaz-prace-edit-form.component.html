@@ -3,29 +3,73 @@
 		<div class="form-group">
 			<label for="datum" class="control-label col-xs-3" >Datum</label>
 			<div class="col-xs-9">
-				<p-calendar id="datum" [(ngModel)]="vykazPraceDatum" dateFormat="dd.mm.yy"></p-calendar>
+				<p-calendar id="datum" [(ngModel)]="vykazPraceDatum" dateFormat="dd.mm.yy" (onSelect)="onDatumSelect()" ></p-calendar>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="mnozstviOdvedenePrace" class="control-label col-xs-3">Hodin</label>
 			<div class="col-xs-9">
 				<p-calendar id="mnozstviOdvedenePrace" [(ngModel)]="vykazPraceMnozstviOdvedenePrace"
-					[timeOnly]="true"></p-calendar>
-				<button pButton type="button" label="Vyplň den" icon="fa-hourglass" (click)="mnozstviOdvedenePraceFillDay()"></button>	
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="popis" class="control-label col-xs-3">Popis</label>
-			<div class="col-xs-9">
-				<input pInputText id="popis" type="text" size="45" [(ngModel)]="vykazPrace.popisPrace">
+					[timeOnly]="true"
+					[inputStyle]="{'width':'100px'}"></p-calendar>
+				<button pButton type="button" [label]="fillDayButtonLabel" icon="fa-hourglass" (click)="mnozstviOdvedenePraceFillDay()"></button>	
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="zakazka" class="control-label col-xs-3">Zakázka</label>
 			<div class="col-xs-9">
-				<p-autoComplete id="zakazka" size="12" [(ngModel)]="vykazPrace.zakazka" [suggestions]="zakazkaSuggestions" (completeMethod)="findZakazkaSuggestions($event)"></p-autoComplete>
-				<input pInputText id="zakpol" type="text" size="3" [(ngModel)]="vykazPrace.polozka">
-				<input pInputText id="zakpoz" type="text" size="3" [(ngModel)]="vykazPrace.pozice">
+				<p-autoComplete id="zakazka" size="12" [(ngModel)]="vykazPrace.zakazka" 
+					[suggestions]="zakazkaSuggestions" (completeMethod)="findZakazkaSuggestions($event)"
+					autoWidth="false" [style]="{'width':'100%'}"
+					(onDropdownClick)="onZakazkaDropdownClick()" 
+					(onFocus)="onZakazkaDropdownClick()">
+					<ng-template let-zakazka pTemplate="item">
+						<small><small>
+							<div style="white-space: nowrap;"><b>{{zakazkaSuggestionDatas[zakazka]?.zakazka}}</b></div>
+							<div style="white-space: nowrap;">{{zakazkaSuggestionDatas[zakazka]?.popis}}</div>
+						</small></small>
+					</ng-template>
+				</p-autoComplete>
+			</div>
+		</div>	
+		<div class="form-group">
+			<label for="zakpol" class="control-label col-xs-3"></label>
+			<div class="col-xs-9">
+				<p-autoComplete id="zakpol" size="3" [(ngModel)]="vykazPrace.polozka" 
+					[suggestions]="zakazkaPolozkaSuggestions" (completeMethod)="findZakazkaPolozkaSuggestions($event)"
+					autoWidth="false" [style]="{'width':'100%'}"
+					(onDropdownClick)="onZakazkaPolozkaDropdownClick()"
+					(onFocus)="onZakazkaPolozkaDropdownClick()">
+					<ng-template let-polozka pTemplate="item">
+						<small><small>
+							<div style="white-space: nowrap;"><b>{{zakazkaPolozkaSuggestionDatas[polozka]?.polozka}}</b></div>
+							<div style="white-space: nowrap;">{{zakazkaPolozkaSuggestionDatas[polozka]?.popis}}</div>
+						</small></small>
+					</ng-template>
+				</p-autoComplete>
+			</div>
+		</div>		
+		<div class="form-group">
+			<label for="zakpoz" class="control-label col-xs-3"></label>
+			<div class="col-xs-9">
+				<p-autoComplete id="zakpoz" size="3" [(ngModel)]="vykazPrace.pozice" 
+					[suggestions]="zakazkaPoziceSuggestions" (completeMethod)="findZakazkaPoziceSuggestions($event)"
+					autoWidth="false" [style]="{'width':'100%'}"
+					(onDropdownClick)="onZakazkaPoziceDropdownClick()"
+					(onFocus)="onZakazkaPoziceDropdownClick()">
+					<ng-template let-pozice pTemplate="item">
+						<small><small>
+							<div style="white-space: nowrap;"><b>{{zakazkaPoziceSuggestionDatas[pozice]?.pozice}}</b></div>
+							<div style="white-space: nowrap;">{{zakazkaPoziceSuggestionDatas[pozice]?.popis}}</div>
+						</small></small>
+					</ng-template>
+				</p-autoComplete>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="popis" class="control-label col-xs-3">Popis</label>
+			<div class="col-xs-9">
+				<input pInputText id="popis" type="text" style="width: 100%;" [(ngModel)]="vykazPrace.popisPrace">
 			</div>
 		</div>
 		<div class="form-group">

@@ -9,12 +9,20 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import cz.cca.mojecca.db.imis.model.DenVykazEntity;
 import cz.cca.mojecca.db.imis.model.DenVykazFilterParameters;
+import cz.cca.mojecca.db.imis.model.PlzEntity;
+import cz.cca.mojecca.db.imis.model.PlzFilterPrameters;
+import cz.cca.mojecca.db.imis.model.PpzEntity;
+import cz.cca.mojecca.db.imis.model.PpzFilterPrameters;
 import cz.cca.mojecca.db.imis.model.ZakEntity;
 import cz.cca.mojecca.db.imis.model.ZakEntityFilterParameters;
 import cz.cca.mojecca.service.imis.model.VykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPracesFilterParameters;
 import cz.cca.mojecca.service.imis.model.Zakazka;
 import cz.cca.mojecca.service.imis.model.ZakazkaFilterParameters;
+import cz.cca.mojecca.service.imis.model.ZakazkaPolozka;
+import cz.cca.mojecca.service.imis.model.ZakazkaPolozkasFilterParameters;
+import cz.cca.mojecca.service.imis.model.ZakazkaPozice;
+import cz.cca.mojecca.service.imis.model.ZakazkaPozicesFilterParameters;
 
 public class VykazPraceDataAdapter {
 
@@ -98,6 +106,57 @@ public class VykazPraceDataAdapter {
 		result.setZakazka(entity.getZc());
 		result.setPopis(entity.getNazzak());
 		
+		return result;
+	}
+
+
+	public static List<ZakazkaPolozka> toZakazkaPolozkaList(List<PlzEntity> plzs) {
+		if (plzs == null) {
+			return null;
+		}
+		
+		return plzs.stream().map(e -> toZakazkaPolozka(e)).collect(Collectors.toList());
+	}
+
+
+	private static ZakazkaPolozka toZakazkaPolozka(PlzEntity e) {
+		ZakazkaPolozka result = new ZakazkaPolozka();
+		result.setPolozka(e.getId().getCpolzak());
+		result.setPopis(e.getNpolzak());
+		return result;
+	}
+
+
+	public static List<ZakazkaPozice> toZakazkaPoziceList(List<PpzEntity> ppzs) {
+		if (ppzs == null) {
+			return null;
+		}
+		
+		return ppzs.stream().map(e -> toZakazkaPozice(e)).collect(Collectors.toList());
+	}
+
+
+	private static ZakazkaPozice toZakazkaPozice(PpzEntity e) {
+		ZakazkaPozice result = new ZakazkaPozice();
+		result.setPozice(e.getId().getCpozzak());
+		result.setPopis(e.getNazev());
+		return result;
+	}
+
+
+	public static PlzFilterPrameters toPlzFilterParameters(ZakazkaPolozkasFilterParameters params) {
+		PlzFilterPrameters result = new PlzFilterPrameters();
+		result.setCpolzakPattern(params.getPolozkaPattern());
+		result.setZc(params.getZakazka());
+		return result;
+	}
+
+
+	public static PpzFilterPrameters toPpzFilterParameters(ZakazkaPozicesFilterParameters params) {
+		PpzFilterPrameters result = new PpzFilterPrameters();
+		result.setCpolzak(params.getPolozka());
+		result.setCpozzakPattern(params.getPozicePattern());
+		result.setZc(params.getZakazka());
 		return result;
 	}
 

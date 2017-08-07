@@ -18,6 +18,10 @@ import cz.cca.mojecca.service.imis.model.VykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPracesFilterParameters;
 import cz.cca.mojecca.service.imis.model.Zakazka;
 import cz.cca.mojecca.service.imis.model.ZakazkaFilterParameters;
+import cz.cca.mojecca.service.imis.model.ZakazkaPolozka;
+import cz.cca.mojecca.service.imis.model.ZakazkaPolozkasFilterParameters;
+import cz.cca.mojecca.service.imis.model.ZakazkaPozice;
+import cz.cca.mojecca.service.imis.model.ZakazkaPozicesFilterParameters;
 
 @Path("/services/imis/vykazPrace")
 @Produces(MediaType.APPLICATION_JSON)
@@ -71,4 +75,19 @@ public class VykazPraceRestService {
 		return vykazPraceService.getZakazkas(params);
 	}
 	
+	@POST
+	@Path("zakazkaPolozkas")
+	public List<ZakazkaPolozka> getZakazkaPolozkas(ZakazkaPolozkasFilterParameters params) {
+		LOGGER.log(Level.FINE, "Požadavek na položky zakázky");
+		
+		return vykazPraceService.getZakazkaPolozkas(params);
+	}	
+
+	@POST
+	@Path("zakazkaPozices")
+	public List<ZakazkaPozice> getZakazkaPozices(ZakazkaPozicesFilterParameters params) {
+		LOGGER.log(Level.FINE, "Požadavek na pozice zakázky");
+		
+		return vykazPraceService.getZakazkaPozices(params);
+	}		
 }

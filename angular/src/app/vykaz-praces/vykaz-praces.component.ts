@@ -10,13 +10,14 @@ import { VykazPraceFilterParameters } from '../model/vykaz-prace-filter-paramete
 import { ImisDay } from '../model/imis-day';
 import { ImisDaysFilterParameters } from '../model/imis-days-filter-parameters';
 import { VykazPraceEditorComponent } from '../vykaz-prace-editor/vykaz-prace-editor.component';
+import { DatePipe } from '@angular/common';
 
 
 @Component( {
     selector: 'app-vykaz-praces',
     templateUrl: './vykaz-praces.component.html',
     styleUrls: ['./vykaz-praces.component.css'],
-    providers: [VykazPraceService, ImisKalendarService]
+    providers: [VykazPraceService, ImisKalendarService, DatePipe]
 } )
 export class VykazPracesComponent implements OnInit {
 
@@ -27,12 +28,11 @@ export class VykazPracesComponent implements OnInit {
     imisDays: ImisDay[] = [];
     selectedDay: ImisDay;
     unsolvedDaysOnly: boolean = true;
+    kalendarObdobidialogVisible: boolean = false;
 
     kalendarMenuItems: MenuItem[];
 
     @ViewChild( 'vykazPraceEditor' ) vykazPraceEditor: VykazPraceEditorComponent;
-
-
 
     private autoRefreshSubscription: Subscription;
 
@@ -40,7 +40,8 @@ export class VykazPracesComponent implements OnInit {
         private vykazPraceService: VykazPraceService,
         private imisKalendarService: ImisKalendarService,
         private toasterService: ToasterService,
-        private applicationService: ApplicationService ) {
+        private applicationService: ApplicationService,
+        private datePipe: DatePipe ) {
 
         this.fromDate = new Date();
         this.fromDate.setDate( this.fromDate.getDate() - 30 );
@@ -52,10 +53,38 @@ export class VykazPracesComponent implements OnInit {
     ngOnInit() {
         this.kalendarMenuItems = [
             { label: 'Potvrdit výkazy', icon: 'fa-check', command: ( event ) => this.confirmVykazPraces( this.selectedDay ) },
-            { label: 'Nový výkaz', icon: 'fa-asterisk', command: ( event ) => this.newVykazPrace( this.selectedDay ) }
+            { label: 'Nový výkaz', icon: 'fa-asterisk', command: ( event ) => this.newVykazPrace( this.selectedDay ) },
+            { separator: true },
+            { label: 'Refresh', icon: 'fa-refresh', command: ( event ) => this.readImisDays() },
+            {
+                label: 'Jen nevyřešené dny', icon: 'fa-check-circle-o', command: ( event ) => this.switchUnsolvedDaysOnly(),
+                styleClass: 'mojeCcaMenuUnsolvedDaysOnly'
+            },
+            {
+                label: this.getMenuObdobiText(), icon: 'fa-calendar', command: ( event ) => this.kalendarObdobidialogVisible = true,
+                styleClass: 'mojeCcaMenuPeriod'
+            }
         ];
 
         this.readImisDays();
+    }
+
+    getMenuObdobiText(): string {
+        var result;
+
+        if ( this.fromDate ) {
+            result = this.datePipe.transform( this.fromDate, 'ddMM.yy' );
+        } else {
+            result = '...';
+        }
+        result += ' - ';
+        if ( this.toDate ) {
+            result += this.datePipe.transform( this.toDate, 'ddMM.yy' );
+        } else {
+            result += '...';
+        }
+
+        return result;
     }
 
     readImisDays() {
@@ -169,7 +198,19 @@ export class VykazPracesComponent implements OnInit {
         let vykazPrace = new VykazPrace();
         vykazPrace.datum = imisDay.datum;
         vykazPrace.kodUzivatele = this.applicationService.kodUzivatele;
-        this.vykazPraceEditor.show(vykazPrace);
+        this.vykazPraceEditor.show( vykazPrace );
+    }
+
+    switchUnsolvedDaysOnly() {
+        this.unsolvedDaysOnly = !this.unsolvedDaysOnly;
+        this.kalendarMenuItems.find( value => value.styleClass === 'mojeCcaMenuUnsolvedDaysOnly' ).icon = this.unsolvedDaysOnly ? 'fa-check-circle-o' : 'fa-circle-o';
+        this.readImisDays();
+    }
+
+    kalendarObdobidialogOk() {
+        this.kalendarObdobidialogVisible = false;
+        this.kalendarMenuItems.find( value => value.styleClass === 'mojeCcaMenuPeriod' ).label = this.getMenuObdobiText();
+        this.readImisDays();
     }
 
 }
