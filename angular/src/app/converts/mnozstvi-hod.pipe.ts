@@ -11,8 +11,10 @@ export class MnozstviHodPipe implements PipeTransform {
     }
 
     transform( value: number, args?: any ): string {
-        return this.decimalPipe.transform( Math.trunc( value ), '2.0-0' ) + ':' +
-            this.decimalPipe.transform( 60 * ( Math.abs( value ) % 1 ), '2.0-0' );
+        let val = Math.round( value * 1000 ) / 1000;
+        
+        return this.decimalPipe.transform( Math.trunc( val ), '2.0-0' ) + ':' +
+            this.decimalPipe.transform( 60 * ( Math.abs( val ) % 1 ), '2.0-0' );
     }
 
 }
