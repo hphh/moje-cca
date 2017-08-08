@@ -12,6 +12,7 @@ import { ZakazkaPolozka } from '../model/zakazka-polozka';
 import { ZakazkaPozice } from '../model/zakazka-pozice';
 import { ZakazkaPozicesFilterParameters } from '../model/zakazka-pozices-filter-parameters';
 import { ZakazkaPolozkasFilterParameters } from '../model/zakazka-polozkas-filter-parameters';
+import { MoveDayVykazPracesParameters } from '../model/move-day-vykaz-praces-parameters';
 
 
 @Injectable()
@@ -116,4 +117,14 @@ export class VykazPraceService {
             finishCallback );
     }
 
+    moveDayVykazPraces( params: MoveDayVykazPracesParameters,
+        successCallback?: () => void,
+        finishCallback?: ( success: boolean ) => void ) {
+
+        this.callBackendService.post(
+            this.ROOT_PATH + '/moveDayVykazPraces',
+            params,
+            successCallback,
+            finishCallback );
+    }
 }

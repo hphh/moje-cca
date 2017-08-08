@@ -1,0 +1,36 @@
+<p-dialog
+    [(visible)]="dialogVisible"
+	header="Posun výkazů - celý den"
+	modal="modal" 
+	width="450"
+	[resizable]="false">
+	
+	<div class="container-fluid"> 
+		<div class="form-horizontal">
+		
+			<div class="form-group">
+				<label for="oldDate" class="control-label col-xs-4">Z data</label>
+				<div id="oldDate" class="col-xs-8">{{oldDate | date: 'ddMM.yyyy'}}</div>
+			</div>
+			<div class="form-group">
+				<label for="newDate" class="control-label col-xs-4">Na datum</label>
+				<div id="newDate" class="col-xs-8">
+					<p-calendar id="newDate" [(ngModel)]="newDate" dateFormat="dd.mm.yy" [inline]="true"></p-calendar>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="allNextDays" class="control-label col-xs-4">I následující dny</label>
+				<div id="allNextDays" class="col-xs-8">
+					<p-checkbox id="allNextDays" binary="true" [(ngModel)]="allNextDays"></p-checkbox>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-xs-12">
+					<button pButton type="button" icon="fa-check" label="OK" (click)="onOk()"></button>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+				
+</p-dialog>	

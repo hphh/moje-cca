@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 
 import cz.cca.mojecca.service.imis.VykazPraceService;
 import cz.cca.mojecca.service.imis.model.ConfirmVykazPracesParameters;
+import cz.cca.mojecca.service.imis.model.MoveDayVykazPracesParameters;
 import cz.cca.mojecca.service.imis.model.SplittingVykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPracesFilterParameters;
@@ -90,4 +91,13 @@ public class VykazPraceRestService {
 		
 		return vykazPraceService.getZakazkaPozices(params);
 	}		
+	
+	@POST
+	@Path("moveDayVykazPraces")
+	public void moveDayVykazPraces(MoveDayVykazPracesParameters params) {
+		LOGGER.log(Level.FINE, "Požadavek na posun výkazů celého dne");
+
+		vykazPraceService.moveDayVykazPraces(params);
+	}		
+	
 }

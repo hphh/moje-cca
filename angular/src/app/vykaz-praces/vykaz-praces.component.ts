@@ -11,6 +11,7 @@ import { ImisDay } from '../model/imis-day';
 import { ImisDaysFilterParameters } from '../model/imis-days-filter-parameters';
 import { VykazPraceEditorComponent } from '../vykaz-prace-editor/vykaz-prace-editor.component';
 import { DatePipe } from '@angular/common';
+import { VykazPraceDayMoverComponent } from '../vykaz-prace-day-mover/vykaz-prace-day-mover.component';
 
 
 @Component( {
@@ -33,6 +34,7 @@ export class VykazPracesComponent implements OnInit {
     kalendarMenuItems: MenuItem[];
 
     @ViewChild( 'vykazPraceEditor' ) vykazPraceEditor: VykazPraceEditorComponent;
+    @ViewChild( 'vykazPraceDayMover' ) vykazPraceDayMover: VykazPraceDayMoverComponent;
 
     private autoRefreshSubscription: Subscription;
 
@@ -54,6 +56,7 @@ export class VykazPracesComponent implements OnInit {
         this.kalendarMenuItems = [
             { label: 'Potvrdit výkazy', icon: 'fa-check', command: ( event ) => this.confirmVykazPraces( this.selectedDay ) },
             { label: 'Nový výkaz', icon: 'fa-asterisk', command: ( event ) => this.newVykazPrace( this.selectedDay ) },
+            { label: 'Posunout výkazy', icon: 'fa-forward', command: ( event ) => this.moveDayVykazPraces( this.selectedDay ) },
             { separator: true },
             { label: 'Refresh', icon: 'fa-refresh', command: ( event ) => this.readImisDays() },
             {
@@ -211,6 +214,10 @@ export class VykazPracesComponent implements OnInit {
         this.kalendarObdobidialogVisible = false;
         this.kalendarMenuItems.find( value => value.styleClass === 'mojeCcaMenuPeriod' ).label = this.getMenuObdobiText();
         this.readImisDays();
+    }
+    
+    moveDayVykazPraces( day: ImisDay): void {
+        this.vykazPraceDayMover.show(new Date(day.datum));
     }
 
 }

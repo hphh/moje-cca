@@ -2,6 +2,7 @@ package cz.cca.mojecca.service.imis;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +13,8 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 
 import cz.cca.mojecca.db.imis.PlzDAO;
 import cz.cca.mojecca.db.imis.PpzDAO;
@@ -21,6 +24,7 @@ import cz.cca.mojecca.db.imis.model.DenVykazEntity;
 import cz.cca.mojecca.db.imis.model.DenVykazFilterParameters;
 import cz.cca.mojecca.service.imis.data.VykazPraceDataAdapter;
 import cz.cca.mojecca.service.imis.model.ConfirmVykazPracesParameters;
+import cz.cca.mojecca.service.imis.model.MoveDayVykazPracesParameters;
 import cz.cca.mojecca.service.imis.model.SplittingVykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPracesFilterParameters;
@@ -186,5 +190,47 @@ public class VykazPraceService {
 		return VykazPraceDataAdapter.toZakazkaPoziceList(ppzDAO.getPpzs(VykazPraceDataAdapter.toPpzFilterParameters(params)));
 	}
 	
+	public void moveDayVykazPraces(MoveDayVykazPracesParameters params) {
+		DenVykazFilterParameters denVykazParams = new DenVykazFilterParameters();
+		denVykazParams.setKodUzivatele(params.getKodUzivatele());
+		denVykazParams.setFromDate(new Date(params.getOldDate()));
+		if (!params.isAllNextDays()) {
+			denVykazParams.setToDate(denVykazParams.getFromDate());
+		}
+		List<DenVykazEntity> vykazs = vykazPraceDAO.getVykazPraces(denVykazParams);
+		
+		if ((vykazs == null) || (vykazs.size() == 0)) {
+			return;
+		}
+		
+		int shift = calculateShift(params.getOldDate(), params.getNewDate());
+		
+		if (shift == 0) {
+			return;
+		}
+
+		vykazs.stream().forEach(entity -> {
+			Calendar c = Calendar.getInstance();
+			c.setTime(entity.getDatum());
+			c.add(Calendar.DATE, shift);
+			entity.setDatum(c.getTime());
+		});
+		
+		
+		vykazPraceDAO.saveOrUpdateDenVykazs(vykazs);
+	}
+
+	private int calculateShift(long oldDate, long newDate) {
+		Calendar oldC = Calendar.getInstance();
+		oldC.setTimeInMillis(oldDate);
+		
+		Calendar newC = Calendar.getInstance();
+		newC.setTimeInMillis(newDate);
+		
+		LocalDate oldD = new LocalDate(oldDate);
+		LocalDate newD = new LocalDate(newDate);
+		
+		return Days.daysBetween(oldD, newD).getDays();
+	}
 
 }

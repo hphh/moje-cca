@@ -30,6 +30,7 @@ import { VykazPraceSplitterComponent } from './vykaz-prace-splitter/vykaz-prace-
 import { VykazPraceTableComponent } from './vykaz-prace-table/vykaz-prace-table.component';
 import { VykazPracesOverviewComponent } from './vykaz-praces-overview/vykaz-praces-overview.component';
 import { VykazPraceEditFormComponent } from './vykaz-prace-edit-form/vykaz-prace-edit-form.component';
+import { VykazPraceDayMoverComponent } from './vykaz-prace-day-mover/vykaz-prace-day-mover.component';
 
 @NgModule( {
     declarations: [
@@ -41,7 +42,8 @@ import { VykazPraceEditFormComponent } from './vykaz-prace-edit-form/vykaz-prace
         VykazPraceSplitterComponent,
         VykazPraceTableComponent,
         VykazPracesOverviewComponent,
-        VykazPraceEditFormComponent
+        VykazPraceEditFormComponent,
+        VykazPraceDayMoverComponent
     ],
     imports: [
         BrowserAnimationsModule,
