@@ -42,7 +42,7 @@ export class VykazPracesComponent implements OnInit {
         private vykazPraceService: VykazPraceService,
         private imisKalendarService: ImisKalendarService,
         private toasterService: ToasterService,
-        private applicationService: ApplicationService,
+        public applicationService: ApplicationService,
         private datePipe: DatePipe ) {
 
         this.fromDate = new Date();

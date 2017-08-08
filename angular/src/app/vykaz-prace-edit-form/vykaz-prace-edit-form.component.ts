@@ -42,7 +42,7 @@ export class VykazPraceEditFormComponent implements OnInit {
     constructor(
         private vykazPraceService: VykazPraceService,
         private toasterService: ToasterService,
-        private applicationService: ApplicationService,
+        public applicationService: ApplicationService,
         private imisKalendarService: ImisKalendarService,
         private datePipe: DatePipe ) { }
 

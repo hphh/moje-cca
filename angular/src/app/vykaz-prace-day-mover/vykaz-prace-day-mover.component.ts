@@ -19,7 +19,7 @@ export class VykazPraceDayMoverComponent implements OnInit {
 
 
     constructor( private vykazPraceService: VykazPraceService,
-            private applicationService: ApplicationService) { }
+            public applicationService: ApplicationService) { }
 
     ngOnInit() {
     }
