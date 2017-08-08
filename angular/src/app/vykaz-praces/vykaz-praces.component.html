@@ -52,9 +52,9 @@
 	<div class="container-fluid"> 
 		<div style="float: left; clear: left;">
 			Od:
-			<p-calendar [(ngModel)]="fromDate" dateFormat="dd.mm.yy" [inline]="true"></p-calendar>
+			<p-calendar [(ngModel)]="fromDate" dateFormat="dd.mm.yy" [inline]="true" [locale]="applicationService.primengCzLocale"></p-calendar>
 			Do:
-			<p-calendar [(ngModel)]="toDate" dateFormat="dd.mm.yy" [inline]="true"></p-calendar>
+			<p-calendar [(ngModel)]="toDate" dateFormat="dd.mm.yy" [inline]="true" [locale]="applicationService.primengCzLocale"></p-calendar>
 		</div>
 		<div style="float: left; clear: left;">
 			<button pButton (click)="kalendarObdobidialogOk()" type="text" icon="fa-check" label="OK"></button>

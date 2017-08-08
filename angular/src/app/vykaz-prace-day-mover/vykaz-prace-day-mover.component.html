@@ -15,7 +15,7 @@
 			<div class="form-group">
 				<label for="newDate" class="control-label col-xs-4">Na datum</label>
 				<div id="newDate" class="col-xs-8">
-					<p-calendar id="newDate" [(ngModel)]="newDate" dateFormat="dd.mm.yy" [inline]="true"></p-calendar>
+					<p-calendar id="newDate" [(ngModel)]="newDate" dateFormat="dd.mm.yy" [inline]="true" [locale]="applicationService.primengCzLocale"></p-calendar>
 				</div>
 			</div>
 			<div class="form-group">

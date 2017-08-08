@@ -3,7 +3,8 @@
 		<div class="form-group">
 			<label for="datum" class="control-label col-xs-3" >Datum</label>
 			<div class="col-xs-9">
-				<p-calendar id="datum" [(ngModel)]="vykazPraceDatum" dateFormat="dd.mm.yy" (onSelect)="onDatumSelect()" ></p-calendar>
+				<p-calendar id="datum" [(ngModel)]="vykazPraceDatum" dateFormat="dd.mm.yy" 
+					(onSelect)="onDatumSelect()" [locale]="applicationService.primengCzLocale" ></p-calendar>
 			</div>
 		</div>
 		<div class="form-group">
@@ -18,7 +19,7 @@
 		<div class="form-group">
 			<label for="zakazka" class="control-label col-xs-3">Zakázka</label>
 			<div class="col-xs-9">
-				<p-autoComplete id="zakazka" size="12" [(ngModel)]="vykazPrace.zakazka" 
+				<p-autoComplete id="zakazka" size="20" [(ngModel)]="vykazPrace.zakazka" 
 					[suggestions]="zakazkaSuggestions" (completeMethod)="findZakazkaSuggestions($event)"
 					autoWidth="false" [style]="{'width':'100%'}"
 					(onDropdownClick)="onZakazkaDropdownClick()" 
@@ -42,8 +43,10 @@
 					(onFocus)="onZakazkaPolozkaDropdownClick()">
 					<ng-template let-polozka pTemplate="item">
 						<small><small>
-							<div style="white-space: nowrap;"><b>{{zakazkaPolozkaSuggestionDatas[polozka]?.polozka}}</b></div>
-							<div style="white-space: nowrap;">{{zakazkaPolozkaSuggestionDatas[polozka]?.popis}}</div>
+							<div style="white-space: nowrap;">
+								<b>{{zakazkaPolozkaSuggestionDatas[polozka]?.polozka}}</b> - 
+								{{zakazkaPolozkaSuggestionDatas[polozka]?.popis}}
+							</div>
 						</small></small>
 					</ng-template>
 				</p-autoComplete>
@@ -58,10 +61,12 @@
 					(onDropdownClick)="onZakazkaPoziceDropdownClick()"
 					(onFocus)="onZakazkaPoziceDropdownClick()">
 					<ng-template let-pozice pTemplate="item">
-						<small><small>
-							<div style="white-space: nowrap;"><b>{{zakazkaPoziceSuggestionDatas[pozice]?.pozice}}</b></div>
-							<div style="white-space: nowrap;">{{zakazkaPoziceSuggestionDatas[pozice]?.popis}}</div>
-						</small></small>
+						<div style="white-space: nowrap;">
+							<small><small>
+								<b>{{zakazkaPoziceSuggestionDatas[pozice]?.pozice}}</b> - 
+								{{zakazkaPoziceSuggestionDatas[pozice]?.popis}}
+							</small></small>
+						</div>
 					</ng-template>
 				</p-autoComplete>
 			</div>
