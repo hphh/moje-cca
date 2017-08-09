@@ -1,5 +1,6 @@
 package cz.cca.mojecca.db.imis;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -28,7 +29,7 @@ public class PrichodOdchodDAO {
 			"       kody_po p, " + 
 			"       kody_dob d" + 
 			" where icp = :icp" + 
-			"   and datum = trunc(sysdate) " + 
+			"   and datum = :day " + 
 			"   and p.kod_po = t.kod_po" + 
 			"   and d.kod_doby = p.kod_doby" + 
 			"   and t.druh in ('P', 'O') " +
@@ -45,11 +46,12 @@ public class PrichodOdchodDAO {
 	private EntityManager entityManager;
 	
 	@SuppressWarnings("unchecked")
-	public List<PrichodOdchodEntity> getPrichodOdchodsEmployeeToday(String icp) {
+	public List<PrichodOdchodEntity> getEmployeePrichodOdchods(String icp, Date day) {
 		Query q = entityManager.createNativeQuery(
 				PRICHODY_ODCHODY_PRACOVNIKA_AKTUALNI_DEN_QUERY, 
 				PrichodOdchodEntity.class);
 		q.setParameter("icp", icp);
+		q.setParameter("day", day);
 		
 		return q.getResultList();
 	}

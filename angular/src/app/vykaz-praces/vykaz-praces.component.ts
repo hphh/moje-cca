@@ -102,8 +102,6 @@ export class VykazPracesComponent implements OnInit {
 
         this.imisKalendarService.getImisDays( params,
             data => {
-                this.readingData = false;
-
                 this.imisDays = data;
 
                 var selectedDate: number;
@@ -121,10 +119,6 @@ export class VykazPracesComponent implements OnInit {
                 }
 
                 this.readVykazPraces();
-            },
-            success => {
-                this.readingData = false;
-                this.refreshAutoRefreshSubscription();
             }
         );
     }
@@ -132,6 +126,8 @@ export class VykazPracesComponent implements OnInit {
     readVykazPraces() {
         if ( this.selectedDay == null ) {
             this.vykazPraces = [];
+            this.readingData = false;
+            this.refreshAutoRefreshSubscription();
             return;
         }
 
@@ -145,9 +141,7 @@ export class VykazPracesComponent implements OnInit {
 
         this.vykazPraceService.getVykazPraces( params,
             data => {
-                this.readingData = false;
                 this.vykazPraces = data;
-                this.refreshAutoRefreshSubscription();
             },
             success => {
                 this.readingData = false;
