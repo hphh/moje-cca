@@ -1,4 +1,9 @@
 <toaster-container [toasterconfig]="toasterconfig"></toaster-container>
 
-<app-dochazka-employee-today></app-dochazka-employee-today>
-<app-vykaz-praces></app-vykaz-praces>
+<div style="display: flex; flex-direction: column; height: 100vh;">
+	<div style="min-height: 40px;">
+		<app-dochazka-employee-today></app-dochazka-employee-today>
+	</div>
+	
+	<app-vykaz-praces></app-vykaz-praces>
+</div>

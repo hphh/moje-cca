@@ -1,13 +1,10 @@
-<app-vykaz-prace-editor #vykazPraceEditor (onSave)="readImisDays()"></app-vykaz-prace-editor>
-<app-vykaz-prace-day-mover #vykazPraceDayMover (onSave)="readImisDays()"></app-vykaz-prace-day-mover>
-<p-contextMenu #kalendarMenu [model]="kalendarMenuItems"></p-contextMenu>
-
-<div style="height: 100vh; display: flex; flex-flow: row;">
-		<div style="width: 350px; margin-left: 10px; margin-top: 10px; overflow-y: auto; ">
+<div style="display: flex; flex: 1; height: calc(100vh - 40px);">
+		<div style="overflow-y: auto; min-width: 350px; margin-left: 10px; margin-top: 10px;">
 			<p-dataTable [value]="imisDays"  
 						selectionMode="single" [(selection)]="selectedDay"
 						(onRowSelect)="onDateSelect($event)"
-						[contextMenu]="kalendarMenu">
+						[contextMenu]="kalendarMenu"
+						[style]="{'max-width':'350px'}">
 						
 				<p-column field="datum" header="Datum" [style]="{'text-align':'center'}">
 					<ng-template let-col let-vykaz="rowData" pTemplate="body">
@@ -38,11 +35,14 @@
 			</p-dataTable>
 		</div>
 		
-		<div style="width: 1000px; margin-left: 10px; margin-top: 10px;">
+		<div style="flex:1 auto; overflow-y: auto; margin-left: 10px; margin-top: 10px;">
 			<app-vykaz-prace-table [vykazPraces]="vykazPraces" (onSave)="readImisDays()" ></app-vykaz-prace-table>
 		</div>
 </div>
 
+<app-vykaz-prace-editor #vykazPraceEditor (onSave)="readImisDays()"></app-vykaz-prace-editor>
+<app-vykaz-prace-day-mover #vykazPraceDayMover (onSave)="readImisDays()"></app-vykaz-prace-day-mover>
+<p-contextMenu #kalendarMenu [model]="kalendarMenuItems"></p-contextMenu>
 <p-dialog
     [(visible)]="kalendarObdobidialogVisible"
 	header="Kalendář - období"
