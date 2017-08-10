@@ -10,6 +10,8 @@ import javax.ws.rs.core.MediaType;
 import cz.cca.mojecca.service.imis.DochazkaService;
 import cz.cca.mojecca.service.imis.model.EmployeeDayPrichodOdchods;
 import cz.cca.mojecca.service.imis.model.EmployeeDayPrichodOdchodsFilterParameters;
+import cz.cca.mojecca.service.imis.model.EmployeeNahradniVolno;
+import cz.cca.mojecca.service.imis.model.EmployeeNahradniVolnoFilterParameters;
 
 @Path("/services/imis/dochazka")
 @Produces(MediaType.APPLICATION_JSON)
@@ -26,5 +28,10 @@ public class DochazkaRestService {
 		return dochazkaService.getEmployeeDayPrichodOdchods(params);
 	}
 		
+	@POST
+	@Path("/employeeNahradniVolno")
+	public EmployeeNahradniVolno getEmployeeNahradniVolno(EmployeeNahradniVolnoFilterParameters params) {
+		return dochazkaService.getEmployeeNahradniVolno(params);
+	}
 
 }

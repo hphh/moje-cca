@@ -32,6 +32,7 @@ import { VykazPracesOverviewComponent } from './vykaz-praces-overview/vykaz-prac
 import { VykazPraceEditFormComponent } from './vykaz-prace-edit-form/vykaz-prace-edit-form.component';
 import { VykazPraceDayMoverComponent } from './vykaz-prace-day-mover/vykaz-prace-day-mover.component';
 import { DochazkaEmployeeTodayComponent } from './dochazka-employee-today/dochazka-employee-today.component';
+import { NahradniVolnoOverviewComponent } from './nahradni-volno-overview/nahradni-volno-overview.component';
 
 @NgModule( {
     declarations: [
@@ -45,7 +46,8 @@ import { DochazkaEmployeeTodayComponent } from './dochazka-employee-today/dochaz
         VykazPracesOverviewComponent,
         VykazPraceEditFormComponent,
         VykazPraceDayMoverComponent,
-        DochazkaEmployeeTodayComponent
+        DochazkaEmployeeTodayComponent,
+        NahradniVolnoOverviewComponent
     ],
     imports: [
         BrowserAnimationsModule,
