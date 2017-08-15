@@ -13,6 +13,7 @@ public class ImisDen {
 	private BigDecimal odpracovanoHod;
 	private BigDecimal vykazanoHod;
 	private String potvrzeno;
+	private boolean unsolved;
 	
 	
 	public Long getDatum() {
@@ -68,6 +69,12 @@ public class ImisDen {
 	}
 	public void setPotvrzeno(String potvrzeno) {
 		this.potvrzeno = potvrzeno;
+	}
+	public boolean isUnsolved() {
+		return unsolved;
+	}
+	public void setUnsolved(boolean unsolved) {
+		this.unsolved = unsolved;
 	}	
 	
 	

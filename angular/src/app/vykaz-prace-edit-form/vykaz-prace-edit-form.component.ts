@@ -72,7 +72,7 @@ export class VykazPraceEditFormComponent implements OnInit {
                 let vyks: VykazPrace[] = data;
                 let sumVyks = vyks.filter( value => value.id !== this.vykazPrace.id ).map( value => value.mnozstviOdvedenePrace ).reduce(( previousValue, currentValue ) => {
                     return previousValue + currentValue;
-                } );
+                }, 0);
 
                 let params = new DensFilterParameters();
                 params.fromDate = this.vykazPrace.datum;

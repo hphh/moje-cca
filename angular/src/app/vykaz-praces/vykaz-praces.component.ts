@@ -12,6 +12,7 @@ import { DensFilterParameters } from '../model/dens-filter-parameters';
 import { VykazPraceEditorComponent } from '../vykaz-prace-editor/vykaz-prace-editor.component';
 import { DatePipe } from '@angular/common';
 import { VykazPraceDayMoverComponent } from '../vykaz-prace-day-mover/vykaz-prace-day-mover.component';
+import { NextPracovniDenFilterParameters } from '../model/next-pracovni-den-filter-parameters';
 
 
 @Component( {
@@ -30,6 +31,7 @@ export class VykazPracesComponent implements OnInit {
     selectedDay: Den;
     unsolvedDaysOnly: boolean = true;
     kalendarObdobidialogVisible: boolean = false;
+    nextPracovniDen: Den;
 
     kalendarMenuItems: MenuItem[];
 
@@ -40,7 +42,7 @@ export class VykazPracesComponent implements OnInit {
 
     constructor(
         private vykazPraceService: VykazPraceService,
-        private imisKalendarService: KalendarService,
+        private kalendarService: KalendarService,
         private toasterService: ToasterService,
         public applicationService: ApplicationService,
         private datePipe: DatePipe ) {
@@ -100,7 +102,7 @@ export class VykazPracesComponent implements OnInit {
         params.toDate = this.toDate.getTime();
         params.unsolvedDaysOnly = this.unsolvedDaysOnly;
 
-        this.imisKalendarService.getImisDays( params,
+        this.kalendarService.getDens( params,
             data => {
                 this.dens = data;
 
@@ -116,6 +118,19 @@ export class VykazPracesComponent implements OnInit {
                             this.selectedDay = value;
                         }
                     } );
+                }
+                
+                var lastUnsolvedDay: Den;
+                this.dens.forEach(value => {
+                    if (value.imisDen.unsolved) {
+                        lastUnsolvedDay = value;
+                    }
+                });
+                if (lastUnsolvedDay) {
+                    let ps = new NextPracovniDenFilterParameters();
+                    ps.day = lastUnsolvedDay.datum;
+                    ps.kodUzivatele = this.applicationService.kodUzivatele;
+                    this.kalendarService.getNextPracovniDen(ps, data => this.nextPracovniDen = data);
                 }
 
                 this.readVykazPraces();
@@ -177,7 +192,36 @@ export class VykazPracesComponent implements OnInit {
     isToday( date: number ): boolean {
         let today = new Date();
         today.setHours( 0, 0, 0, 0 );
-        return new Date(date) === today;
+        return date === today.getTime();
+    }
+    
+    isPast( date: number ): boolean {
+        let today = new Date();
+        today.setHours( 0, 0, 0, 0 );
+        return date < today.getTime();
+    }
+    
+    
+    dayStyle( day: Den ): any {
+        if (day && day.iszaDen && day.iszaDen.druhDne !== 'P') {
+            return {'color': 'lightgrey'};
+        } 
+        
+        return {};
+    }
+    
+    warningDay(den : Den): boolean {
+        let isPast = this.isPast(den.datum);
+        
+        if (isPast && den.imisDen.unsolved) {
+            return true;
+        }
+        
+        if (!isPast && den.imisDen.unsolved && den.iszaDen.druhDne !== 'P'){
+            return true;
+        }
+                
+        return false;
     }
 
     onDateSelect() {

@@ -40,24 +40,26 @@ public class ImisKalendarService {
 
 		List<ImisDen> result = KalendarDataAdapter.toImisDens(imisDenEntities);
 
-		fillOdpracovanoHod(result, icp);
-
+		fillCalculatedItems(result, icp);
+		
 		if (params.isUnsolvedDaysOnly()) {
-			result = result.stream().filter(entity -> {
-				return (MnozstviHodUtils.compare(entity.getVykazanoHod(), entity.getOdpracovanoHod()) != 0) ||
-						("A".equals(entity.getPritomen()) && "N".equals(entity.getPotvrzeno())) ||
-						("A".equals(entity.getVykazano()) && "N".equals(entity.getPotvrzeno()));
-
-			}).collect(Collectors.toList());
+			result = result.stream().filter(entity -> entity.isUnsolved()).collect(Collectors.toList());
 		}
 
 		return result;
 	}
+	
+	private boolean isUnsolvedDay(ImisDen entity) {
+		return (MnozstviHodUtils.compare(entity.getVykazanoHod(), entity.getOdpracovanoHod()) != 0) ||
+				("A".equals(entity.getPritomen()) && "N".equals(entity.getPotvrzeno())) ||
+				("A".equals(entity.getVykazano()) && "N".equals(entity.getPotvrzeno()));
+	}
 
-	private void fillOdpracovanoHod(List<ImisDen> result, String icp) {
+	private void fillCalculatedItems(List<ImisDen> result, String icp) {
 		result.stream().forEach(entity -> {
 			BigDecimal odprac = dochazkaService.getOdpracovano(icp, new Date(entity.getDatum()));
 			entity.setOdpracovanoHod(odprac);
+			entity.setUnsolved(isUnsolvedDay(entity));
 		});
 	}
 

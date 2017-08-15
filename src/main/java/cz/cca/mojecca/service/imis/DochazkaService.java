@@ -17,15 +17,16 @@ import cz.cca.mojecca.db.imis.ZamMesDAO;
 import cz.cca.mojecca.db.imis.model.PrichodOdchodEntity;
 import cz.cca.mojecca.db.imis.model.ZamMesEntity;
 import cz.cca.mojecca.db.imis.model.ZamMesFilterParameters;
+import cz.cca.mojecca.service.KalendarService;
 import cz.cca.mojecca.service.imis.data.DochazkaDataAdapter;
 import cz.cca.mojecca.service.imis.data.PresentDataAdapter;
 import cz.cca.mojecca.service.imis.model.EmployeeDayPrichodOdchods;
 import cz.cca.mojecca.service.imis.model.EmployeeDayPrichodOdchodsFilterParameters;
 import cz.cca.mojecca.service.imis.model.EmployeeNahradniVolno;
 import cz.cca.mojecca.service.imis.model.EmployeeNahradniVolnoFilterParameters;
-import cz.cca.mojecca.service.imis.model.ImisDen;
-import cz.cca.mojecca.service.imis.model.ImisDensFilterParameters;
 import cz.cca.mojecca.service.imis.model.NahradniVolnoSumVybrat;
+import cz.cca.mojecca.service.model.Den;
+import cz.cca.mojecca.service.model.DensFilterParameters;
 import cz.cca.mojecca.util.DateUtils;
 
 @RequestScoped
@@ -33,16 +34,16 @@ public class DochazkaService {
 
 	@Inject
 	private UzivatelService uzivatelService;
-	
-	@Inject 
-	private ImisKalendarService kalendarService;
+
+	@Inject
+	private KalendarService kalendarService;
 
 	@EJB
 	private PrichodOdchodDAO prichodOdchodDAO;
 
 	@EJB
 	private VykazPraceDAO vykazPraceDAO;
-	
+
 	@EJB
 	private ZamMesDAO zamMesDAO;
 
@@ -154,22 +155,22 @@ public class DochazkaService {
 
 		return result;
 	}
-	
+
 	public EmployeeNahradniVolno getEmployeeNahradniVolno(EmployeeNahradniVolnoFilterParameters params) {
 		String icp = uzivatelService.getIcp(params.getKodUzivatele());
 		ZamMesFilterParameters pars = DochazkaDataAdapter.toZamMesFilterParameters(params, icp);
-		
+
 		List<ZamMesEntity> zamMess = zamMesDAO.getZamMess(pars);
 		NahradniVolnoSumVybrat sumVybrat = calculateSumVybrat(params.getKodUzivatele());
-		
+
 		EmployeeNahradniVolno result = DochazkaDataAdapter.toEmployeeNahradniVolno(zamMess, sumVybrat);
-						
+
 		return result;
 	}
 
 	private NahradniVolnoSumVybrat calculateSumVybrat(String kodUzivatele) {
 		String icp = uzivatelService.getIcp(kodUzivatele);
-		
+
 		EmployeeNahradniVolnoFilterParameters params = new EmployeeNahradniVolnoFilterParameters();
 		ZamMesFilterParameters pars = DochazkaDataAdapter.toZamMesFilterParameters(params, icp);
 		List<ZamMesEntity> zamMess = zamMesDAO.getZamMess(pars);
@@ -179,37 +180,41 @@ public class DochazkaService {
 		double vybranoNV = 0;
 		while (today.compareTo(day) > 0) {
 			OdpracovanoHod odpracovano = calculateOpracovanoHod(icp, day.toDate());
-			
+
 			if ((odpracovano.odpracovano > 0) && (Math.round(odpracovano.odpracovano * 1000d) / 1000d < 8d)) {
 				vybranoNV += 8d - odpracovano.odpracovano;
 			}
-						
+
 			day = day.plusDays(1);
 		}
-		
+
 		double sumNV = zamMess.stream().mapToDouble(entity -> entity.getNahrVolno().doubleValue()).sum();
 		double lzeVybrat = sumNV - vybranoNV;
-		
+
 		Date obdobiMusiVybrat = new LocalDate().withDayOfMonth(1).minusMonths(2).toDate();
-		double musiVybrat = zamMess.stream().filter(entity -> entity.getId().getObdobi().equals(obdobiMusiVybrat)).mapToDouble(entity -> entity.getNahrVolno().doubleValue()).sum();
+		double musiVybrat = zamMess.stream().filter(entity -> entity.getId().getObdobi().equals(obdobiMusiVybrat))
+				.mapToDouble(entity -> entity.getNahrVolno().doubleValue()).sum();
 		musiVybrat -= vybranoNV;
-		
+
 		NahradniVolnoSumVybrat result = new NahradniVolnoSumVybrat();
 		result.setLze(new BigDecimal(lzeVybrat));
 		result.setMusi(new BigDecimal(musiVybrat));
 		result.setMusiNaDen(new BigDecimal(musiVybrat / getPracovnichDniDoKonceMesiceCount(kodUzivatele)));
-		
+
 		return result;
 	}
 
 	private double getPracovnichDniDoKonceMesiceCount(String kodUzivatele) {
-		ImisDensFilterParameters params = new ImisDensFilterParameters();
+		DensFilterParameters params = new DensFilterParameters();
 		params.setKodUzivatele(kodUzivatele);
-		params.setFromDate(new LocalDate().toDate());
-		params.setToDate(new LocalDate().withDayOfMonth(1).plusMonths(1).minusDays(1).toDate());
-		List<ImisDen> days = kalendarService.getImisDens(params);
-		
-		return days.stream().filter(entity -> "A".equals(entity.getVyrobniDen())).count();
+		params.setFromDate(new LocalDate().toDate().getTime());
+		params.setToDate(new LocalDate().withDayOfMonth(1).plusMonths(1).minusDays(1).toDate().getTime());
+		List<Den> days = kalendarService.getDens(params);
+
+		return days.stream().filter(
+				entity -> "A".equals(entity.getImisDen().getVyrobniDen()) &&
+						"P".equals(entity.getIszaDen().getDruhDne()))
+				.count();
 	}
 
 }
@@ -222,4 +227,3 @@ class OdpracovanoHod {
 	double firstPrichod;
 
 }
-

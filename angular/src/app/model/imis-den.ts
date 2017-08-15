@@ -9,5 +9,6 @@ export class ImisDen {
     odpracovanoHod: number;
     vykazanoHod: number;
     potvrzeno: string;
+    unsolved: boolean;
     
 }

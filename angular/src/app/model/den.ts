@@ -6,5 +6,5 @@ export class Den {
     datum: number;
     kodUzivatele: String;
     imisDen: ImisDen;
-    izsaDen: IszaDen;
+    iszaDen: IszaDen;
 }

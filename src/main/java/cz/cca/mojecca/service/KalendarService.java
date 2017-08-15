@@ -8,6 +8,8 @@ import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
 import cz.cca.mojecca.db.isza.CcagDenniKapacitaDAO;
 import cz.cca.mojecca.db.isza.model.CcagDenniKapacitaEntity;
 import cz.cca.mojecca.db.isza.model.CcagDenniKapacitaFilterParameters;
@@ -17,6 +19,7 @@ import cz.cca.mojecca.service.imis.model.ImisDen;
 import cz.cca.mojecca.service.imis.model.ImisDensFilterParameters;
 import cz.cca.mojecca.service.model.Den;
 import cz.cca.mojecca.service.model.DensFilterParameters;
+import cz.cca.mojecca.service.model.NextPracovniDenFilterParameters;
 
 @RequestScoped
 public class KalendarService {
@@ -49,6 +52,27 @@ public class KalendarService {
 
 		return result;
 
+	}
+
+	public Den getNextPracovniDen(NextPracovniDenFilterParameters params) {
+		if (params.getKodUzivatele() == null) {
+			throw new RuntimeException("Musí být uvedena osoba");
+		}
+		
+		DensFilterParameters ps = new DensFilterParameters();
+		ps.setKodUzivatele(params.getKodUzivatele());
+		LocalDate day = new LocalDate(params.getDay());
+		ps.setFromDate(day.plusDays(1).toDate().getTime());
+		ps.setToDate(day.plusDays(30).toDate().getTime());
+		List<Den> dens = getDens(ps);
+		
+		for (Den d : dens) {
+			if ("P".equals(d.getIszaDen().getDruhDne())) {
+				return d;
+			}
+		}
+
+		return null;
 	}
 
 }

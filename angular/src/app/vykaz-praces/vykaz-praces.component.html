@@ -19,8 +19,9 @@
 				</ng-template>
 				<ng-template let-col let-den="rowData" pTemplate="body">
 					<span style="white-space: nowrap;">
-		           		<i *ngIf="isToday(den['datum'])" class="fa fa-arrow-right"></i>
-		           		{{den[col.field] | date: 'ddMM.yyyy EEE'}}
+		           		<i *ngIf="isToday(den.datum)" class="fa fa-arrow-right"></i>
+		           		<span [ngStyle]="dayStyle(den)">{{den[col.field] | date: 'ddMM.yyyy EEE'}}</span>
+		           		<i *ngIf="warningDay(den)" class="fa fa-exclamation-triangle" style="color: orange;"></i>
 		           	</span>
 		       	</ng-template> 
 	        </p-column>
@@ -43,6 +44,9 @@
 		       	</ng-template> 
 	        </p-column>
 		</p-dataTable>
+		<div style="margin-top: 10px;">
+			Další pracovní den: {{nextPracovniDen?.datum | date: 'ddMM.yyyy EEE'}}
+		</div>
 	</div>
 	
 	<div style="flex:1 auto; overflow-y: auto; margin-left: 10px;">
