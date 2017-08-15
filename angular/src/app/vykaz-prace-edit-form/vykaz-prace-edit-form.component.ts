@@ -80,7 +80,7 @@ export class VykazPraceEditFormComponent implements OnInit {
                 params.kodUzivatele = this.applicationService.kodUzivatele;
                 params.unsolvedDaysOnly = false;
 
-                this.kalendarService.getImisDays( params,
+                this.kalendarService.getDens( params,
                     data => {
                         let days: Den[] = data;
 

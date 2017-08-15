@@ -16,7 +16,7 @@ swarm:
         password: hph
         jndi-name: java:/iszaDS
         check-valid-connection-sql: select 1 from dual
-        new-connection-sql: set role ccasp_hap001f
+        new-connection-sql: set role ccasp_hap001f, ccasp_hpp008f
   http:
     port: 81 
   logging:
