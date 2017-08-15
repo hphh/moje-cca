@@ -1,6 +1,7 @@
 package cz.cca.mojecca.service.imis;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,12 +13,12 @@ import cz.cca.mojecca.db.imis.KalendarDAO;
 import cz.cca.mojecca.db.imis.PrichodOdchodDAO;
 import cz.cca.mojecca.db.imis.model.ImisDenEntity;
 import cz.cca.mojecca.service.imis.data.KalendarDataAdapter;
-import cz.cca.mojecca.service.imis.model.ImisDay;
-import cz.cca.mojecca.service.imis.model.ImisDaysFilterParameters;
+import cz.cca.mojecca.service.imis.model.ImisDen;
+import cz.cca.mojecca.service.imis.model.ImisDensFilterParameters;
 import cz.cca.mojecca.util.MnozstviHodUtils;
 
 @RequestScoped
-public class KalendarService {
+public class ImisKalendarService {
 
 	@EJB
 	private KalendarDAO kalendarDAO;
@@ -31,13 +32,13 @@ public class KalendarService {
 	@Inject
 	private UzivatelService uzivatelService;
 
-	public List<ImisDay> getImisDays(ImisDaysFilterParameters params) {
+	public List<ImisDen> getImisDens(ImisDensFilterParameters params) {
 		String icp = uzivatelService.getIcp(params.getKodUzivatele());
 
 		List<ImisDenEntity> imisDenEntities = kalendarDAO.getImisDens(params.getFromDate(), params.getToDate(),
 				params.getKodUzivatele(), icp);
 
-		List<ImisDay> result = KalendarDataAdapter.toImisDays(imisDenEntities);
+		List<ImisDen> result = KalendarDataAdapter.toImisDens(imisDenEntities);
 
 		fillOdpracovanoHod(result, icp);
 
@@ -53,9 +54,9 @@ public class KalendarService {
 		return result;
 	}
 
-	private void fillOdpracovanoHod(List<ImisDay> result, String icp) {
+	private void fillOdpracovanoHod(List<ImisDen> result, String icp) {
 		result.stream().forEach(entity -> {
-			BigDecimal odprac = dochazkaService.getOdpracovano(icp, entity.getDatum());
+			BigDecimal odprac = dochazkaService.getOdpracovano(icp, new Date(entity.getDatum()));
 			entity.setOdpracovanoHod(odprac);
 		});
 	}

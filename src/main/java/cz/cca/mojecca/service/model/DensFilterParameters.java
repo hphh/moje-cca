@@ -1,14 +1,12 @@
-package cz.cca.mojecca.service.imis.model;
+package cz.cca.mojecca.service.model;
 
-import java.util.Date;
-
-public class ImisDaysFilterParameters {
+public class DensFilterParameters {
 	
 	private String kodUzivatele;
-	private Date fromDate;
-	private Date toDate;
+	private Long fromDate;
+	private Long toDate;
 	private boolean unsolvedDaysOnly;
-	
+
 	
 	public String getKodUzivatele() {
 		return kodUzivatele;
@@ -16,16 +14,16 @@ public class ImisDaysFilterParameters {
 	public void setKodUzivatele(String kodUzivatele) {
 		this.kodUzivatele = kodUzivatele;
 	}
-	public Date getFromDate() {
+	public Long getFromDate() {
 		return fromDate;
 	}
-	public void setFromDate(Date fromDate) {
+	public void setFromDate(Long fromDate) {
 		this.fromDate = fromDate;
 	}
-	public Date getToDate() {
+	public Long getToDate() {
 		return toDate;
 	}
-	public void setToDate(Date toDate) {
+	public void setToDate(Long toDate) {
 		this.toDate = toDate;
 	}
 	public boolean isUnsolvedDaysOnly() {
@@ -33,8 +31,7 @@ public class ImisDaysFilterParameters {
 	}
 	public void setUnsolvedDaysOnly(boolean unsolvedDaysOnly) {
 		this.unsolvedDaysOnly = unsolvedDaysOnly;
-	}
-	
+	}	
 	
 
 }

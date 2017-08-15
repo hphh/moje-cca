@@ -23,8 +23,8 @@ import cz.cca.mojecca.service.imis.model.EmployeeDayPrichodOdchods;
 import cz.cca.mojecca.service.imis.model.EmployeeDayPrichodOdchodsFilterParameters;
 import cz.cca.mojecca.service.imis.model.EmployeeNahradniVolno;
 import cz.cca.mojecca.service.imis.model.EmployeeNahradniVolnoFilterParameters;
-import cz.cca.mojecca.service.imis.model.ImisDay;
-import cz.cca.mojecca.service.imis.model.ImisDaysFilterParameters;
+import cz.cca.mojecca.service.imis.model.ImisDen;
+import cz.cca.mojecca.service.imis.model.ImisDensFilterParameters;
 import cz.cca.mojecca.service.imis.model.NahradniVolnoSumVybrat;
 import cz.cca.mojecca.util.DateUtils;
 
@@ -35,7 +35,7 @@ public class DochazkaService {
 	private UzivatelService uzivatelService;
 	
 	@Inject 
-	private KalendarService kalendarService;
+	private ImisKalendarService kalendarService;
 
 	@EJB
 	private PrichodOdchodDAO prichodOdchodDAO;
@@ -203,11 +203,11 @@ public class DochazkaService {
 	}
 
 	private double getPracovnichDniDoKonceMesiceCount(String kodUzivatele) {
-		ImisDaysFilterParameters params = new ImisDaysFilterParameters();
+		ImisDensFilterParameters params = new ImisDensFilterParameters();
 		params.setKodUzivatele(kodUzivatele);
 		params.setFromDate(new LocalDate().toDate());
 		params.setToDate(new LocalDate().withDayOfMonth(1).plusMonths(1).minusDays(1).toDate());
-		List<ImisDay> days = kalendarService.getImisDays(params);
+		List<ImisDen> days = kalendarService.getImisDens(params);
 		
 		return days.stream().filter(entity -> "A".equals(entity.getVyrobniDen())).count();
 	}

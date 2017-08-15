@@ -1,14 +1,14 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { VykazPraceService } from '../services/vykaz-prace.service';
-import { ImisKalendarService } from '../services/imis-kalendar.service';
+import { KalendarService } from '../services/kalendar.service';
 import { ApplicationService } from '../services/application.service';
 import { ToasterService } from 'angular2-toaster';
 import { VykazPrace } from '../model/vykaz-prace';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 import { VykazPraceFilterParameters } from '../model/vykaz-prace-filter-parameters';
-import { ImisDay } from '../model/imis-day';
-import { ImisDaysFilterParameters } from '../model/imis-days-filter-parameters';
+import { Den } from '../model/den';
+import { DensFilterParameters } from '../model/dens-filter-parameters';
 import { VykazPraceEditorComponent } from '../vykaz-prace-editor/vykaz-prace-editor.component';
 import { DatePipe } from '@angular/common';
 import { VykazPraceDayMoverComponent } from '../vykaz-prace-day-mover/vykaz-prace-day-mover.component';
@@ -18,7 +18,7 @@ import { VykazPraceDayMoverComponent } from '../vykaz-prace-day-mover/vykaz-prac
     selector: 'app-vykaz-praces',
     templateUrl: './vykaz-praces.component.html',
     styleUrls: ['./vykaz-praces.component.css'],
-    providers: [VykazPraceService, ImisKalendarService, DatePipe]
+    providers: [VykazPraceService, KalendarService, DatePipe]
 } )
 export class VykazPracesComponent implements OnInit {
 
@@ -26,8 +26,8 @@ export class VykazPracesComponent implements OnInit {
     toDate: Date = new Date();
     vykazPraces: VykazPrace[] = [];
     readingData: boolean = false;
-    imisDays: ImisDay[] = [];
-    selectedDay: ImisDay;
+    dens: Den[] = [];
+    selectedDay: Den;
     unsolvedDaysOnly: boolean = true;
     kalendarObdobidialogVisible: boolean = false;
 
@@ -40,7 +40,7 @@ export class VykazPracesComponent implements OnInit {
 
     constructor(
         private vykazPraceService: VykazPraceService,
-        private imisKalendarService: ImisKalendarService,
+        private imisKalendarService: KalendarService,
         private toasterService: ToasterService,
         public applicationService: ApplicationService,
         private datePipe: DatePipe ) {
@@ -58,7 +58,7 @@ export class VykazPracesComponent implements OnInit {
             { label: 'Nový výkaz', icon: 'fa-asterisk', command: ( event ) => this.newVykazPrace( this.selectedDay ) },
             { label: 'Posunout výkazy', icon: 'fa-forward', command: ( event ) => this.moveDayVykazPraces( this.selectedDay ) },
             { separator: true },
-            { label: 'Refresh', icon: 'fa-refresh', command: ( event ) => this.readImisDays() },
+            { label: 'Refresh', icon: 'fa-refresh', command: ( event ) => this.readDens() },
             {
                 label: 'Jen nevyřešené dny', icon: 'fa-check-circle-o', command: ( event ) => this.switchUnsolvedDaysOnly(),
                 styleClass: 'mojeCcaMenuUnsolvedDaysOnly'
@@ -69,7 +69,7 @@ export class VykazPracesComponent implements OnInit {
             }
         ];
 
-        this.readImisDays();
+        this.readDens();
     }
 
     getMenuObdobiText(): string {
@@ -90,27 +90,27 @@ export class VykazPracesComponent implements OnInit {
         return result;
     }
 
-    readImisDays() {
+    readDens() {
         this.readingData = true;
         this.unsubscribeAutoRefreshSubscription();
 
-        let params = new ImisDaysFilterParameters();
+        let params = new DensFilterParameters();
         params.kodUzivatele = this.applicationService.kodUzivatele;
-        params.fromDate = this.fromDate;
-        params.toDate = this.toDate;
+        params.fromDate = this.fromDate.getTime();
+        params.toDate = this.toDate.getTime();
         params.unsolvedDaysOnly = this.unsolvedDaysOnly;
 
         this.imisKalendarService.getImisDays( params,
             data => {
-                this.imisDays = data;
+                this.dens = data;
 
                 var selectedDate: number;
                 if ( this.selectedDay ) {
                     selectedDate = this.selectedDay.datum;
                 }
-                if ( this.imisDays.length > 0 ) {
-                    this.selectedDay = this.imisDays[0];
-                    this.imisDays.forEach( value => {
+                if ( this.dens.length > 0 ) {
+                    this.selectedDay = this.dens[0];
+                    this.dens.forEach( value => {
                         if ( ( selectedDate && selectedDate === value.datum ) ||
                             ( !selectedDate && this.isToday( value.datum ) ) ) {
                             this.selectedDay = value;
@@ -124,7 +124,7 @@ export class VykazPracesComponent implements OnInit {
     }
 
     readVykazPraces() {
-        if ( this.selectedDay == null ) {
+        if ( !this.selectedDay || !this.selectedDay.datum ) {
             this.vykazPraces = [];
             this.readingData = false;
             this.refreshAutoRefreshSubscription();
@@ -170,30 +170,30 @@ export class VykazPracesComponent implements OnInit {
     private refreshAutoRefreshSubscription() {
         this.unsubscribeAutoRefreshSubscription();
         this.autoRefreshSubscription = Observable.interval( 60000 ).subscribe(() => {
-            this.readImisDays()
+            this.readDens()
         } );
     }
 
     isToday( date: number ): boolean {
         let today = new Date();
         today.setHours( 0, 0, 0, 0 );
-        return date === today.getTime();
+        return new Date(date) === today;
     }
 
-    onDateSelect( imisDay: ImisDay ) {
+    onDateSelect() {
         this.readVykazPraces();
     }
 
-    private confirmVykazPraces( imisDay: ImisDay ) {
-        this.vykazPraceService.confirmVykazPraces( imisDay.datum, imisDay.datum,
+    private confirmVykazPraces( den: Den ) {
+        this.vykazPraceService.confirmVykazPraces( den.datum, den.datum,
             () => {
-                this.readImisDays();
+                this.readDens();
             } )
     }
 
-    newVykazPrace( imisDay: ImisDay ) {
+    newVykazPrace( den: Den ) {
         let vykazPrace = new VykazPrace();
-        vykazPrace.datum = imisDay.datum;
+        vykazPrace.datum = den.datum;
         vykazPrace.kodUzivatele = this.applicationService.kodUzivatele;
         this.vykazPraceEditor.show( vykazPrace );
     }
@@ -201,17 +201,17 @@ export class VykazPracesComponent implements OnInit {
     switchUnsolvedDaysOnly() {
         this.unsolvedDaysOnly = !this.unsolvedDaysOnly;
         this.kalendarMenuItems.find( value => value.styleClass === 'mojeCcaMenuUnsolvedDaysOnly' ).icon = this.unsolvedDaysOnly ? 'fa-check-circle-o' : 'fa-circle-o';
-        this.readImisDays();
+        this.readDens();
     }
 
     kalendarObdobidialogOk() {
         this.kalendarObdobidialogVisible = false;
         this.kalendarMenuItems.find( value => value.styleClass === 'mojeCcaMenuPeriod' ).label = this.getMenuObdobiText();
-        this.readImisDays();
+        this.readDens();
     }
     
-    moveDayVykazPraces( day: ImisDay): void {
-        this.vykazPraceDayMover.show(new Date(day.datum));
+    moveDayVykazPraces( den: Den): void {
+        this.vykazPraceDayMover.show(new Date(den.datum));
     }
 
 }

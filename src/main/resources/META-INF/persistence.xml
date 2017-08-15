@@ -6,6 +6,7 @@
 		<jta-data-source>imisDS</jta-data-source>
 		<class>cz.cca.mojecca.db.imis.model.ZamMesEntity</class>
 		<class>cz.cca.mojecca.db.imis.model.ZamMesEntityPK</class>
+		<class>cz.cca.mojecca.db.isza.model.CcagDenniKapacitaEntity</class>
 	</persistence-unit>
 	<persistence-unit name="isza">
 		<jta-data-source>iszaDS</jta-data-source>

@@ -1,4 +1,4 @@
-export class ImisDay {
+export class ImisDen {
     
     datum: number;
     druhDne: string;

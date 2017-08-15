@@ -5,9 +5,6 @@ import { ToasterService } from 'angular2-toaster';
 import { DataConvertor } from '../converts/data-convertor';
 import { VykazPraceFilterParameters } from '../model/vykaz-prace-filter-parameters';
 import { ApplicationService } from '../services/application.service';
-import { ImisKalendarService } from '../services/imis-kalendar.service';
-import { ImisDaysFilterParameters } from '../model/imis-days-filter-parameters';
-import { ImisDay } from '../model/imis-day';
 import { VykazPraceEditFormComponent } from '../vykaz-prace-edit-form/vykaz-prace-edit-form.component';
 
 
@@ -28,8 +25,7 @@ export class VykazPraceEditorComponent implements OnInit {
     constructor(
         private vykazPraceService: VykazPraceService,
         private toasterService: ToasterService,
-        private applicationService: ApplicationService,
-        private imisKalendarService: ImisKalendarService ) { }
+        private applicationService: ApplicationService) { }
 
     ngOnInit() {
     }

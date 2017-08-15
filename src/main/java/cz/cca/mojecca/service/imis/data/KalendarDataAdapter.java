@@ -8,26 +8,26 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 
 import cz.cca.mojecca.db.imis.model.ImisDenEntity;
-import cz.cca.mojecca.service.imis.model.ImisDay;
+import cz.cca.mojecca.service.imis.model.ImisDen;
 
 public class KalendarDataAdapter {
 
-	public static List<ImisDay> toImisDays(List<ImisDenEntity> imisDenEntities) {
+	public static List<ImisDen> toImisDens(List<ImisDenEntity> imisDenEntities) {
 		if (imisDenEntities == null) {
 			return null;
 		}
 		
-		List<ImisDay> result = new ArrayList<ImisDay>();
+		List<ImisDen> result = new ArrayList<ImisDen>();
 		
 		imisDenEntities.stream().forEach(entity -> {
-			result.add(toImisDay(entity));
+			result.add(toImisDen(entity));
 		});
 		
 		return result;
 	}
 
-	private static ImisDay toImisDay(ImisDenEntity entity) {
-		ImisDay result = new ImisDay();
+	private static ImisDen toImisDen(ImisDenEntity entity) {
+		ImisDen result = new ImisDen();
 		try {
 			BeanUtils.copyProperties(result, entity);
 		} catch (IllegalAccessException | InvocationTargetException e) {

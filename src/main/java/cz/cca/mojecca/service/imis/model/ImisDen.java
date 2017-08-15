@@ -1,11 +1,10 @@
 package cz.cca.mojecca.service.imis.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
-public class ImisDay {
+public class ImisDen {
 	
-	private Date datum;
+	private Long datum;
 	private String druhDne;
 	private String svatek;
 	private String vyrobniDen;
@@ -16,10 +15,10 @@ public class ImisDay {
 	private String potvrzeno;
 	
 	
-	public Date getDatum() {
+	public Long getDatum() {
 		return datum;
 	}
-	public void setDatum(Date datum) {
+	public void setDatum(Long datum) {
 		this.datum = datum;
 	}
 	public String getDruhDne() {

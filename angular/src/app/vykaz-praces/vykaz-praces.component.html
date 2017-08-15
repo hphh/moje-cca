@@ -1,8 +1,8 @@
 <div style="display: flex; flex: 1; height: calc(100vh - 60px); margin-left: 10px; margin-right: 10px;">
 	<div style="overflow-y: auto; min-width: 350px;">
-		<p-dataTable [value]="imisDays"  
+		<p-dataTable [value]="dens"  
 					selectionMode="single" [(selection)]="selectedDay"
-					(onRowSelect)="onDateSelect($event)"
+					(onRowSelect)="onDateSelect()"
 					[contextMenu]="kalendarMenu"
 					[style]="{'max-width':'350px'}">
 					
@@ -10,48 +10,48 @@
 				<ng-template pTemplate="header">
 					<div style="display: flex; flex-direction: row; ">
 						<div>
-							<button pButton type="button" icon="fa-refresh {{(readingData? 'fa-spin': '')}}" (click)="readImisDays()" style="height: 25px;"></button>
+							<button pButton type="button" icon="fa-refresh {{(readingData? 'fa-spin': '')}}" (click)="readDens()" style="height: 25px;"></button>
 						</div>
 						<div style="margin-left: 10px">
 							<span style="vertical-align: middle;">Datum</span>
 						</div>
 					</div>
 				</ng-template>
-				<ng-template let-col let-vykaz="rowData" pTemplate="body">
+				<ng-template let-col let-den="rowData" pTemplate="body">
 					<span style="white-space: nowrap;">
-		           		<i *ngIf="isToday(vykaz['datum'])" class="fa fa-arrow-right"></i>
-		           		{{vykaz[col.field] | date: 'ddMM.yyyy EEE'}}
+		           		<i *ngIf="isToday(den['datum'])" class="fa fa-arrow-right"></i>
+		           		{{den[col.field] | date: 'ddMM.yyyy EEE'}}
 		           	</span>
 		       	</ng-template> 
 	        </p-column>
-			<p-column field="odpracovanoHod" header="Odprac." [style]="{'width':'70px','text-align':'center'}">
-				<ng-template let-col let-vykaz="rowData" pTemplate="body">
-		           	{{vykaz[col.field] | mnozstviHod}}
+			<p-column field="imisDen.odpracovanoHod" header="Odprac." [style]="{'width':'70px','text-align':'center'}">
+				<ng-template let-col let-den="rowData" pTemplate="body">
+		           	{{den.imisDen.odpracovanoHod | mnozstviHod}}
 		       	</ng-template> 
 	        </p-column>
-			<p-column field="vykazanoHod" header="Vykáz." [style]="{'width':'70px','text-align':'center'}">
-				<ng-template let-col let-vykaz="rowData" pTemplate="body">
+			<p-column field="imisDen.vykazanoHod" header="Vykáz." [style]="{'width':'70px','text-align':'center'}">
+				<ng-template let-col let-den="rowData" pTemplate="body">
 					<span style="white-space: nowrap;">
-		           		{{vykaz[col.field] | mnozstviHod}}
-		           		<i *ngIf="vykaz['potvrzeno'] === 'A'" class="fa fa-check"></i>
+		           		{{den.imisDen.vykazanoHod | mnozstviHod}}
+		           		<i *ngIf="den.imisDen.potvrzeno === 'A'" class="fa fa-check"></i>
 		           	</span>
 		       	</ng-template> 
 	        </p-column>
 			<p-column header="Rozdíl" [style]="{'width':'70px','text-align':'center'}">
-				<ng-template let-col let-vykaz="rowData" pTemplate="body">
-	           		{{vykaz['odpracovanoHod'] - vykaz['vykazanoHod'] | mnozstviHod}}
+				<ng-template let-col let-den="rowData" pTemplate="body">
+	           		{{den.imisDen.odpracovanoHod - den.imisDen.vykazanoHod | mnozstviHod}}
 		       	</ng-template> 
 	        </p-column>
 		</p-dataTable>
 	</div>
 	
 	<div style="flex:1 auto; overflow-y: auto; margin-left: 10px;">
-		<app-vykaz-prace-table [vykazPraces]="vykazPraces" (onSave)="readImisDays()" ></app-vykaz-prace-table>
+		<app-vykaz-prace-table [vykazPraces]="vykazPraces" (onSave)="readDens()" ></app-vykaz-prace-table>
 	</div>
 </div>
 
-<app-vykaz-prace-editor #vykazPraceEditor (onSave)="readImisDays()"></app-vykaz-prace-editor>
-<app-vykaz-prace-day-mover #vykazPraceDayMover (onSave)="readImisDays()"></app-vykaz-prace-day-mover>
+<app-vykaz-prace-editor #vykazPraceEditor (onSave)="readDens()"></app-vykaz-prace-editor>
+<app-vykaz-prace-day-mover #vykazPraceDayMover (onSave)="readDens()"></app-vykaz-prace-day-mover>
 <p-contextMenu #kalendarMenu [model]="kalendarMenuItems"></p-contextMenu>
 <p-dialog
     [(visible)]="kalendarObdobidialogVisible"

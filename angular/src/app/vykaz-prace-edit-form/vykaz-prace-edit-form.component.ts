@@ -6,9 +6,9 @@ import { ToasterService } from 'angular2-toaster';
 import { DataConvertor } from '../converts/data-convertor';
 import { VykazPraceFilterParameters } from '../model/vykaz-prace-filter-parameters';
 import { ApplicationService } from '../services/application.service';
-import { ImisKalendarService } from '../services/imis-kalendar.service';
-import { ImisDaysFilterParameters } from '../model/imis-days-filter-parameters';
-import { ImisDay } from '../model/imis-day';
+import { KalendarService } from '../services/kalendar.service';
+import { DensFilterParameters } from '../model/dens-filter-parameters';
+import { Den } from '../model/den';
 import { ZakazkaFilterParameters } from '../model/zakazka-filter-parameters';
 import { Zakazka } from '../model/zakazka';
 import { ZakazkaPolozka } from '../model/zakazka-polozka';
@@ -43,7 +43,7 @@ export class VykazPraceEditFormComponent implements OnInit {
         private vykazPraceService: VykazPraceService,
         private toasterService: ToasterService,
         public applicationService: ApplicationService,
-        private imisKalendarService: ImisKalendarService,
+        private kalendarService: KalendarService,
         private datePipe: DatePipe ) { }
 
     ngOnInit() {
@@ -74,19 +74,19 @@ export class VykazPraceEditFormComponent implements OnInit {
                     return previousValue + currentValue;
                 } );
 
-                let params = new ImisDaysFilterParameters();
-                params.fromDate = new Date( this.vykazPrace.datum );
-                params.toDate = new Date( this.vykazPrace.datum );
+                let params = new DensFilterParameters();
+                params.fromDate = this.vykazPrace.datum;
+                params.toDate = this.vykazPrace.datum;
                 params.kodUzivatele = this.applicationService.kodUzivatele;
                 params.unsolvedDaysOnly = false;
 
-                this.imisKalendarService.getImisDays( params,
+                this.kalendarService.getImisDays( params,
                     data => {
-                        let days: ImisDay[] = data;
+                        let days: Den[] = data;
 
                         var odprac = 0;
                         if ( days && ( days.length > 0 ) ) {
-                            odprac = days[0].odpracovanoHod;
+                            odprac = days[0].imisDen.odpracovanoHod;
                         }
 
                         var result = odprac - sumVyks; 
