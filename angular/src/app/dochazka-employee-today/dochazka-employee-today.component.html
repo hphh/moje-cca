@@ -1,5 +1,10 @@
 <div style="margin-left: 10px; margin-top: 10px; ">
-  [ {{prichodOdchods?.prichodOdchodsText}} ] 
-  Odprac.: {{prichodOdchods?.odpracovano | mnozstviHod}}
-  Odchod: <b>{{prichodOdchods?.odchodPlan | mnozstviHod}}</b>
+  <div>
+  	[ {{prichodOdchods?.prichodOdchodsText}} ] 
+  	Odprac.: {{prichodOdchods?.odpracovano | mnozstviHod}}
+  </div>
+  <div>
+  	Odchod: <b>{{prichodOdchods?.odchodPlan | mnozstviHod}}</b>,
+  	Odchod s NV: <b>{{prichodOdchods?.odchodPlanWithNV | mnozstviHod}}</b>
+  </div>
 </div>

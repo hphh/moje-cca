@@ -7,6 +7,7 @@ public class NahradniVolnoSumVybrat {
 	BigDecimal lze;
 	BigDecimal musi;
 	BigDecimal musiNaDen;
+	private Long pracovnichDniDoKonceMesice;
 	
 	
 	public BigDecimal getLze() {
@@ -26,6 +27,12 @@ public class NahradniVolnoSumVybrat {
 	}
 	public void setMusiNaDen(BigDecimal musiNaDen) {
 		this.musiNaDen = musiNaDen;
+	}
+	public Long getPracovnichDniDoKonceMesice() {
+		return pracovnichDniDoKonceMesice;
+	}
+	public void setPracovnichDniDoKonceMesice(Long pracovnichDniDoKonceMesice) {
+		this.pracovnichDniDoKonceMesice = pracovnichDniDoKonceMesice;
 	}
 	
 	

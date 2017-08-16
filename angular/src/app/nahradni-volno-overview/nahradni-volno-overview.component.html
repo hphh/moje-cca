@@ -1,7 +1,7 @@
 <div style="margin-left: 10px; margin-top: 10px;">
   	<div style="display: flex; flex: 1; margin-left: 10px;">
-  		<div>lze vybrat: {{nahradniVolno?.sumVybrat?.lze | mnozstviHod}}</div>
-  		<div style="margin-left: 10px;">musí vybrat: <b>{{nahradniVolno?.sumVybrat?.musi | mnozstviHod}}</b> ({{nahradniVolno?.sumVybrat?.musiNaDen | mnozstviHod}} na den)</div>
+  		lze vybrat:&nbsp;{{nahradniVolno?.sumVybrat?.lze | mnozstviHod}},
+  		musí vybrat:&nbsp;<b>{{nahradniVolno?.sumVybrat?.musi | mnozstviHod}}</b>&nbsp;({{nahradniVolno?.sumVybrat?.musiNaDen | mnozstviHod}} na {{nahradniVolno?.sumVybrat?.pracovnichDniDoKonceMesice}} dní)
   	</div>
 	<div style="display: flex; flex: 1;">
   		<div *ngFor="let volno of nahradniVolno?.nahradniVolnos" style="margin-left: 10px;">

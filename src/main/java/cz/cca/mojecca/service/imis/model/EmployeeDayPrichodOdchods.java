@@ -7,6 +7,7 @@ public class EmployeeDayPrichodOdchods {
 	private String prichodOdchodsText;
 	private BigDecimal odpracovano;
 	private BigDecimal odchodPlan;
+	private BigDecimal odchodPlanWithNV;
 
 	public String getPrichodOdchodsText() {
 		return prichodOdchodsText;
@@ -30,6 +31,14 @@ public class EmployeeDayPrichodOdchods {
 
 	public void setOdchodPlan(BigDecimal odchodPlan) {
 		this.odchodPlan = odchodPlan;
+	}
+
+	public BigDecimal getOdchodPlanWithNV() {
+		return odchodPlanWithNV;
+	}
+
+	public void setOdchodPlanWithNV(BigDecimal odchodPlanWithNV) {
+		this.odchodPlanWithNV = odchodPlanWithNV;
 	}
 
 }

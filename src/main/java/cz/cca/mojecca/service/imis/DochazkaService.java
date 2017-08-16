@@ -60,6 +60,13 @@ public class DochazkaService {
 			OdpracovanoHod o = calculateOpracovanoHod(icp, day);
 			result.setOdpracovano(new BigDecimal(o.odpracovano));
 			result.setOdchodPlan(new BigDecimal(calculateOdchodPlan(o)));
+			
+			EmployeeNahradniVolnoFilterParameters envParams = new EmployeeNahradniVolnoFilterParameters();
+			envParams.setKodUzivatele(params.getKodUzivatele());
+			envParams.setFromObdobi(new LocalDate().withDayOfMonth(1).toDate().getTime());
+			EmployeeNahradniVolno env = getEmployeeNahradniVolno(envParams);
+			
+			result.setOdchodPlanWithNV(result.getOdchodPlan().subtract(env.getSumVybrat().getMusiNaDen()));			
 		} else {
 			result.setOdpracovano(vykazPraceDAO.getOdpracovanoHodVDen(icp, day));
 		}
@@ -199,12 +206,13 @@ public class DochazkaService {
 		NahradniVolnoSumVybrat result = new NahradniVolnoSumVybrat();
 		result.setLze(new BigDecimal(lzeVybrat));
 		result.setMusi(new BigDecimal(musiVybrat));
-		result.setMusiNaDen(new BigDecimal(musiVybrat / getPracovnichDniDoKonceMesiceCount(kodUzivatele)));
+		result.setPracovnichDniDoKonceMesice(calculatePracovnichDniDoKonceMesice(kodUzivatele));
+		result.setMusiNaDen(new BigDecimal(musiVybrat / result.getPracovnichDniDoKonceMesice()));
 
 		return result;
 	}
 
-	private double getPracovnichDniDoKonceMesiceCount(String kodUzivatele) {
+	private long calculatePracovnichDniDoKonceMesice(String kodUzivatele) {
 		DensFilterParameters params = new DensFilterParameters();
 		params.setKodUzivatele(kodUzivatele);
 		params.setFromDate(new LocalDate().toDate().getTime());
