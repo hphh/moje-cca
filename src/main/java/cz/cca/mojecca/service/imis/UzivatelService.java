@@ -29,6 +29,7 @@ public class UzivatelService {
 	@EJB
 	private PvtDAO pvtDAO;
 	
+	
 	public String getIcp(String kodUzivatele) {
 		CacheParameters cp = new CacheParameters(Long.MAX_VALUE, 100);
 		@SuppressWarnings("unchecked")

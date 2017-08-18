@@ -4,6 +4,8 @@ import { EmployeeDayPrichodOdchodsFilterParameters } from '../model/employee-day
 import { EmployeeDayPrichodOdchods } from '../model/employee-day-prichod-odchods';
 import { EmployeeNahradniVolnoFilterParameters } from '../model/employee-nahradni-volno-filter-parameters';
 import { EmployeeNahradniVolno } from '../model/employee-nahradni-volno';
+import { Dovolena } from '../model/dovolena';
+import { DovolenaFilterParameters } from '../model/dovolena-filter-parameters';
 
 @Injectable()
 export class DochazkaService {
@@ -31,6 +33,17 @@ export class DochazkaService {
 
         this.callBackendService.post(
             this.ROOT_PATH + '/employeeNahradniVolno',
+            params,
+            successCallback,
+            finishCallback );
+    }
+
+    getDovolena( params: DovolenaFilterParameters,
+        successCallback?: ( data: Dovolena ) => void,
+        finishCallback?: ( success: boolean ) => void ): void {
+
+        this.callBackendService.post(
+            this.ROOT_PATH + '/employeeDovolena',
             params,
             successCallback,
             finishCallback );

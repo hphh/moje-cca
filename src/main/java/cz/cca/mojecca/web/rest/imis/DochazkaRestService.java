@@ -8,6 +8,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import cz.cca.mojecca.service.imis.DochazkaService;
+import cz.cca.mojecca.service.imis.DovolenaService;
+import cz.cca.mojecca.service.imis.model.Dovolena;
+import cz.cca.mojecca.service.imis.model.DovolenaFilterParameters;
 import cz.cca.mojecca.service.imis.model.EmployeeDayPrichodOdchods;
 import cz.cca.mojecca.service.imis.model.EmployeeDayPrichodOdchodsFilterParameters;
 import cz.cca.mojecca.service.imis.model.EmployeeNahradniVolno;
@@ -20,6 +23,9 @@ public class DochazkaRestService {
 	
 	@Inject
 	private DochazkaService dochazkaService;
+	
+	@Inject
+	private DovolenaService dovolenaService;
 	
 	
 	@POST
@@ -34,4 +40,10 @@ public class DochazkaRestService {
 		return dochazkaService.getEmployeeNahradniVolno(params);
 	}
 
+	@POST
+	@Path("/employeeDovolena")
+	public Dovolena getDovolena(DovolenaFilterParameters params) {
+		return dovolenaService.getDovolena(params);
+	}
+	
 }
