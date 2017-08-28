@@ -5,13 +5,21 @@
 	[resizable]="false">
 	
 	<div class="container-fluid"> 
+		<div>
+			<div style="display: table; margin: 0 auto;">
+				<div style="float: left; margin-right: 10px;">
+					Hodin {{baseMnozstviOdvedenePrace | mnozstviHod}}
+				</div>
+				<p-inputSwitch [(ngModel)]="connectedMonozstviOdevedenPrace" onLabel="Spojeno" offLabel="-"></p-inputSwitch>
+			</div>					
+		</div>
 		<div style="float: left; width: 400px;">
 			<h4>Původní výkaz</h4>
-			<app-vykaz-prace-edit-form #oldEditForm></app-vykaz-prace-edit-form>
+			<app-vykaz-prace-edit-form #oldEditForm (onMnozstviOdvedenePraceChange)="onChangeOldMnozstviOdvedenePrace($event)"></app-vykaz-prace-edit-form>
 		</div>
 		<div style="float: left; width: 400px;">
 			<h4>Nový výkaz</h4>
-			<app-vykaz-prace-edit-form #newEditForm></app-vykaz-prace-edit-form>
+			<app-vykaz-prace-edit-form #newEditForm (onMnozstviOdvedenePraceChange)="onChangeNewMnozstviOdvedenePrace($event)"></app-vykaz-prace-edit-form>
 		</div>
 		
 		<div style="float: left; clear: left;">

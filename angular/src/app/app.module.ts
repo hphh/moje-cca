@@ -17,7 +17,8 @@ import {
     ContextMenuModule,
     CheckboxModule,
     AutoCompleteModule,
-    DropdownModule
+    DropdownModule,
+    InputSwitchModule
 } from 'primeng/primeng';
 
 import { ToasterModule, ToasterService } from 'angular2-toaster';
@@ -68,7 +69,8 @@ import { DovolenaOverviewComponent } from './dovolena-overview/dovolena-overview
         ContextMenuModule,
         CheckboxModule,
         AutoCompleteModule,
-        DropdownModule
+        DropdownModule,
+        InputSwitchModule
     ],
     providers: [
         DatePipe,

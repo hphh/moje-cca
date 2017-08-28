@@ -4,6 +4,10 @@ import { VykazPraceService } from '../services/vykaz-prace.service';
 import { ToasterService } from 'angular2-toaster';
 import { DataConvertor } from '../converts/data-convertor';
 import { VykazPraceEditFormComponent } from '../vykaz-prace-edit-form/vykaz-prace-edit-form.component';
+import { KalendarService } from '../services/kalendar.service';
+import { NextPracovniDenFilterParameters } from '../model/next-pracovni-den-filter-parameters';
+import { Den } from '../model/den';
+import { ApplicationService } from '../services/application.service';
 
 
 @Component( {
@@ -14,6 +18,8 @@ import { VykazPraceEditFormComponent } from '../vykaz-prace-edit-form/vykaz-prac
 export class VykazPraceSplitterComponent implements OnInit {
 
     dialogVisible: boolean = false;
+    connectedMonozstviOdevedenPrace: boolean = true;
+    baseMnozstviOdvedenePrace: number;
 
     @ViewChild( 'oldEditForm' ) oldEditForm: VykazPraceEditFormComponent;
     @ViewChild( 'newEditForm' ) newEditForm: VykazPraceEditFormComponent;
@@ -22,7 +28,9 @@ export class VykazPraceSplitterComponent implements OnInit {
 
     constructor(
         private vykazPraceService: VykazPraceService,
-        private toasterService: ToasterService ) { }
+        private kalendarService: KalendarService,
+        private toasterService: ToasterService,
+        public applicationService: ApplicationService) { }
 
     ngOnInit() {
     }
@@ -33,13 +41,21 @@ export class VykazPraceSplitterComponent implements OnInit {
             return;
         }
 
-        this.oldEditForm.show( vykazPrace );
+        this.baseMnozstviOdvedenePrace = vykazPrace.mnozstviOdvedenePrace;
+        this.oldEditForm.showWithBaseMnozstviOdvedenePrace( vykazPrace, this.baseMnozstviOdvedenePrace );
 
         let newVykazPrace = Object.assign( {}, vykazPrace );
         newVykazPrace.mnozstviOdvedenePrace = 0;
-        this.newEditForm.show( newVykazPrace );
+        
+        let ps = new NextPracovniDenFilterParameters();
+        ps.day = newVykazPrace.datum;
+        ps.kodUzivatele = this.applicationService.kodUzivatele;
+        this.kalendarService.getNextPracovniDen(ps, data => {
+          newVykazPrace.datum = data.datum;
+          this.newEditForm.showWithBaseMnozstviOdvedenePrace( newVykazPrace, this.baseMnozstviOdvedenePrace );
+          this.dialogVisible = true;
+        });
 
-        this.dialogVisible = true;
     }
 
     onOk() {
@@ -57,5 +73,19 @@ export class VykazPraceSplitterComponent implements OnInit {
             }
         );
     }
+    
+    onChangeOldMnozstviOdvedenePrace( event: number ) {
+        if (!this.connectedMonozstviOdevedenPrace) {
+            return;
+        }
+        this.newEditForm.setMnozstviOdvedenePraceLoss(event);
+    }
 
+    onChangeNewMnozstviOdvedenePrace( event: number ) {
+        if (!this.connectedMonozstviOdevedenPrace) {
+            return;
+        }
+        this.oldEditForm.setMnozstviOdvedenePraceLoss(event);
+    }
+    
 }

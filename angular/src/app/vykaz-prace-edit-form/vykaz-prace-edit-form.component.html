@@ -12,7 +12,10 @@
 			<div class="col-xs-9">
 				<p-calendar id="mnozstviOdvedenePrace" [(ngModel)]="vykazPraceMnozstviOdvedenePrace"
 					[timeOnly]="true"
-					[inputStyle]="{'width':'100px'}"></p-calendar>
+					[inputStyle]="{'width':'100px'}"
+					(onInput)="onChangeMnozstviOdvedenePrace()"
+					(onSelect)="onChangeMnozstviOdvedenePrace()"
+					></p-calendar>
 				<button pButton type="button" [label]="fillDayButtonLabel" icon="fa-hourglass" (click)="mnozstviOdvedenePraceFillDay()"></button>	
 			</div>
 		</div>

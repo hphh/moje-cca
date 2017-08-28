@@ -27,6 +27,8 @@ export class VykazPraceEditFormComponent implements OnInit {
     vykazPrace: VykazPrace = new VykazPrace();
     vykazPraceDatum: Date;
     vykazPraceMnozstviOdvedenePrace: Date;
+    baseMnozstviOdvedenePrace: number;
+    originalMnozstviOdvedenePrace: number;
 
     zakazkaSuggestions: string[];
     zakazkaSuggestionDatas: Zakazka[];
@@ -39,6 +41,8 @@ export class VykazPraceEditFormComponent implements OnInit {
 
     fillDayButtonLabel: string = 'Vyplň den';
 
+    @Output() onMnozstviOdvedenePraceChange: EventEmitter<number> = new EventEmitter<number>();
+
     constructor(
         private vykazPraceService: VykazPraceService,
         private toasterService: ToasterService,
@@ -49,8 +53,7 @@ export class VykazPraceEditFormComponent implements OnInit {
     ngOnInit() {
     }
 
-    @Input()
-    show( vykazPrace: VykazPrace ) {
+    showWithBaseMnozstviOdvedenePrace( vykazPrace: VykazPrace, baseMnozstviOdvedenePrace: number ) {
         if ( vykazPrace == null ) {
             return;
         }
@@ -58,8 +61,15 @@ export class VykazPraceEditFormComponent implements OnInit {
         this.vykazPrace = Object.assign( {}, vykazPrace );
         this.vykazPraceDatum = new Date( this.vykazPrace.datum );
         this.vykazPraceMnozstviOdvedenePrace = DataConvertor.mnozstviHodToDate( this.vykazPrace.mnozstviOdvedenePrace );
+        this.baseMnozstviOdvedenePrace = baseMnozstviOdvedenePrace;
+        this.originalMnozstviOdvedenePrace = this.vykazPrace.mnozstviOdvedenePrace;
         this.refreshFillDayButtonLabel();
     }
+
+    show( vykazPrace: VykazPrace ) {
+        this.showWithBaseMnozstviOdvedenePrace( vykazPrace, null );
+    }
+
 
     private calculateFillDay( fnc: ( Date ) => void ) {
         let params = new VykazPraceFilterParameters();
@@ -72,7 +82,7 @@ export class VykazPraceEditFormComponent implements OnInit {
                 let vyks: VykazPrace[] = data;
                 let sumVyks = vyks.filter( value => value.id !== this.vykazPrace.id ).map( value => value.mnozstviOdvedenePrace ).reduce(( previousValue, currentValue ) => {
                     return previousValue + currentValue;
-                }, 0);
+                }, 0 );
 
                 let params = new DensFilterParameters();
                 params.fromDate = this.vykazPrace.datum;
@@ -89,9 +99,9 @@ export class VykazPraceEditFormComponent implements OnInit {
                             odprac = days[0].imisDen.odpracovanoHod;
                         }
 
-                        var result = odprac - sumVyks; 
+                        var result = odprac - sumVyks;
                         if ( result < 0 ) {
-                            result = DataConvertor.toMnozstviHod(this.vykazPraceMnozstviOdvedenePrace);
+                            result = this.originalMnozstviOdvedenePrace;
                         }
 
                         fnc( DataConvertor.mnozstviHodToDate( result ) );
@@ -103,7 +113,10 @@ export class VykazPraceEditFormComponent implements OnInit {
     }
 
     mnozstviOdvedenePraceFillDay() {
-        this.calculateFillDay( date => this.vykazPraceMnozstviOdvedenePrace = date );
+        this.calculateFillDay( date => {
+            this.vykazPraceMnozstviOdvedenePrace = date;
+            this.onChangeMnozstviOdvedenePrace();
+        } );
     }
 
     refreshFillDayButtonLabel() {
@@ -209,9 +222,24 @@ export class VykazPraceEditFormComponent implements OnInit {
     onZakazkaPoziceDropdownClick() {
         this.findZakazkaPoziceSuggestions( { query: this.vykazPrace.pozice } );
     }
-    
+
     onDatumSelect() {
         this.refreshFillDayButtonLabel();
+    }
+
+    onChangeMnozstviOdvedenePrace() {
+        if ( this.vykazPraceMnozstviOdvedenePrace == null ) {
+            return;
+        }
+        this.onMnozstviOdvedenePraceChange.emit( DataConvertor.toMnozstviHod( this.vykazPraceMnozstviOdvedenePrace ) );
+    }
+
+    setMnozstviOdvedenePraceLoss( loss: number ) {
+        if ( this.baseMnozstviOdvedenePrace > loss ) {
+            this.vykazPraceMnozstviOdvedenePrace = DataConvertor.mnozstviHodToDate( this.baseMnozstviOdvedenePrace - loss );
+        } else {
+            this.vykazPraceMnozstviOdvedenePrace = DataConvertor.mnozstviHodToDate( 0 );
+        }
     }
 
 }
