@@ -57,8 +57,7 @@ public class KalendarDAO {
 		q.setParameter("kodUzivatele", kodUzivatele);
 		q.setParameter("icp", icp);
 		
-		List<ImisDenEntity> result = q.getResultList();
-		return result;
+		return q.getResultList();
 
 	}
 

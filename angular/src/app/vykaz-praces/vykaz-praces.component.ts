@@ -98,9 +98,12 @@ export class VykazPracesComponent implements OnInit {
 
         let params = new DensFilterParameters();
         params.kodUzivatele = this.applicationService.kodUzivatele;
-        params.fromDate = this.fromDate.getTime();
-        params.toDate = this.toDate.getTime();
+        
         params.unsolvedDaysOnly = this.unsolvedDaysOnly;
+        if (!this.unsolvedDaysOnly) {
+            params.fromDate = this.fromDate.getTime();
+            params.toDate = this.toDate.getTime();
+        }
 
         this.kalendarService.getDens( params,
             data => {
@@ -247,12 +250,35 @@ export class VykazPracesComponent implements OnInit {
         this.kalendarMenuItems.find( value => value.styleClass === 'mojeCcaMenuUnsolvedDaysOnly' ).icon = this.unsolvedDaysOnly ? 'fa-check-circle-o' : 'fa-circle-o';
         this.readDens();
     }
-
+    
     kalendarObdobidialogOk() {
+        this.unsolvedDaysOnly = false;
         this.kalendarObdobidialogVisible = false;
         this.kalendarMenuItems.find( value => value.styleClass === 'mojeCcaMenuPeriod' ).label = this.getMenuObdobiText();
         this.readDens();
     }
+    
+    kalendarObdobidialogTentoMesic() {
+        let now = new Date();
+        this.fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        this.toDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        this.kalendarObdobidialogOk()
+    }
+    
+    kalendarObdobidialogTentoAMinulyMesic() {
+        let now = new Date();
+        this.fromDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        this.toDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        this.kalendarObdobidialogOk()
+    }
+
+    kalendarObdobidialogTentoAPristiMesic() {
+        let now = new Date();
+        this.fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        this.toDate = new Date(now.getFullYear(), now.getMonth() + 2, 0);
+        this.kalendarObdobidialogOk()
+    }
+    
     
     moveDayVykazPraces( den: Den): void {
         this.vykazPraceDayMover.show(new Date(den.datum));
