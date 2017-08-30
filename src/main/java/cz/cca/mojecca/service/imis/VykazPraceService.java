@@ -2,7 +2,6 @@ package cz.cca.mojecca.service.imis;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -231,6 +230,11 @@ public class VykazPraceService {
 		LocalDate newD = new LocalDate(newDate);
 		
 		return Days.daysBetween(oldD, newD).getDays();
+	}
+
+	public void deleteVykazPraces(List<VykazPrace> vykazPraces) {
+		List<Long> ids = vykazPraces.stream().map(entity -> entity.getId()).collect(Collectors.toList());
+		vykazPraceDAO.deleteDenVykazs(ids);
 	}
 
 }

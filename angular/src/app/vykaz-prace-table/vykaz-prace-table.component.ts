@@ -3,11 +3,17 @@ import { VykazPrace } from '../model/vykaz-prace';
 import { MenuItem } from 'primeng/primeng';
 import { VykazPracesOverviewComponent } from '../vykaz-praces-overview/vykaz-praces-overview.component';
 import { VykazPraceFilterParameters } from '../model/vykaz-prace-filter-parameters';
+import { VykazPraceService } from '../services/vykaz-prace.service';
+import { ToasterService } from 'angular2-toaster';
+import { ConfirmationService } from 'primeng/primeng';
+import { MnozstviHodPipe } from '../converts/mnozstvi-hod.pipe';
+import { ZakazkaPipe } from '../converts/zakazka.pipe';
 
 @Component( {
     selector: 'app-vykaz-prace-table',
     templateUrl: './vykaz-prace-table.component.html',
-    styleUrls: ['./vykaz-prace-table.component.css']
+    styleUrls: ['./vykaz-prace-table.component.css'],
+    providers: [ MnozstviHodPipe, ZakazkaPipe ]
 } )
 export class VykazPraceTableComponent implements OnInit {
 
@@ -45,7 +51,12 @@ export class VykazPraceTableComponent implements OnInit {
     @Output() onSave: EventEmitter<any> = new EventEmitter();
 
 
-    constructor() { }
+    constructor(
+            private vykazPraceService: VykazPraceService,
+            private toasterService: ToasterService,
+            private confirmationService: ConfirmationService,
+            private mnozstviHodPipe: MnozstviHodPipe,
+            private zakazkaPipe: ZakazkaPipe) { }
 
     ngOnInit() {
     }
@@ -55,11 +66,15 @@ export class VykazPraceTableComponent implements OnInit {
         if ( !this.disableEdit ) {
             this.vykazMenuItems.push(
                 { label: 'Upravit', icon: 'fa-pencil-square-o', command: ( event ) => this.editVykazPrace( this.selectedVykazPrace ) },
-                { label: 'Rozdělit', icon: 'fa-scissors', command: ( event ) => this.splitVykazPrace( this.selectedVykazPrace ) }
+                { label: 'Rozdělit', icon: 'fa-scissors', command: ( event ) => this.splitVykazPrace( this.selectedVykazPrace ) },
+                { label: 'Smazat', icon: 'fa-times', command: ( event ) => this.deleteVykazPrace( this.selectedVykazPrace ) } 
             );
         }
 
         if ( !this.disableVykazyNaUkol ) {
+            if ( !this.disableEdit ) {
+                this.vykazMenuItems.push( { separator: true } );
+            }
             if ( vykaz.ukol ) {
                 this.vykazMenuItems.push(
                     { label: 'Výkazy na úkol', icon: 'fa-list', command: ( event ) => this.showVykazPracesOverview( this.selectedVykazPrace, VykazPracesOverviewType.ukol ) }
@@ -84,6 +99,30 @@ export class VykazPraceTableComponent implements OnInit {
 
     private splitVykazPrace( vykaz: VykazPrace ) {
         this.vykazPraceSplitter.show( vykaz );
+    }
+
+    private deleteVykazPrace( vykaz: VykazPrace ) {
+        this.confirmationService.confirm({
+            header: 'Opravdu smazat tento výkaz?',
+            message: this.prepareVykazDescription(vykaz),
+            icon: 'fa fa-exclamation-triangle',
+            accept: () => {
+                this.vykazPraceService.deleteVykazPraces([vykaz], () => {
+                    this.toasterService.pop( 'info', 'Výkaz odmazán', null );
+                },
+                success => {
+                    this.refreshData();
+                }); 
+            }
+        });        
+    }
+    
+    private prepareVykazDescription( vykaz: VykazPrace ): string {
+        return this.mnozstviHodPipe.transform(vykaz.mnozstviOdvedenePrace) +
+            ' hod - ' +
+            this.zakazkaPipe.transform(vykaz) + 
+            '<br>' + 
+            vykaz.popisPrace;
     }
 
     refreshData() {

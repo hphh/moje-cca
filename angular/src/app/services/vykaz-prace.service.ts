@@ -127,4 +127,15 @@ export class VykazPraceService {
             successCallback,
             finishCallback );
     }
+
+    deleteVykazPraces( vykazPraces: VykazPrace[],
+        successCallback?: () => void,
+        finishCallback?: ( success: boolean ) => void ) {
+
+        this.callBackendService.post(
+            this.ROOT_PATH + '/deleteVykazPraces',
+            vykazPraces,
+            successCallback,
+            finishCallback );
+    }
 }

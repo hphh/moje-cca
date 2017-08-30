@@ -18,7 +18,9 @@ import {
     CheckboxModule,
     AutoCompleteModule,
     DropdownModule,
-    InputSwitchModule
+    InputSwitchModule,
+    ConfirmDialogModule,
+    ConfirmationService
 } from 'primeng/primeng';
 
 import { ToasterModule, ToasterService } from 'angular2-toaster';
@@ -70,12 +72,14 @@ import { DovolenaOverviewComponent } from './dovolena-overview/dovolena-overview
         CheckboxModule,
         AutoCompleteModule,
         DropdownModule,
-        InputSwitchModule
+        InputSwitchModule,
+        ConfirmDialogModule
     ],
     providers: [
         DatePipe,
         DecimalPipe,
-        { provide: LOCALE_ID, useValue: "cz-CS" }
+        { provide: LOCALE_ID, useValue: "cz-CS" },
+        ConfirmationService
     ],
     bootstrap: [AppComponent]
 } )

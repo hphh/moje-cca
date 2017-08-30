@@ -100,4 +100,12 @@ public class VykazPraceRestService {
 		vykazPraceService.moveDayVykazPraces(params);
 	}		
 	
+	@POST
+	@Path("deleteVykazPraces")
+	public void deleteVykazPraces(List<VykazPrace> vykazPraces) {
+		LOGGER.log(Level.FINE, "Pořadavek na vymazání výkazů práce {0}", vykazPraces.size());
+		
+		vykazPraceService.deleteVykazPraces(vykazPraces);
+	}
+	
 }

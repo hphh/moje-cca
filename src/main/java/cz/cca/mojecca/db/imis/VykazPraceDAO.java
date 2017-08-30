@@ -107,5 +107,12 @@ public class VykazPraceDAO {
 	public void insertDenVykaz(DenVykazEntity denVykazEntity) {
 		entityManager.persist(denVykazEntity);
 	}
+	
+	public void deleteDenVykazs(List<Long> ids) {
+		ids.stream().forEach(id -> {
+			DenVykazEntity d = entityManager.find(DenVykazEntity.class, id);
+			entityManager.remove(d);
+		});
+	}
 
 }
