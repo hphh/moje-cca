@@ -6,6 +6,7 @@ public class Dovolena {
 	
 	private BigDecimal narok;
 	private BigDecimal vycerpano;
+	private BigDecimal planovano;
 	
 	
 	public BigDecimal getNarok() {
@@ -19,6 +20,12 @@ public class Dovolena {
 	}
 	public void setVycerpano(BigDecimal vycerpano) {
 		this.vycerpano = vycerpano;
+	}
+	public BigDecimal getPlanovano() {
+		return planovano;
+	}
+	public void setPlanovano(BigDecimal planovano) {
+		this.planovano = planovano;
 	}
 	
 	

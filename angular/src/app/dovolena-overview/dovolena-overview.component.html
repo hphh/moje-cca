@@ -1,3 +1,4 @@
 <div style="padding: 10px; background: lightblue; height: 60px;">
-	Dovolená: {{dovolena?.narok}} - {{dovolena?.vycerpano}} = {{dovolena?.narok - dovolena?.vycerpano}}
+	<div>Dovolená: {{dovolena?.narok}} - {{dovolena?.vycerpano}}, zbývá {{dovolena?.narok - dovolena?.vycerpano}}</div>
+	<div>Plánováno: {{dovolena?.planovano}}, zbývá <b>{{dovolena?.narok - dovolena?.vycerpano - dovolena?.planovano}}</b></div> 
 </div>

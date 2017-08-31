@@ -7,6 +7,7 @@ public class CcagDenniKapacitaFilterParameters {
 	private String kodUzivatele;
 	private Date fromDate;
 	private Date toDate;
+	private String druhDne;
 	
 	
 	public String getKodUzivatele() {
@@ -26,6 +27,12 @@ public class CcagDenniKapacitaFilterParameters {
 	}
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
+	}
+	public String getDruhDne() {
+		return druhDne;
+	}
+	public void setDruhDne(String druhDne) {
+		this.druhDne = druhDne;
 	}
 	
 	

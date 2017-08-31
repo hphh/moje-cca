@@ -7,8 +7,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import cz.cca.mojecca.service.DovolenaService;
 import cz.cca.mojecca.service.imis.DochazkaService;
-import cz.cca.mojecca.service.imis.DovolenaService;
 import cz.cca.mojecca.service.imis.model.Dovolena;
 import cz.cca.mojecca.service.imis.model.DovolenaFilterParameters;
 import cz.cca.mojecca.service.imis.model.EmployeeDayPrichodOdchods;

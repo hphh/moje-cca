@@ -36,6 +36,10 @@ public class CcagDenniKapacitaDAO {
 			q.where(e.datum.loe(params.getToDate()));
 		}
 		
+		if (params.getDruhDne() != null) {
+			q.where(e.druhDne.eq(params.getDruhDne()));
+		}
+		
 		q.orderBy(e.kodUzivatele.asc());
 		q.orderBy(e.datum.asc());
 		
