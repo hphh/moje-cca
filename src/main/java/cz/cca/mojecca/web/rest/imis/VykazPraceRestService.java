@@ -1,5 +1,6 @@
 package cz.cca.mojecca.web.rest.imis;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,6 +107,14 @@ public class VykazPraceRestService {
 		LOGGER.log(Level.FINE, "Pořadavek na vymazání výkazů práce {0}", vykazPraces.size());
 		
 		vykazPraceService.deleteVykazPraces(vykazPraces);
+	}
+	
+	@POST
+	@Path("napracovanoHodin")
+	public BigDecimal napracovanoHodin(String kodUzivatele) {
+		LOGGER.log(Level.FINE, "Pořadavek na mnozstvi napracovanych hodin");
+		
+		return vykazPraceService.napracovanoHodin(kodUzivatele);
 	}
 	
 }

@@ -138,4 +138,15 @@ export class VykazPraceService {
             successCallback,
             finishCallback );
     }
+
+    napracovanoHodin( kodUzivatele: string,
+        successCallback?: (number) => void,
+        finishCallback?: ( success: boolean ) => void ) {
+
+        this.callBackendService.post(
+            this.ROOT_PATH + '/napracovanoHodin',
+            kodUzivatele,
+            successCallback,
+            finishCallback );
+    }
 }

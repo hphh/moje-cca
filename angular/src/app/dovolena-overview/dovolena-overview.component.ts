@@ -3,6 +3,7 @@ import { Dovolena } from '../model/dovolena';
 import { DovolenaFilterParameters } from '../model/dovolena-filter-parameters';
 import { DochazkaService } from '../services/dochazka.service';
 import { ApplicationService } from '../services/application.service';
+import { Observable, Subscription } from 'rxjs/Rx';
 
 @Component( {
     selector: 'app-dovolena-overview',
@@ -21,6 +22,7 @@ export class DovolenaOverviewComponent implements OnInit {
 
     ngOnInit() {
         this.readDovolena();
+        Observable.interval( 60 * 60000 ).subscribe(() => this.readDovolena());
     }
 
     readDovolena() {

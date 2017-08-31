@@ -23,6 +23,8 @@ import cz.cca.mojecca.db.imis.model.DenVykazEntity;
 import cz.cca.mojecca.db.imis.model.DenVykazFilterParameters;
 import cz.cca.mojecca.service.imis.data.VykazPraceDataAdapter;
 import cz.cca.mojecca.service.imis.model.ConfirmVykazPracesParameters;
+import cz.cca.mojecca.service.imis.model.ImisDen;
+import cz.cca.mojecca.service.imis.model.ImisDensFilterParameters;
 import cz.cca.mojecca.service.imis.model.MoveDayVykazPracesParameters;
 import cz.cca.mojecca.service.imis.model.SplittingVykazPrace;
 import cz.cca.mojecca.service.imis.model.VykazPrace;
@@ -51,6 +53,9 @@ public class VykazPraceService {
 	
 	@EJB
 	private PpzDAO ppzDAO;
+	
+	@Inject 
+	private ImisKalendarService imisKalendarService;
 	
 	public List<VykazPrace> getEmployeeVykazPraces(VykazPracesFilterParameters vykazPracesFilterParameters) {
 		List<DenVykazEntity> denVykazs = vykazPraceDAO.getVykazPraces(
@@ -131,7 +136,7 @@ public class VykazPraceService {
 	private static BigDecimal toCisloVykazu(Date datum) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(datum);
-		return new BigDecimal(c.get(Calendar.MONTH) + 1 + c.get(Calendar.DAY_OF_MONTH) / 100d);
+		return BigDecimal.valueOf(c.get(Calendar.MONTH) + 1 + c.get(Calendar.DAY_OF_MONTH) / 100d);
 	}	
 
 	public void splitVykazPrace(SplittingVykazPrace splittingVykazPrace) {
@@ -198,7 +203,7 @@ public class VykazPraceService {
 		}
 		List<DenVykazEntity> vykazs = vykazPraceDAO.getVykazPraces(denVykazParams);
 		
-		if ((vykazs == null) || (vykazs.size() == 0)) {
+		if ((vykazs == null) || (vykazs.isEmpty())) {
 			return;
 		}
 		
@@ -233,8 +238,27 @@ public class VykazPraceService {
 	}
 
 	public void deleteVykazPraces(List<VykazPrace> vykazPraces) {
-		List<Long> ids = vykazPraces.stream().map(entity -> entity.getId()).collect(Collectors.toList());
+		List<Long> ids = vykazPraces.stream().map(VykazPrace::getId).collect(Collectors.toList());
 		vykazPraceDAO.deleteDenVykazs(ids);
+	}
+
+	public BigDecimal napracovanoHodin(String kodUzivatele) {
+		ImisDensFilterParameters params = new ImisDensFilterParameters();
+		params.setKodUzivatele(kodUzivatele);
+		params.setFromDate(new LocalDate().toDate());
+		params.setToDate(new LocalDate().plusDays(100).toDate());
+		List<ImisDen> dens = imisKalendarService.getImisDens(params);
+		
+		if (dens.isEmpty()) {
+			return BigDecimal.ZERO;
+		}
+		
+		double result = dens.stream()
+				.map(entity -> entity.getVykazanoHod().subtract(entity.getOdpracovanoHod()))
+				.mapToDouble(BigDecimal::doubleValue)
+				.sum();
+		
+		return BigDecimal.valueOf(result);
 	}
 
 }
