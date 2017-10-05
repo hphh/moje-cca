@@ -2,6 +2,7 @@
   <div>
   	[ {{prichodOdchods?.prichodOdchodsText}} ] 
   	Odprac.: {{prichodOdchods?.odpracovano | mnozstviHod}}
+  	(zbývá {{8 - prichodOdchods?.odpracovano | mnozstviHod}})
   </div>
   <div>
   	Odchod: <b>{{prichodOdchods?.odchodPlan | mnozstviHod}}</b>,

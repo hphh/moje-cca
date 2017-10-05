@@ -38,6 +38,7 @@ import { DochazkaEmployeeTodayComponent } from './dochazka-employee-today/dochaz
 import { NahradniVolnoOverviewComponent } from './nahradni-volno-overview/nahradni-volno-overview.component';
 import { DovolenaOverviewComponent } from './dovolena-overview/dovolena-overview.component';
 import { NapracovanoOverviewComponent } from './napracovano-overview/napracovano-overview.component';
+import { NotificationService } from './services/notification.service';
 
 @NgModule( {
     declarations: [
@@ -81,7 +82,8 @@ import { NapracovanoOverviewComponent } from './napracovano-overview/napracovano
         DatePipe,
         DecimalPipe,
         { provide: LOCALE_ID, useValue: "cz-CS" },
-        ConfirmationService
+        ConfirmationService,
+        NotificationService
     ],
     bootstrap: [AppComponent]
 } )
