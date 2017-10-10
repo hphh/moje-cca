@@ -1,83 +1,90 @@
 <div style="display: flex; flex: 1; height: calc(100vh - 60px); padding: 10px;">
-	<div style="overflow-y: auto; min-width: 350px;">
-		<p-dataTable [value]="dens"  
-					selectionMode="single" [(selection)]="selectedDay"
-					(onRowSelect)="onDateSelect()"
-					[contextMenu]="kalendarMenu"
-					[style]="{'max-width':'350px'}">
-					
-			<p-column field="datum" header="Datum" [style]="{'text-align':'center'}">
-				<ng-template pTemplate="header">
-					<div style="display: flex; flex-direction: row; ">
-						<div>
-							<button pButton type="button" icon="fa-refresh {{(readingData? 'fa-spin': '')}}" (click)="readDens()" style="height: 25px;"></button>
-						</div>
-						<div style="margin-left: 10px">
-							<span style="vertical-align: middle;">Datum</span>
-						</div>
-					</div>
-				</ng-template>
-				<ng-template let-col let-den="rowData" pTemplate="body">
+  <div style="overflow-y: auto; min-width: 350px;">
+    <p-dataTable [value]="dens"
+                 selectionMode="single" [(selection)]="selectedDay"
+                 (onRowSelect)="onDateSelect()"
+                 [contextMenu]="kalendarMenu"
+                 [style]="{'max-width':'350px'}">
+
+      <p-column field="datum" header="Datum" [style]="{'text-align':'center'}">
+        <ng-template pTemplate="header">
+          <div style="display: flex; flex-direction: row; ">
+            <div>
+              <button pButton type="button" icon="fa-refresh {{(readingData? 'fa-spin': '')}}" (click)="readDens()"
+                      style="height: 25px;"></button>
+            </div>
+            <div style="margin-left: 10px">
+              <span style="vertical-align: middle;">Datum</span>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template let-col let-den="rowData" pTemplate="body">
 					<span style="white-space: nowrap;">
 		           		<i *ngIf="isToday(den.datum)" class="fa fa-arrow-right"></i>
 		           		<span [ngStyle]="dayStyle(den)">{{den[col.field] | date: 'ddMM.yyyy EEE'}}</span>
 		           		<i *ngIf="warningDay(den)" class="fa fa-exclamation-triangle" style="color: orange;"></i>
 		           	</span>
-		       	</ng-template> 
-	        </p-column>
-			<p-column field="imisDen.odpracovanoHod" header="Odprac." [style]="{'width':'70px','text-align':'center'}">
-				<ng-template let-col let-den="rowData" pTemplate="body">
-		           	{{den.imisDen.odpracovanoHod | mnozstviHod}}
-		       	</ng-template> 
-	        </p-column>
-			<p-column field="imisDen.vykazanoHod" header="Vykáz." [style]="{'width':'70px','text-align':'center'}">
-				<ng-template let-col let-den="rowData" pTemplate="body">
+        </ng-template>
+      </p-column>
+      <p-column field="imisDen.odpracovanoHod" header="Odprac." [style]="{'width':'70px','text-align':'center'}">
+        <ng-template let-col let-den="rowData" pTemplate="body">
+          {{den.imisDen.odpracovanoHod | mnozstviHod}}
+        </ng-template>
+      </p-column>
+      <p-column field="imisDen.vykazanoHod" header="Vykáz." [style]="{'width':'70px','text-align':'center'}">
+        <ng-template let-col let-den="rowData" pTemplate="body">
 					<span style="white-space: nowrap;">
 		           		{{den.imisDen.vykazanoHod | mnozstviHod}}
 		           		<i *ngIf="den.imisDen.potvrzeno === 'A'" class="fa fa-check"></i>
 		           	</span>
-		       	</ng-template> 
-	        </p-column>
-			<p-column header="Rozdíl" [style]="{'width':'70px','text-align':'center'}">
-				<ng-template let-col let-den="rowData" pTemplate="body">
-	           		{{den.imisDen.odpracovanoHod - den.imisDen.vykazanoHod | mnozstviHod}}
-		       	</ng-template> 
-	        </p-column>
-		</p-dataTable>
-		<div style="margin-top: 10px;">
-			Další pracovní den: {{nextPracovniDen?.datum | date: 'ddMM.yyyy EEE'}}
-		</div>
-	</div>
-	
-	<div style="flex:1 auto; overflow-y: auto; margin-left: 10px;">
-		<app-vykaz-prace-table [vykazPraces]="vykazPraces" (onSave)="readDens()" ></app-vykaz-prace-table>
-	</div>
+        </ng-template>
+      </p-column>
+      <p-column header="Rozdíl" [style]="{'width':'70px','text-align':'center'}">
+        <ng-template let-col let-den="rowData" pTemplate="body">
+          {{den.imisDen.odpracovanoHod - den.imisDen.vykazanoHod | mnozstviHod}}
+          <button pButton *ngIf="solveableDay(den)" icon="fa-check" (click)="confirmVykazPraces(den)" style="width: 20px; height: 20px;"></button>
+        </ng-template>
+      </p-column>
+    </p-dataTable>
+    <div style="margin-top: 10px;">
+      Další pracovní den: {{nextPracovniDen?.datum | date: 'ddMM.yyyy EEE'}}
+    </div>
+  </div>
+
+  <div style="flex:1 auto; overflow-y: auto; margin-left: 10px;">
+    <app-vykaz-prace-table [vykazPraces]="vykazPraces" (onSave)="readDens()"></app-vykaz-prace-table>
+  </div>
 </div>
 
 <app-vykaz-prace-editor #vykazPraceEditor (onSave)="readDens()"></app-vykaz-prace-editor>
 <app-vykaz-prace-day-mover #vykazPraceDayMover (onSave)="readDens()"></app-vykaz-prace-day-mover>
 <p-contextMenu #kalendarMenu [model]="kalendarMenuItems"></p-contextMenu>
 <p-dialog
-    [(visible)]="kalendarObdobidialogVisible"
-	header="Kalendář - období"
-	modal="modal"
-	[resizable]="false">
-	
-	<div class="container-fluid"> 
-		<div style="float: left; clear: left;">
-			Od:
-			<p-calendar [(ngModel)]="fromDate" dateFormat="dd.mm.yy" [inline]="true" [locale]="applicationService.primengCzLocale"></p-calendar>
-			Do:
-			<p-calendar [(ngModel)]="toDate" dateFormat="dd.mm.yy" [inline]="true" [locale]="applicationService.primengCzLocale"></p-calendar>
-		</div>
-		<div style="float: left; clear: left; margin-top: 10px;">
-			<button pButton (click)="kalendarObdobidialogOk()" type="text" icon="fa-check" label="OK"></button>
-			<button pButton (click)="kalendarObdobidialogTentoMesic()" type="text" icon="fa-calendar" label="Tento měsíc"></button>
-			<button pButton (click)="kalendarObdobidialogTentoAMinulyMesic()" type="text" icon="fa-calendar" label="Tento a minulý měsíc"></button>
-			<button pButton (click)="kalendarObdobidialogTentoAPristiMesic()" type="text" icon="fa-calendar" label="Tento a příští měsíc"></button>
-		</div>
-	</div>	
-	
-</p-dialog>	
+  [(visible)]="kalendarObdobidialogVisible"
+  header="Kalendář - období"
+  modal="modal"
+  [resizable]="false">
+
+  <div class="container-fluid">
+    <div style="float: left; clear: left;">
+      Od:
+      <p-calendar [(ngModel)]="fromDate" dateFormat="dd.mm.yy" [inline]="true"
+                  [locale]="applicationService.primengCzLocale"></p-calendar>
+      Do:
+      <p-calendar [(ngModel)]="toDate" dateFormat="dd.mm.yy" [inline]="true"
+                  [locale]="applicationService.primengCzLocale"></p-calendar>
+    </div>
+    <div style="float: left; clear: left; margin-top: 10px;">
+      <button pButton (click)="kalendarObdobidialogOk()" type="text" icon="fa-check" label="OK"></button>
+      <button pButton (click)="kalendarObdobidialogTentoMesic()" type="text" icon="fa-calendar"
+              label="Tento měsíc"></button>
+      <button pButton (click)="kalendarObdobidialogTentoAMinulyMesic()" type="text" icon="fa-calendar"
+              label="Tento a minulý měsíc"></button>
+      <button pButton (click)="kalendarObdobidialogTentoAPristiMesic()" type="text" icon="fa-calendar"
+              label="Tento a příští měsíc"></button>
+    </div>
+  </div>
+
+</p-dialog>
 <p-confirmDialog></p-confirmDialog>
 
