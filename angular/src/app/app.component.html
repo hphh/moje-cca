@@ -2,11 +2,12 @@
 
 <div style="display: flex; flex-direction: column; height: 100vh;">
 	<div style="display: flex; flex: 1; min-height: 60px;">
+    <button pButton icon="fa-refresh {{(globalRefreshService.isRefresing()? 'fa-spin': '')}}" (click)="refreshAll()" style="width: 40px; height: 40px; margin: 10px;"></button>
 		<app-dochazka-employee-today></app-dochazka-employee-today>
 		<app-nahradni-volno-overview></app-nahradni-volno-overview>
 		<app-dovolena-overview></app-dovolena-overview>
 		<app-napracovano-overview></app-napracovano-overview>
 	</div>
-	
+
 	<app-vykaz-praces></app-vykaz-praces>
 </div>

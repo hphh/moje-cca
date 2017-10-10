@@ -7,17 +7,6 @@
                  [style]="{'max-width':'350px'}">
 
       <p-column field="datum" header="Datum" [style]="{'text-align':'center'}">
-        <ng-template pTemplate="header">
-          <div style="display: flex; flex-direction: row; ">
-            <div>
-              <button pButton type="button" icon="fa-refresh {{(readingData? 'fa-spin': '')}}" (click)="readDens()"
-                      style="height: 25px;"></button>
-            </div>
-            <div style="margin-left: 10px">
-              <span style="vertical-align: middle;">Datum</span>
-            </div>
-          </div>
-        </ng-template>
         <ng-template let-col let-den="rowData" pTemplate="body">
 					<span style="white-space: nowrap;">
 		           		<i *ngIf="isToday(den.datum)" class="fa fa-arrow-right"></i>
@@ -42,7 +31,8 @@
       <p-column header="Rozdíl" [style]="{'width':'70px','text-align':'center'}">
         <ng-template let-col let-den="rowData" pTemplate="body">
           {{den.imisDen.odpracovanoHod - den.imisDen.vykazanoHod | mnozstviHod}}
-          <button pButton *ngIf="solveableDay(den)" icon="fa-check" (click)="confirmVykazPraces(den)" style="width: 20px; height: 20px;"></button>
+          <button pButton *ngIf="solveableDay(den)" icon="fa-check" (click)="confirmVykazPraces(den)"
+                  style="width: 20px; height: 20px;"></button>
         </ng-template>
       </p-column>
     </p-dataTable>

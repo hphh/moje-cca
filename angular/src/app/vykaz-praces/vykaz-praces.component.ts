@@ -4,7 +4,6 @@ import {KalendarService} from '../services/kalendar.service';
 import {ApplicationService} from '../services/application.service';
 import {ToasterService} from 'angular2-toaster';
 import {VykazPrace} from '../model/vykaz-prace';
-import {Observable, Subscription} from 'rxjs/Rx';
 import {MenuItem} from 'primeng/primeng';
 import {VykazPraceFilterParameters} from '../model/vykaz-prace-filter-parameters';
 import {Den} from '../model/den';
@@ -13,13 +12,14 @@ import {VykazPraceEditorComponent} from '../vykaz-prace-editor/vykaz-prace-edito
 import {DatePipe} from '@angular/common';
 import {VykazPraceDayMoverComponent} from '../vykaz-prace-day-mover/vykaz-prace-day-mover.component';
 import {NextPracovniDenFilterParameters} from '../model/next-pracovni-den-filter-parameters';
+import {RefreshService} from "../services/refresh.service";
 
 
 @Component({
   selector: 'app-vykaz-praces',
   templateUrl: './vykaz-praces.component.html',
   styleUrls: ['./vykaz-praces.component.css'],
-  providers: [VykazPraceService, KalendarService, DatePipe]
+  providers: [VykazPraceService, KalendarService, DatePipe, RefreshService]
 })
 export class VykazPracesComponent implements OnInit {
 
@@ -38,19 +38,22 @@ export class VykazPracesComponent implements OnInit {
   @ViewChild('vykazPraceEditor') vykazPraceEditor: VykazPraceEditorComponent;
   @ViewChild('vykazPraceDayMover') vykazPraceDayMover: VykazPraceDayMoverComponent;
 
-  private autoRefreshSubscription: Subscription;
-
   constructor(private vykazPraceService: VykazPraceService,
               private kalendarService: KalendarService,
               private toasterService: ToasterService,
               public applicationService: ApplicationService,
-              private datePipe: DatePipe) {
+              private datePipe: DatePipe,
+              private refreshService: RefreshService) {
 
     this.fromDate = new Date();
     this.fromDate.setDate(this.fromDate.getDate() - 30);
 
     this.toDate = new Date();
     this.toDate.setDate(this.toDate.getDate() + 30);
+
+    this.refreshService.init(() => {
+      this.readDens();
+    }, 60000)
   }
 
   ngOnInit() {
@@ -72,7 +75,6 @@ export class VykazPracesComponent implements OnInit {
       }
     ];
 
-    this.readDens();
   }
 
   getMenuObdobiText(): string {
@@ -94,8 +96,8 @@ export class VykazPracesComponent implements OnInit {
   }
 
   readDens() {
+    console.log('VykazPracesComponent refresh');
     this.readingData = true;
-    this.unsubscribeAutoRefreshSubscription();
 
     let params = new DensFilterParameters();
     params.kodUzivatele = this.applicationService.kodUzivatele;
@@ -138,6 +140,11 @@ export class VykazPracesComponent implements OnInit {
         }
 
         this.readVykazPraces();
+      },
+      success => {
+        if (!success) {
+          this.refreshService.refreshFinished();
+        }
       }
     );
   }
@@ -146,12 +153,10 @@ export class VykazPracesComponent implements OnInit {
     if (!this.selectedDay || !this.selectedDay.datum) {
       this.vykazPraces = [];
       this.readingData = false;
-      this.refreshAutoRefreshSubscription();
       return;
     }
 
     this.readingData = true;
-    this.unsubscribeAutoRefreshSubscription();
 
     let params = new VykazPraceFilterParameters();
     params.kodUzivatele = this.applicationService.kodUzivatele;
@@ -164,7 +169,7 @@ export class VykazPracesComponent implements OnInit {
       },
       success => {
         this.readingData = false;
-        this.refreshAutoRefreshSubscription();
+        this.refreshService.refreshFinished();
       })
   }
 
@@ -178,19 +183,6 @@ export class VykazPracesComponent implements OnInit {
       }
     });
     return sum;
-  }
-
-  private unsubscribeAutoRefreshSubscription() {
-    if (this.autoRefreshSubscription != null) {
-      this.autoRefreshSubscription.unsubscribe();
-    }
-  }
-
-  private refreshAutoRefreshSubscription() {
-    this.unsubscribeAutoRefreshSubscription();
-    this.autoRefreshSubscription = Observable.interval(60000).subscribe(() => {
-      this.readDens()
-    });
   }
 
   isToday(date: number): boolean {
