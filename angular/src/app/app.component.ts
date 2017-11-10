@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
 
   constructor(private elm: ElementRef,
               private applicationService: ApplicationService,
-              private globalRefreshService: GlobalRefreshService) {
+              public globalRefreshService: GlobalRefreshService) {
 
     this.getParam('backendServicesUrl', value => applicationService.backendServicesUrl = value);
     this.getParam('kodUzivatele', value => applicationService.kodUzivatele = value);
