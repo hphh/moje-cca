@@ -39,7 +39,5 @@ export class NotificationService {
             console.log( e );
         };
     }
-
-
-
+    
 }

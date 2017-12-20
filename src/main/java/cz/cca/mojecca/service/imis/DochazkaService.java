@@ -58,15 +58,17 @@ public class DochazkaService {
 
 		if (DateUtils.isToday(day)) {
 			OdpracovanoHod o = calculateOpracovanoHod(icp, day);
-			result.setOdpracovano(new BigDecimal(o.odpracovano));
-			result.setOdchodPlan(new BigDecimal(calculateOdchodPlan(o)));
+			result.setOdpracovano(BigDecimal.valueOf(o.odpracovano));
+			result.setOdchodPlan(calculateOdchodPlan(o));
 			
 			EmployeeNahradniVolnoFilterParameters envParams = new EmployeeNahradniVolnoFilterParameters();
 			envParams.setKodUzivatele(params.getKodUzivatele());
 			envParams.setFromObdobi(new LocalDate().withDayOfMonth(1).toDate().getTime());
 			EmployeeNahradniVolno env = getEmployeeNahradniVolno(envParams);
 			
-			result.setOdchodPlanWithNV(result.getOdchodPlan().subtract(env.getSumVybrat().getMusiNaDen()));			
+			if (result.getOdchodPlan() != null) {
+				result.setOdchodPlanWithNV(result.getOdchodPlan().subtract(env.getSumVybrat().getMusiNaDen()));
+			}
 		} else {
 			result.setOdpracovano(vykazPraceDAO.getOdpracovanoHodVDen(icp, day));
 		}
@@ -74,19 +76,23 @@ public class DochazkaService {
 		return result;
 	}
 
-	private double calculateOdchodPlan(OdpracovanoHod o) {
+	private BigDecimal calculateOdchodPlan(OdpracovanoHod o) {
+		if (o.firstPrichod == null) {
+			return null;
+		}
+		
 		double result = o.firstPrichod + 8;
 		if (o.outTime > 0.5d) {
 			result += o.outTime;
 		} else {
 			result += 0.5d;
 		}
-		return result;
+		return BigDecimal.valueOf(result);
 	}
 
 	public BigDecimal getOdpracovano(String icp, Date date) {
 		if (DateUtils.isToday(date)) {
-			return new BigDecimal(calculateOpracovanoHod(icp, date).odpracovano);
+			return BigDecimal.valueOf(calculateOpracovanoHod(icp, date).odpracovano);
 		} else {
 			return vykazPraceDAO.getOdpracovanoHodVDen(icp, date);
 		}
@@ -97,7 +103,7 @@ public class DochazkaService {
 
 		OdpracovanoHod result = new OdpracovanoHod();
 
-		if ((pos == null) || (pos.size() == 0)) {
+		if ((pos == null) || (pos.isEmpty())) {
 			result.odpracovano = 0d;
 			result.inTime = 0d;
 			result.outTime = 0d;
@@ -118,7 +124,7 @@ public class DochazkaService {
 				}
 				actIn = true;
 				lastTime = po.getCas();
-				if (result.firstPrichod == 0) {
+				if (result.firstPrichod == null) {
 					result.firstPrichod = po.getCas();
 				}
 
@@ -170,9 +176,7 @@ public class DochazkaService {
 		List<ZamMesEntity> zamMess = zamMesDAO.getZamMess(pars);
 		NahradniVolnoSumVybrat sumVybrat = calculateSumVybrat(params.getKodUzivatele());
 
-		EmployeeNahradniVolno result = DochazkaDataAdapter.toEmployeeNahradniVolno(zamMess, sumVybrat);
-
-		return result;
+		return DochazkaDataAdapter.toEmployeeNahradniVolno(zamMess, sumVybrat);
 	}
 
 	private NahradniVolnoSumVybrat calculateSumVybrat(String kodUzivatele) {
@@ -204,10 +208,10 @@ public class DochazkaService {
 		musiVybrat -= vybranoNV;
 
 		NahradniVolnoSumVybrat result = new NahradniVolnoSumVybrat();
-		result.setLze(new BigDecimal(lzeVybrat));
-		result.setMusi(new BigDecimal(musiVybrat));
+		result.setLze(BigDecimal.valueOf(lzeVybrat));
+		result.setMusi(BigDecimal.valueOf(musiVybrat));
 		result.setPracovnichDniDoKonceMesice(calculatePracovnichDniDoKonceMesice(kodUzivatele));
-		result.setMusiNaDen(new BigDecimal(musiVybrat / result.getPracovnichDniDoKonceMesice()));
+		result.setMusiNaDen(BigDecimal.valueOf(musiVybrat / result.getPracovnichDniDoKonceMesice()));
 
 		return result;
 	}
@@ -232,6 +236,6 @@ class OdpracovanoHod {
 	double odpracovano;
 	double inTime;
 	double outTime;
-	double firstPrichod;
+	Double firstPrichod;
 
 }

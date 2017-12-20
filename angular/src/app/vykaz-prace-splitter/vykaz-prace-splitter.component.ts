@@ -51,7 +51,12 @@ export class VykazPraceSplitterComponent implements OnInit {
         ps.day = newVykazPrace.datum;
         ps.kodUzivatele = this.applicationService.kodUzivatele;
         this.kalendarService.getNextPracovniDen(ps, data => {
-          newVykazPrace.datum = data.datum;
+          if (data != null) {
+              newVykazPrace.datum = data.datum;
+          } else {
+              newVykazPrace.datum = vykazPrace.datum;
+          }
+            
           this.newEditForm.showWithBaseMnozstviOdvedenePrace( newVykazPrace, this.baseMnozstviOdvedenePrace );
           this.dialogVisible = true;
         });

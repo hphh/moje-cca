@@ -29,7 +29,6 @@ export class NahradniVolnoOverviewComponent implements OnInit {
   }
 
   readNahradniVolno() {
-    console.log('NahradniVolnoOverviewComponent refresh');
     let params = new EmployeeNahradniVolnoFilterParameters();
     params.kodUzivatele = this.applicationService.kodUzivatele;
 

@@ -26,7 +26,6 @@ export class NapracovanoOverviewComponent implements OnInit {
   }
 
   readNapracovano() {
-    console.log('NapracovanoOverviewComponent refresh')
     this.vykazPraceService.napracovanoHodin(
       this.applicationService.kodUzivatele,
       data => this.napracovanoHod = data,

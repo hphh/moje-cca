@@ -30,7 +30,6 @@ export class DovolenaOverviewComponent implements OnInit {
   }
 
   readDovolena() {
-    console.log('DovolenaOverviewComponent refresh')
     let params = new DovolenaFilterParameters();
     params.kodUzivatele = this.applicationService.kodUzivatele;
 

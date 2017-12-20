@@ -96,7 +96,6 @@ export class VykazPracesComponent implements OnInit {
   }
 
   readDens() {
-    console.log('VykazPracesComponent refresh');
     this.readingData = true;
 
     let params = new DensFilterParameters();

@@ -36,7 +36,6 @@ export class DochazkaEmployeeTodayComponent implements OnInit {
   }
 
   readPrichodOdchods() {
-    console.log('DochazkaEmployeeTodayComponent refresh');
     let params = new EmployeeDayPrichodOdchodsFilterParameters();
     params.date = new Date().getTime();
     params.kodUzivatele = this.applicationService.kodUzivatele;
@@ -57,7 +56,7 @@ export class DochazkaEmployeeTodayComponent implements OnInit {
 
     let now = new Date();
     let nowTime = now.getHours() + now.getMinutes() / 60;
-
+    
     if (this.prichodOdchods.odchodPlan &&
       !this.leaveInfoShownToday(this.leaveInfoShowDate) &&
       nowTime >= this.prichodOdchods.odchodPlan - 2 / 60) {
