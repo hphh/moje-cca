@@ -1,11 +1,20 @@
-<div style="padding: 10px; height: 60px; background: papayaWhip ; ">
-  <div>
-  	[ {{prichodOdchods?.prichodOdchodsText}} ] 
-  	Odprac.: {{prichodOdchods?.odpracovano | mnozstviHod}}
-  	(zbývá {{8 - prichodOdchods?.odpracovano | mnozstviHod}})
+<div style="padding: 10px; height: 60px; background: papayaWhip;">
+  <div style="float: left;">
+  	<div>
+	  	[ {{prichodOdchods?.prichodOdchodsText}} ] 
+  	</div>
+  	<div>
+	  	Odprac.: {{prichodOdchods?.odpracovano | mnozstviHod}}
+  	</div>
   </div>
-  <div>
-  	Odchod: <b>{{prichodOdchods?.odchodPlan | mnozstviHod}}</b>,
-  	Odchod s NV: <b>{{prichodOdchods?.odchodPlanWithNV | mnozstviHod}}</b>
+  <div style="float: left; padding-left: 10px;">
+  	<div>
+	  	Odchod: <b>{{prichodOdchods?.odchodPlan | mnozstviHod}}</b>
+	  	(zbývá {{remainingTimeToLeave() | mnozstviHod}})
+  	</div>
+  	<div>
+	  	Odchod s NV: <b>{{prichodOdchods?.odchodPlanWithNV | mnozstviHod}}</b>
+  		(zbývá {{remainingTimeToLeaveWithNV() | mnozstviHod}})
+  	</div>
   </div>
 </div>

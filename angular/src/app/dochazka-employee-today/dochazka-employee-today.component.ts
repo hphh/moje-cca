@@ -47,7 +47,23 @@ export class DochazkaEmployeeTodayComponent implements OnInit {
       },
       success => this.refreshService.refreshFinished());
   }
+  
+  remainingTimeToLeave(): number {
+      if (!this.prichodOdchods || !this.prichodOdchods.odchodPlan) {
+          return null;
+      }
+      
+      return this.prichodOdchods.odchodPlan - this.getNowTime();
+  }
 
+  remainingTimeToLeaveWithNV(): number {
+      if (!this.prichodOdchods || !this.prichodOdchods.odchodPlanWithNV) {
+          return null;
+      }
+      
+      return this.prichodOdchods.odchodPlanWithNV - this.getNowTime();
+  }
+  
 
   private showLeaveInfo() {
     if (!this.prichodOdchods) {
@@ -55,7 +71,7 @@ export class DochazkaEmployeeTodayComponent implements OnInit {
     }
 
     let now = new Date();
-    let nowTime = now.getHours() + now.getMinutes() / 60;
+    let nowTime = this.getNowTime();
     
     if (this.prichodOdchods.odchodPlan &&
       !this.leaveInfoShownToday(this.leaveInfoShowDate) &&
@@ -84,6 +100,10 @@ export class DochazkaEmployeeTodayComponent implements OnInit {
 
     return now.getTime() == comparedDate.getTime();
   }
-
+  
+  private getNowTime(): number {
+      let now = new Date();
+      return now.getHours() + now.getMinutes() / 60;
+  }
 
 }

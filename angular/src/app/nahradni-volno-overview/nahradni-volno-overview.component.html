@@ -1,10 +1,10 @@
 <div style="padding: 10px; background: lightgreen; height: 60px;">
-  	<div style="display: flex; flex: 1; margin-left: 10px;">
+  	<div style="display: flex; flex: 1;">
   		lze vybrat:&nbsp;{{nahradniVolno?.sumVybrat?.lze | mnozstviHod}},
   		musí vybrat:&nbsp;<b>{{nahradniVolno?.sumVybrat?.musi | mnozstviHod}}</b>&nbsp;({{nahradniVolno?.sumVybrat?.musiNaDen | mnozstviHod}} na {{nahradniVolno?.sumVybrat?.pracovnichDniDoKonceMesice}} dní)
   	</div>
 	<div style="display: flex; flex: 1;">
-  		<div *ngFor="let volno of nahradniVolno?.nahradniVolnos" style="margin-left: 10px;">
+  		<div *ngFor="let volno of nahradniVolno?.nahradniVolnos" style="margin-right: 10px;">
 			<small>	  			
 				[{{volno.obdobi | date: 'MM'}} - {{volno.mnozstvi | mnozstviHod}}]
 	  		</small>
