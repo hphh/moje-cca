@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MoveDayVykazPracesParameters } from '../model/move-day-vykaz-praces-parameters';
 import { VykazPraceService } from '../services/vykaz-prace.service';
 import { ApplicationService } from '../services/application.service';
+import { GlobalRefreshService } from "../services/global-refresh.service";
 
 @Component( {
     selector: 'app-vykaz-prace-day-mover',
@@ -19,7 +20,8 @@ export class VykazPraceDayMoverComponent implements OnInit {
 
 
     constructor( private vykazPraceService: VykazPraceService,
-            public applicationService: ApplicationService) { }
+        public applicationService: ApplicationService,
+        public globalRefreshService: GlobalRefreshService ) { }
 
     ngOnInit() {
     }
@@ -39,14 +41,15 @@ export class VykazPraceDayMoverComponent implements OnInit {
         params.allNextDays = this.allNextDays;
         params.oldDate = this.oldDate.getTime();
         params.newDate = this.newDate.getTime();
-        
-        this.vykazPraceService.moveDayVykazPraces( params, 
-                () => { }, 
-                ( success ) => {
-            if ( success ) {
-                this.dialogVisible = false;
-                this.onSave.emit();
-            }
-        } );
+
+        this.vykazPraceService.moveDayVykazPraces( params,
+            () => { },
+            ( success ) => {
+                if ( success ) {
+                    this.dialogVisible = false;
+                    this.globalRefreshService.globalRefresh();
+                    this.onSave.emit();
+                }
+            } );
     }
 }

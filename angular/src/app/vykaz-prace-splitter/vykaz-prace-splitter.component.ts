@@ -8,6 +8,7 @@ import { KalendarService } from '../services/kalendar.service';
 import { NextPracovniDenFilterParameters } from '../model/next-pracovni-den-filter-parameters';
 import { Den } from '../model/den';
 import { ApplicationService } from '../services/application.service';
+import { GlobalRefreshService } from "../services/global-refresh.service";
 
 
 @Component( {
@@ -30,7 +31,8 @@ export class VykazPraceSplitterComponent implements OnInit {
         private vykazPraceService: VykazPraceService,
         private kalendarService: KalendarService,
         private toasterService: ToasterService,
-        public applicationService: ApplicationService) { }
+        public applicationService: ApplicationService,
+        public globalRefreshService: GlobalRefreshService ) { }
 
     ngOnInit() {
     }
@@ -46,20 +48,20 @@ export class VykazPraceSplitterComponent implements OnInit {
 
         let newVykazPrace = Object.assign( {}, vykazPrace );
         newVykazPrace.mnozstviOdvedenePrace = 0;
-        
+
         let ps = new NextPracovniDenFilterParameters();
         ps.day = newVykazPrace.datum;
         ps.kodUzivatele = this.applicationService.kodUzivatele;
-        this.kalendarService.getNextPracovniDen(ps, data => {
-          if (data != null) {
-              newVykazPrace.datum = data.datum;
-          } else {
-              newVykazPrace.datum = vykazPrace.datum;
-          }
-            
-          this.newEditForm.showWithBaseMnozstviOdvedenePrace( newVykazPrace, this.baseMnozstviOdvedenePrace );
-          this.dialogVisible = true;
-        });
+        this.kalendarService.getNextPracovniDen( ps, data => {
+            if ( data != null ) {
+                newVykazPrace.datum = data.datum;
+            } else {
+                newVykazPrace.datum = vykazPrace.datum;
+            }
+
+            this.newEditForm.showWithBaseMnozstviOdvedenePrace( newVykazPrace, this.baseMnozstviOdvedenePrace );
+            this.dialogVisible = true;
+        } );
 
     }
 
@@ -73,24 +75,25 @@ export class VykazPraceSplitterComponent implements OnInit {
             success => {
                 if ( success ) {
                     this.dialogVisible = false;
+                    this.globalRefreshService.globalRefresh();
                     this.onSave.emit();
                 }
             }
         );
     }
-    
+
     onChangeOldMnozstviOdvedenePrace( event: number ) {
-        if (!this.connectedMonozstviOdevedenPrace) {
+        if ( !this.connectedMonozstviOdevedenPrace ) {
             return;
         }
-        this.newEditForm.setMnozstviOdvedenePraceLoss(event);
+        this.newEditForm.setMnozstviOdvedenePraceLoss( event );
     }
 
     onChangeNewMnozstviOdvedenePrace( event: number ) {
-        if (!this.connectedMonozstviOdevedenPrace) {
+        if ( !this.connectedMonozstviOdevedenPrace ) {
             return;
         }
-        this.oldEditForm.setMnozstviOdvedenePraceLoss(event);
+        this.oldEditForm.setMnozstviOdvedenePraceLoss( event );
     }
-    
+
 }

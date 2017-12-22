@@ -1,6 +1,6 @@
 <p-contextMenu #vykazMenu [model]="vykazMenuItems"></p-contextMenu>
-<app-vykaz-prace-editor #vykazPraceEditor (onSave)="refreshData()"></app-vykaz-prace-editor>
-<app-vykaz-prace-splitter #vykazPraceSplitter (onSave)="refreshData()"></app-vykaz-prace-splitter>
+<app-vykaz-prace-editor #vykazPraceEditor></app-vykaz-prace-editor>
+<app-vykaz-prace-splitter #vykazPraceSplitter></app-vykaz-prace-splitter>
 <app-vykaz-praces-overview *ngIf="!disableVykazyNaUkol" #vykazPracesOverview></app-vykaz-praces-overview>
 
 <p-dataTable [value]="vykazPraces" [contextMenu]="vykazMenu" 

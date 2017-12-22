@@ -8,6 +8,8 @@ import { ToasterService } from 'angular2-toaster';
 import { ConfirmationService } from 'primeng/primeng';
 import { MnozstviHodPipe } from '../converts/mnozstvi-hod.pipe';
 import { ZakazkaPipe } from '../converts/zakazka.pipe';
+import { GlobalRefreshService } from "../services/global-refresh.service";
+
 
 @Component( {
     selector: 'app-vykaz-prace-table',
@@ -56,7 +58,8 @@ export class VykazPraceTableComponent implements OnInit {
             private toasterService: ToasterService,
             private confirmationService: ConfirmationService,
             private mnozstviHodPipe: MnozstviHodPipe,
-            private zakazkaPipe: ZakazkaPipe) { }
+            private zakazkaPipe: ZakazkaPipe,
+            public globalRefreshService: GlobalRefreshService) { }
 
     ngOnInit() {
     }
@@ -111,7 +114,7 @@ export class VykazPraceTableComponent implements OnInit {
                     this.toasterService.pop( 'info', 'Výkaz odmazán', null );
                 },
                 success => {
-                    this.refreshData();
+                    this.globalRefreshService.globalRefresh();
                 }); 
             }
         });        

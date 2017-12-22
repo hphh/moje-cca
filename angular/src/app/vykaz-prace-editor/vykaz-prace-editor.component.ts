@@ -6,6 +6,7 @@ import { DataConvertor } from '../converts/data-convertor';
 import { VykazPraceFilterParameters } from '../model/vykaz-prace-filter-parameters';
 import { ApplicationService } from '../services/application.service';
 import { VykazPraceEditFormComponent } from '../vykaz-prace-edit-form/vykaz-prace-edit-form.component';
+import { GlobalRefreshService } from "../services/global-refresh.service";
 
 
 @Component( {
@@ -21,11 +22,12 @@ export class VykazPraceEditorComponent implements OnInit {
     @ViewChild( 'editForm' ) editForm: VykazPraceEditFormComponent;
 
     @Output() onSave: EventEmitter<any> = new EventEmitter();
-    
+
     constructor(
         private vykazPraceService: VykazPraceService,
         private toasterService: ToasterService,
-        private applicationService: ApplicationService) { }
+        private applicationService: ApplicationService,
+        public globalRefreshService: GlobalRefreshService ) { }
 
     ngOnInit() {
     }
@@ -35,8 +37,8 @@ export class VykazPraceEditorComponent implements OnInit {
         if ( vykazPrace == null ) {
             return;
         }
-        
-        this.editForm.show(vykazPrace);
+
+        this.editForm.show( vykazPrace );
         this.dialogVisible = true;
     }
 
@@ -48,6 +50,7 @@ export class VykazPraceEditorComponent implements OnInit {
             success => {
                 if ( success ) {
                     this.dialogVisible = false;
+                    this.globalRefreshService.globalRefresh();
                     this.onSave.emit();
                 }
             }
