@@ -4,6 +4,8 @@ export class PrimengCzLocale implements LocaleSettings {
     
     static readonly INSTANCE = new PrimengCzLocale(); 
     
+    today = 'dnes';
+    clear = 'čistý';
     firstDayOfWeek = 1;
     dayNames = ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'];
     dayNamesShort = ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'];

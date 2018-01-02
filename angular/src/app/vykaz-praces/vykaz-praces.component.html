@@ -36,7 +36,7 @@
         </ng-template>
       </p-column>
     </p-dataTable>
-    <div style="margin-top: 10px;">
+    <div #nextPracovniDenDiv style="margin-top: 10px;">
       Další pracovní den: {{nextPracovniDen?.datum | date: 'ddMM.yyyy EEE'}}
     </div>
   </div>
@@ -49,6 +49,7 @@
 <app-vykaz-prace-editor #vykazPraceEditor></app-vykaz-prace-editor>
 <app-vykaz-prace-day-mover #vykazPraceDayMover></app-vykaz-prace-day-mover>
 <p-contextMenu #kalendarMenu [model]="kalendarMenuItems"></p-contextMenu>
+<p-contextMenu [target]="nextPracovniDenDiv" [model]="nextPracovniDenMenuItems"></p-contextMenu>
 <p-dialog
   [(visible)]="kalendarObdobidialogVisible"
   header="Kalendář - období"
