@@ -203,8 +203,12 @@ public class DochazkaService {
 		double lzeVybrat = sumNV - vybranoNV;
 
 		Date obdobiMusiVybrat = new LocalDate().withDayOfMonth(1).minusMonths(2).toDate();
-		double musiVybrat = zamMess.stream().filter(entity -> entity.getId().getObdobi().equals(obdobiMusiVybrat))
+//		double musiVybrat = zamMess.stream().filter(entity -> entity.getId().getObdobi().equals(obdobiMusiVybrat))
+//				.mapToDouble(entity -> entity.getNahrVolno().doubleValue()).sum();
+		
+		double musiVybrat = zamMess.stream().filter(entity -> entity.getId().getObdobi().compareTo(obdobiMusiVybrat) >= 0)
 				.mapToDouble(entity -> entity.getNahrVolno().doubleValue()).sum();
+
 		musiVybrat -= vybranoNV;
 
 		NahradniVolnoSumVybrat result = new NahradniVolnoSumVybrat();

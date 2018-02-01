@@ -39,6 +39,10 @@ import { NahradniVolnoOverviewComponent } from './nahradni-volno-overview/nahrad
 import { DovolenaOverviewComponent } from './dovolena-overview/dovolena-overview.component';
 import { NapracovanoOverviewComponent } from './napracovano-overview/napracovano-overview.component';
 import { NotificationService } from './services/notification.service';
+import { PageEmployeeOverviewComponent } from './page-employee-overview/page-employee-overview.component';
+import { routes } from './app.routes';
+import { RouterModule } from '@angular/router';
+import { PageVykazPracesListComponent } from './page-vykaz-praces-list/page-vykaz-praces-list.component';
 
 @NgModule( {
     declarations: [
@@ -55,7 +59,9 @@ import { NotificationService } from './services/notification.service';
         DochazkaEmployeeTodayComponent,
         NahradniVolnoOverviewComponent,
         DovolenaOverviewComponent,
-        NapracovanoOverviewComponent
+        NapracovanoOverviewComponent,
+        PageEmployeeOverviewComponent,
+        PageVykazPracesListComponent
     ],
     imports: [
         BrowserAnimationsModule,
@@ -76,7 +82,10 @@ import { NotificationService } from './services/notification.service';
         AutoCompleteModule,
         DropdownModule,
         InputSwitchModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        RouterModule.forRoot(routes, {
+          useHash: true
+        })
     ],
     providers: [
         DatePipe,

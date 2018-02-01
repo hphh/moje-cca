@@ -1,47 +1,45 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
-import {ApplicationService} from './services/application.service';
-import {ToasterConfig} from 'angular2-toaster';
-import {CallBackendService} from './services/call-backend.service';
-import {GlobalRefreshService} from "./services/global-refresh.service";
+import { Component, ElementRef, OnInit } from '@angular/core';
+import { ApplicationService } from './services/application.service';
+import { ToasterConfig } from 'angular2-toaster';
+import { CallBackendService } from './services/call-backend.service';
+import { GlobalRefreshService } from './services/global-refresh.service';
+import { Router } from '@angular/router';
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  providers: [ApplicationService, CallBackendService, GlobalRefreshService]
-})
+@Component( {
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    providers: [ApplicationService, CallBackendService, GlobalRefreshService]
+} )
 export class AppComponent implements OnInit {
 
-  toasterconfig: ToasterConfig = new ToasterConfig({animation: 'flyRight'});
+    toasterconfig: ToasterConfig = new ToasterConfig( { animation: 'flyRight' } );
 
 
-  constructor(private elm: ElementRef,
-              private applicationService: ApplicationService,
-              public globalRefreshService: GlobalRefreshService) {
+    constructor( private elm: ElementRef,
+        private applicationService: ApplicationService,
+        public globalRefreshService: GlobalRefreshService,
+        public router: Router ) {
 
-    this.getParam('backendServicesUrl', value => applicationService.backendServicesUrl = value);
-    this.getParam('kodUzivatele', value => applicationService.kodUzivatele = value);
-
-
-    console.log('uživatel: ' + applicationService.kodUzivatele);
-    console.log('URL backend služeb: ' + applicationService.backendServicesUrl);
-
-  }
-
-  ngOnInit() {
-    this.refreshAll();
-  }
+        this.getParam( 'backendServicesUrl', value => applicationService.backendServicesUrl = value );
+        this.getParam( 'kodUzivatele', value => applicationService.kodUzivatele = value );
 
 
-  private getParam(name: string, manageFnc: (value: string) => void) {
-    let value = this.elm.nativeElement.getAttribute(name);
-    if ((value != null) && (!value.startsWith('<%'))) {
-      manageFnc(value);
+        console.log( 'uživatel: ' + applicationService.kodUzivatele );
+        console.log( 'URL backend služeb: ' + applicationService.backendServicesUrl );
+
     }
-  }
+
+    ngOnInit() {
+    }
 
 
-  refreshAll() {
-    this.globalRefreshService.globalRefresh();
-  }
+    private getParam( name: string, manageFnc: ( value: string ) => void ) {
+        let value = this.elm.nativeElement.getAttribute( name );
+        if ( ( value != null ) && ( !value.startsWith( '<%' ) ) ) {
+            manageFnc( value );
+        }
+    }
+
+
 }
